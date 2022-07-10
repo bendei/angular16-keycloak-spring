@@ -2,20 +2,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <parent>
-  <groupId>dev.marco</groupId>
+    <groupId>com.bende</groupId>
     <artifactId>java-angular-example</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
+
   <modelVersion>4.0.0</modelVersion>
+
   <artifactId>frontend</artifactId>
+
   <packaging>jar</packaging>
+
+  <dependencies>
+  <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-clean-plugin -->
+  <dependency>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-clean-plugin</artifactId>
+    <version>3.2.0</version>
+  </dependency>
+  </dependencies>
+
+
   <build>
     <plugins>
       <!-- clean the dist directory used by Angular -->
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
         <configuration>
           <filesets>
             <fileset>
@@ -25,10 +40,12 @@
         </configuration>
       </plugin>
 
+      <!--This Maven plugin lets you install Node/NPM locally for your project, install dependencies with NPM,
+      install dependencies, builds the project and/or run Karma tests.-->
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.11.2</version>
+        <version>1.12.1</version>
 
         <executions>
 
@@ -77,13 +94,33 @@
         </executions>
       </plugin>
 
+      <plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <version>${openapi-generator.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${project.parent.basedir}/openAPI.yaml</inputSpec>
+              <generatorName>typescript-angular</generatorName>
+              <configOptions>
+                <ngVersion>11.0.0</ngVersion>
+              </configOptions>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
 
-    <resources>
+  <!--  <resources>
       <resource>
-        <!-- we copy the content of the frontend directory in the final artifact -->
+        &lt;!&ndash; we copy the content of the frontend directory in the final artifact &ndash;&gt;
         <directory>dist/frontend</directory>
       </resource>
-    </resources>
+    </resources>-->
   </build>
 </project>

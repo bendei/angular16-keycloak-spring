@@ -4,19 +4,33 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>dev.marco</groupId>
+    <groupId>com.bende</groupId>
     <artifactId>java-angular-example</artifactId>
     <packaging>pom</packaging>
     <version>0.1-SNAPSHOT</version>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
+        <version>2.5.7</version>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.3</version>
     </parent>
+
     <modules>
         <module>frontend</module>
         <module>backend</module>
     </modules>
+
+    <properties>
+        <!-- swagger / openapi -->
+        <openapi-generator.version>5.4.0</openapi-generator.version>
+        <geronimo-openapi.version>1.0.15</geronimo-openapi.version>
+        <swagger.version>1.5.21</swagger.version>
+        <swagger-annotations.version>2.1.11</swagger-annotations.version>
+        <swagger-codegen.version>3.0.30</swagger-codegen.version>
+        <jackson.version>2.13.0</jackson.version>
+        <gson.version>2.8.2</gson.version>
+        <java.version>11</java.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -34,5 +48,21 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <version>2.4.3</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

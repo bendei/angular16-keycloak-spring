@@ -25,3 +25,25 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## bootstrap:
+## spacing, floating element , text aligning etc:
+https://getbootstrap.com/docs/4.0/utilities/float/
+
+## form bootstrap
+https://getbootstrap.com/docs/4.0/components/forms/
+
+## ng-bootstrap UI component library:
+https://ng-bootstrap.github.io/#/getting-started
+
+## UI datatable component
+https://swimlane.gitbook.io/ngx-datatable/
+
+## routing:
+https://blog.angular-university.io/angular2-router/
+
+## using external js file in componwnt
+https://www.c-sharpcorner.com/article/using-external-js-file-in-angular-app/
+
+
+
