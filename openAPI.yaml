@@ -1,0 +1,355 @@
+openapi: 3.0.3
+info:
+  title: Bende REST interface
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+paths:
+  /konnektors/{konnektorId}:
+    parameters:
+      - name: konnektorId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getKonnektor
+      responses:
+        200:
+          description: konnektor retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KonnektorDTO"
+        404:
+          description: no konnektor found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    delete:
+      description: deleteing a konnektor
+      operationId: deleteKonnektor
+      responses:
+        '200':
+          description: Konnektor deleted
+  /konnektors:
+    get:
+      description:  gets all konnektors
+      operationId: getAllKonnektors
+      parameters:
+        - in: query
+          name: hostName
+          schema:
+            type: string
+          description: hostName of the connector
+        - in: query
+          name: serialNumber
+          schema:
+            type: string
+          description: serialNumber of the connector
+        - in: query
+          name: firmwareVersion
+          schema:
+            type: string
+          description: firmwareVersion of the connector
+        - in: query
+          name: hardwareVersion
+          schema:
+            type: string
+          description: hardwareVersion of the connector
+        - in: query
+          name: created
+          schema:
+            type: string
+            format: date-time
+          description: created of the connector
+      responses:
+        200:
+          description: all konnektors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/KonnektorDTO"
+        404:
+          description: not konnektors found
+    put:
+      operationId: updateKonnektorHostname
+      summary: Update the konnektors hostname
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateKonnektorHostnameRequestDTO'
+      responses:
+        204:
+          description: Konnektors data changed successfully
+        403:
+          description: Forbidden
+        404:
+          description: Konnektor not found
+        500:
+          description: Server Error
+
+    post:
+      description: creates a new konnektor
+      operationId:  createKonnektor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KonnektorDTO"
+      responses:
+        204:
+          description: konnektor created
+        500:
+          description: server error
+
+  /artists:
+    get:
+      description: Returns a list of artists
+      operationId: getAllArtists
+      responses:
+        200:
+          description: request for all artists
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ArtistResponseDTO"
+        500:
+          description: Server Error
+  /employees:
+    get:
+      description: Return list of all employees
+      operationId: getAllEmployees
+      responses:
+        200:
+          description: request for all employees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmployeesResponseDTO"
+        500:
+          description: Server error
+  /audit-log:
+    get:
+      operationId: getAuditLog
+      responses:
+        200:
+          description:  OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AuditLogDTO"
+    post:
+      operationId: createAuditLog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref:  "#/components/schemas/CreateAuditLogRequestDTO"
+      responses:
+        204:
+          description: AuditLog created
+        400:
+          description: Konnektor not found
+        500:
+          description: Server error
+
+components:
+  parameters:
+    konnektorId:
+      name: konnektorId
+      in: path
+      schema:
+        type: integer
+        # format: int64 # should be "long"?
+      required: true
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        status:
+          type: string
+        timestamp:
+          type: string
+        message:
+          type: string
+    ArtistResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        role:
+          type: string
+      required:
+        - id
+        - username
+        - role
+    EmployeesResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+      required:
+        - id
+    AuditLogDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        user:
+          type: string
+        konnektor:
+          type: integer
+        userAction:
+          $ref:  "#/components/schemas/AuditLogMessageDTO"
+        timestamp:
+          type: string
+          format: date-time
+    UpdateKonnektorHostnameRequestDTO:
+      type: object
+      properties:
+        konnektorId:
+          type: integer
+          format: int64
+        hostname:
+          type: string
+      required:
+        - konnektorId
+    CreateAuditLogRequestDTO:
+      type: object
+      properties:
+        user:
+          type: string
+        userAction:
+          $ref:  "#/components/schemas/AuditLogMessageDTO"
+        konnektor:
+          type: integer
+      required:
+        - user
+        - userAction
+    KonnektorDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        hostname:
+          type: string
+        serialNumber:
+          type: string
+        firmwareVersion:
+          type: string
+        hardwareVersion:
+          type: string
+        active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+        auditlogs:
+          type: array
+          items:
+            $ref: "#/components/schemas/AuditLogDTO"
+      required:
+        - hostname
+    ErrorDTO:
+      type: object
+      properties:
+        message:
+          type: string
+    AuditLogMessageDTO:
+      type: string
+      enum:
+        - ADD_NEW_KONNEKTOR
+        - REMOVE_KONNEKTOR
+        - UPDATE_KONNEKTOR_SETTINGS
+        - TOGGLE_KONNEKTOR_STATE_ACTIVE
+        - TOGGLE_KONNEKTOR_STATE_PAUSED
+        - EXPORT_KONNEKTOR_DATA
+        - UPDATE_MONITORING_STATE_ACTIVE
+        - UPDATE_MONITORING_STATE_PAUSED
+        - USER_LOGIN
+        - USER_LOGOUT
+        - REBOOT_KONNEKTOR
+        - DELETE_SCHEDULED_REBOOT
+        - UPDATE_SCHEDULED_REBOOT
+        - DELETE_PERIODIC_REBOOT
+        - UPDATE_PERIODIC_REBOOT
+        - UPDATE_UTILITY_SETTINGS
+        - CREATE_USER
+        - UPDATE_USER_DATA
+        - CHANGE_PASSWORD
+        - SET_PASSWORD
+        - ACCEPT_LICENSE
+        - DELETE_USER
+        - UPDATE_EVENT_MONITORING_SETTINGS
+        - UPDATE_EVENT_NOTIFICATION_SETTINGS
+        - UPDATE_EVENT_NOTIFICATION_SETTINGS_VALUE
+        - SMC_B_CARD_VERIFICATION_STARTED
+        - SMC_B_CARD_VERIFICATION_ENDED
+        - CARD_TERMINAL_SICCT_LOGINS_UPDATED
+        - CARD_TERMINAL_ADDED
+        - CARD_TERMINAL_ASSIGNED
+        - CARD_TERMINAL_PAIRED
+        - CARD_TERMINAL_CHANGED_CORRELATION
+        - CARD_TERMINAL_DELETED
+        - CARD_TERMINAL_CONNECTED
+        - CARD_TERMINAL_DISCONNECTED
+        - UPDATE_DNS_SERVER_IP_ADRESSES
+        - UPDATE_INTERNET_ACCESS_GATEWAY
+        - UPDATE_SIGNATURE_SETTINGS
+        - UPDATE_USER_PASSWORD_EXPIRATION_DAYS
+        - KONNEKTOR_BACKUP_IMPORT
+        - KONNEKTOR_BACKUP_EXPORT
+        - KONNEKTOR_BACKUP_AUTO_EXPORT_FAILED
+        - KONNEKTOR_BACKUP_STORED
+        - KONNEKTOR_BACKUP_UPDATED
+        - KONNEKTOR_BACKUP_DELETED
+        - KONNEKTOR_BACKUP_CONFIGURATION_STORED
+        - KONNEKTOR_BACKUP_CONFIGURATION_DELETED
+        - KONNEKTOR_BACKUP_CREATE_ZIP_ARCHIVE
+        - KONNEKTOR_UPDATE_DESCRIPTION
+        - KONNEKTOR_UPDATE_HOSTNAME
+        - KONNEKTOR_USER_GROUP_CREATED
+        - KONNEKTOR_USER_GROUP_UPDATED
+        - KONNEKTOR_USER_GROUP_DELETED
+        - KONNEKTOR_CREATE_USER
+        - KONNEKTOR_DELETE_USER
+        - KONNEKTOR_INFO_MODEL_UPDATED
+        - KONNEKTOR_CARD_TERMINAL_MOVED
+        - CREATE_MASTER_POOL_ENTRY
+        - DELETE_MASTER_POOL_ENTRY
+        - KONNEKTOR_FIRMWARE_UPDATE_PLACED_IN_QUEUE
+        - CARD_TERMINAL_FIRMWARE_UPDATE_PLACED_IN_QUEUE
+        - CARD_TERMINAL_UPDATE_DESCRIPTION
+        - ADD_KONNEKTOR_CLIENT_SYSTEM_CREDENTIAL
+        - UPDATE_KONNEKTOR_CLIENT_SYSTEM_CREDENTIAL
+        - DELETE_KONNEKTOR_CLIENT_SYSTEM_CREDENTIAL
+        - UPDATE_KONNEKTOR_CLIENT_SYSTEM_CERTIFICATE
+        - DELETE_KONNEKTOR_CLIENT_SYSTEM_CERTIFICATE
+        - IMPORT_KONNEKTOR_CLIENT_SYSTEM_CERTIFICATE
+        - UPDATE_CLIENT_SYSTEM_CONFIG
+        - QUEUE_CLEANED_FOR_INVALID_CARD_TERMINAL_UPDATES
+        - CARD_CHANGE_PIN
+        - CARD_UNBLOCK_PIN
+
