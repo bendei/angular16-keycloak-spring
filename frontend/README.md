@@ -45,5 +45,8 @@ https://blog.angular-university.io/angular2-router/
 ## using external js file in componwnt
 https://www.c-sharpcorner.com/article/using-external-js-file-in-angular-app/
 
+## updating angular 12 to 13
+https://update.angular.io/?l=3&v=12.0-13.0
+
 
 
