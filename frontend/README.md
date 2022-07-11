@@ -46,6 +46,10 @@ https://blog.angular-university.io/angular2-router/
 https://www.c-sharpcorner.com/article/using-external-js-file-in-angular-app/
 
 ## updating angular 12 to 13
+https://lachimi.com/angular/version/migration-guide/update-from-angular-13-to-angular-14#migration-using-npm
+
+ha a frontend mappában futtatom a npm install-t akkor nem kell -g (global) kapcsoló mert valahogy nem installálja
+
 https://update.angular.io/?l=3&v=12.0-13.0
 
 
