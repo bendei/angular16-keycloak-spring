@@ -49,11 +49,9 @@ public class KonnektorServiceImpl implements KonnektorService {
     }
 
     @Override
-    public void updateKonnektorHostname(Long id, String hostname) throws ResourceNotFoundException{
-       Konnektor konn = konnektorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden"));
-       konn.setId(id);
-       konn.setHostname(hostname);
-       konnektorRepository.save(konn);
+    public void updateKonnektor(Konnektor konnektor) throws ResourceNotFoundException{
+       konnektorRepository.findById(konnektor.getId()).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden"));
+       konnektorRepository.save(konnektor);
     }
 
 }

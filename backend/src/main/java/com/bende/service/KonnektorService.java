@@ -19,6 +19,6 @@ public interface KonnektorService {
 
     List<Konnektor> filterKonnektors(String hostname, String serialNumber, String firmwareVersion, String hardwareVersion, LocalDateTime created);
 
-    void updateKonnektorHostname(Long id, String hostname);
+    void updateKonnektor(Konnektor konn);
 
 }

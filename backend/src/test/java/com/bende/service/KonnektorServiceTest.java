@@ -106,10 +106,6 @@ public class KonnektorServiceTest {
         Assertions.assertTrue(konnektor.getId() == 1L) ;
     }
 
-    private void whenKonnektorHostnameUpdated() {
-        doNothing().when(konnektorService).updateKonnektorHostname(1L, "127.3.3.3");
-    }
-
     private void givenListOfKonnektors() {
         Konnektor konnektor = new Konnektor();
         konnektor.setId(1L);

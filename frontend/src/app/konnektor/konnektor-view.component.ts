@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DefaultService, KonnektorDTO, UpdateKonnektorHostnameRequestDTO} from '../../../target/generated-sources/openapi';
+import {DefaultService, KonnektorDTO } from '../../../target/generated-sources/openapi';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
 
@@ -49,8 +49,8 @@ export class KonnektorViewComponent implements OnInit {
 
   public onUpdateHostname(event: any, rowIndex: string, dto: KonnektorDTO): void {
     this.isEditMode[rowIndex] = false;
-    let reqDto: UpdateKonnektorHostnameRequestDTO = {konnektorId: dto.id, hostname : event.target.value};
-    this.defaultService.updateKonnektorHostname(reqDto).subscribe(
+    let reqDto: KonnektorDTO = {id: dto.id, hostname : event.target.value};
+    this.defaultService.updateKonnektor(reqDto).subscribe(
       () => {
         this.filterForm();
         this.toast.success("konnektor hostname updated")

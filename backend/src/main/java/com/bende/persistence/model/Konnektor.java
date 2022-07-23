@@ -46,7 +46,7 @@ public class Konnektor {
     @Column(name = "ACTIVE")
     private boolean active;
 
-    @NotNull
+    //@NotNull
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime created;
 

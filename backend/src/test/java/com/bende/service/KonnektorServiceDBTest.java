@@ -5,6 +5,7 @@ import com.bende.excpetions.ResourceNotFoundException;
 import com.bende.persistence.model.Konnektor;
 import com.bende.persistence.repos.KonnektorRepository;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -70,12 +71,12 @@ public class KonnektorServiceDBTest {
 
     @Test
     @Sql({"/test_data.sql"})
-    void saveKonnektorHostname() {
+    void updateKonnektor() {
         Konnektor konnektor = konnektorService.getKonnektor(1L);
-        konnektorService.updateKonnektorHostname(1L, "127.3.3.3");
+        givenKonnektorToBeUpdated(konnektor);
+        konnektorService.updateKonnektor(konnektor);
         Konnektor konnektorUpdated = konnektorService.getKonnektor(1L);
-        Assertions.assertNotNull(konnektor);
-        Assertions.assertTrue(konnektorUpdated.getHostname().equals("127.3.3.3"));
+        thenKonnektorUpdated(konnektorUpdated);
     }
 
 
@@ -91,6 +92,26 @@ public class KonnektorServiceDBTest {
         int lastIdx = lista.size() - 1;
         Konnektor lastElement = lista.get(lastIdx);
         Assertions.assertTrue(lastElement.getHostname().equals(HOSTNAME));
+    }
+
+    private void givenKonnektorToBeUpdated(Konnektor konn) {
+        konn.setHostname("127.3.3.3");
+        konn.setHardwareVersion("hw.1.1");
+        konn.setFirmwareVersion(null);
+        konn.setSerialNumber(null);
+        konn.setActive(true);
+        LocalDateTime aDateTime = LocalDateTime.of(2015, Month.JULY, 29, 19, 30, 40);
+        konn.setCreated(aDateTime);
+    }
+
+    private void thenKonnektorUpdated(Konnektor konn) {
+        Assertions.assertNotNull(konnektor);
+        Assertions.assertTrue(konn.getHostname().equals("127.3.3.3"));
+        Assertions.assertTrue(konn.getHardwareVersion().equals("hw.1.1"));
+        Assertions.assertNull(konn.getFirmwareVersion());
+        Assertions.assertNull(konn.getSerialNumber());
+        Assertions.assertTrue(konn.isActive());
+        Assertions.assertTrue(konn.getCreated().getYear() == 2015);
     }
 
 }

@@ -30,7 +30,7 @@ export class KonnektorModifyComponent implements OnInit {
   }
 
   public onSubmit(): void {
-
+    console.table(this.konnektorForm);
 
   }
 

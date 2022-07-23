@@ -76,14 +76,14 @@ paths:
         404:
           description: not konnektors found
     put:
-      operationId: updateKonnektorHostname
-      summary: Update the konnektors hostname
+      operationId: updateKonnektor
+      summary: Update the konnektors properties
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateKonnektorHostnameRequestDTO'
+              $ref: '#/components/schemas/KonnektorDTO'
       responses:
         204:
           description: Konnektors data changed successfully
@@ -225,7 +225,7 @@ components:
         timestamp:
           type: string
           format: date-time
-    UpdateKonnektorHostnameRequestDTO:
+    UpdateKonnektorRequestDTO:
       type: object
       properties:
         konnektorId:
@@ -233,6 +233,17 @@ components:
           format: int64
         hostname:
           type: string
+        serialNumber:
+          type: string
+        firmwareVersion:
+          type: string
+        hardwareVersion:
+          type: string
+        active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
       required:
         - konnektorId
     CreateAuditLogRequestDTO:

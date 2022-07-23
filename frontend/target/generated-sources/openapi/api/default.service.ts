@@ -30,8 +30,6 @@ import { CreateAuditLogRequestDTO } from '../model/createAuditLogRequestDTO';
 import { EmployeesResponseDTO } from '../model/employeesResponseDTO';
 // @ts-ignore
 import { KonnektorDTO } from '../model/konnektorDTO';
-// @ts-ignore
-import { UpdateKonnektorHostnameRequestDTO } from '../model/updateKonnektorHostnameRequestDTO';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -542,17 +540,17 @@ export class DefaultService {
     }
 
     /**
-     * Update the konnektors hostname
-     * @param updateKonnektorHostnameRequestDTO 
+     * Update the konnektors properties
+     * @param konnektorDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateKonnektorHostname(updateKonnektorHostnameRequestDTO: UpdateKonnektorHostnameRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<any>;
-    public updateKonnektorHostname(updateKonnektorHostnameRequestDTO: UpdateKonnektorHostnameRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpResponse<any>>;
-    public updateKonnektorHostname(updateKonnektorHostnameRequestDTO: UpdateKonnektorHostnameRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpEvent<any>>;
-    public updateKonnektorHostname(updateKonnektorHostnameRequestDTO: UpdateKonnektorHostnameRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined,}): Observable<any> {
-        if (updateKonnektorHostnameRequestDTO === null || updateKonnektorHostnameRequestDTO === undefined) {
-            throw new Error('Required parameter updateKonnektorHostnameRequestDTO was null or undefined when calling updateKonnektorHostname.');
+    public updateKonnektor(konnektorDTO: KonnektorDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<any>;
+    public updateKonnektor(konnektorDTO: KonnektorDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpResponse<any>>;
+    public updateKonnektor(konnektorDTO: KonnektorDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpEvent<any>>;
+    public updateKonnektor(konnektorDTO: KonnektorDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined,}): Observable<any> {
+        if (konnektorDTO === null || konnektorDTO === undefined) {
+            throw new Error('Required parameter konnektorDTO was null or undefined when calling updateKonnektor.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -591,7 +589,7 @@ export class DefaultService {
         }
 
         return this.httpClient.put<any>(`${this.configuration.basePath}/konnektors`,
-            updateKonnektorHostnameRequestDTO,
+            konnektorDTO,
             {
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
