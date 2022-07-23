@@ -66,9 +66,8 @@
       <ngx-datatable-column [width]="200" name="Created" prop="created" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
       <ngx-datatable-column [width]="95" class="pl-4" name="Active" prop="active" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
       <ngx-datatable-column [width]="100" class="pl-4">
-        <ng-template ngx-datatable-cell-template>
-
-         <app-konnektor-dropdown></app-konnektor-dropdown>
+        <ng-template ngx-datatable-cell-template let-row="row">
+         <app-konnektor-dropdown [konnektor]="row"></app-konnektor-dropdown>
         </ng-template>
 
       </ngx-datatable-column>

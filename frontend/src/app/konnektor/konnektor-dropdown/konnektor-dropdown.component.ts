@@ -1,11 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
+import {KonnektorDTO} from "../../../../target/generated-sources/openapi";
 
 @Component({
   selector: 'app-konnektor-dropdown',
   templateUrl: './konnektor-dropdown.component.html'
 })
 export class KonnektorDropdownComponent implements  OnInit {
+
+  @Input()
+  konnektor: KonnektorDTO;
 
   constructor(private readonly router: Router) {
   }
@@ -14,10 +18,17 @@ export class KonnektorDropdownComponent implements  OnInit {
   }
 
   public onRemove(): void {
-    this.router.navigate(['/konnektor/remove']);
+    this.router.navigate(['/konnektor/', this.konnektor.id, 'remove']);
   }
 
   public onModify(): void {
-    this.router.navigate(['/konnektor/modify']);
+    console.log(this.konnektor.id);
+    // http://localhost:4200/konnektor/5/modify
+    this.router.navigate(['/konnektor/', this.konnektor.id, 'modify']);
   }
+
+  public onNew(): void {
+    this.router.navigate(['/konnektor/new']);
+  }
+
 }

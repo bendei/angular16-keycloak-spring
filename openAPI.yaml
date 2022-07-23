@@ -93,7 +93,6 @@ paths:
           description: Konnektor not found
         500:
           description: Server Error
-
     post:
       description: creates a new konnektor
       operationId:  createKonnektor

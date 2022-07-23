@@ -9,11 +9,15 @@ export const konnektorRoutes: Routes = [
     component: TemplateComponent,
     children: [
       {
-        path: 'remove',
+        path: ':id/remove',
         component: KonnektorRemoveComponent
       },
       {
-        path: 'modify',
+        path: ':id/modify',
+        component: KonnektorModifyComponent
+      },
+      {
+        path: 'new',
         component: KonnektorModifyComponent
       }
     ]
