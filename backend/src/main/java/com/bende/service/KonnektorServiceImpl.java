@@ -54,4 +54,11 @@ public class KonnektorServiceImpl implements KonnektorService {
        konnektorRepository.save(konnektor);
     }
 
+    @Override
+    public void updateKonnektorHostname(final Long id, final String hostname) {
+        Konnektor konn = konnektorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden"));
+        konn.setHostname(hostname);
+        konnektorRepository.save(konn);
+    }
+
 }

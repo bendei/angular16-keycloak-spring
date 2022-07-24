@@ -6,7 +6,6 @@ import com.bende.api.model.AuditLogMessageDTO;
 import com.bende.api.model.CreateAuditLogRequestDTO;
 import com.bende.api.model.EmployeesResponseDTO;
 import com.bende.api.model.KonnektorDTO;
-import com.bende.api.model.UpdateKonnektorRequestDTO;
 import com.bende.persistence.model.AuditLog;
 import com.bende.persistence.model.Employee;
 import com.bende.persistence.model.Konnektor;

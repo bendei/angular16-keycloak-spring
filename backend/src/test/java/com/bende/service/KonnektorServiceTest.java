@@ -1,8 +1,8 @@
 package com.bende.service;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-
 import com.bende.excpetions.ResourceNotFoundException;
 import com.bende.persistence.model.Konnektor;
 import com.bende.persistence.repos.KonnektorRepository;
@@ -20,6 +20,8 @@ import org.mockito.Spy;
 public class KonnektorServiceTest {
 
     private static final String HOSTNAME = "127.0.0.1";
+
+    // we use InjectMocks because service has a repository dependency (mockito tries to inject repsoitory mocks by cunstructor injections than by property injection)
     @InjectMocks
     KonnektorServiceImpl konnektorService;
     @Mock
@@ -80,6 +82,22 @@ public class KonnektorServiceTest {
         // doReturn(2).when(konns).size();
         Assertions.assertTrue(!result.isEmpty());
         Assertions.assertTrue(result.size() == 2);
+    }
+
+    @Test
+    void updateKonnektorHostname_ThrowsException() {
+        when(konnektorRepository.findById(1L)).thenReturn(Optional.empty());
+        thenResourceNotFoundExceptionIsThrown();
+    }
+
+    @Test
+    void updateKonnektorHostname_Success() {
+        givenAKonnektor();
+        when(konnektorRepository.findById(1L)).thenReturn(Optional.of(konnektor));
+        when(konnektorRepository.save(any(Konnektor.class))).thenReturn(konnektor);
+        Assertions.assertEquals(konnektor.getHostname(), "127.3.3.3");
+        konnektorService.updateKonnektorHostname(konnektor.getId(), "127.3.3.4");
+        Assertions.assertEquals(konnektor.getHostname(), "127.3.3.4");
     }
 
     private void givenAKonnektor() {

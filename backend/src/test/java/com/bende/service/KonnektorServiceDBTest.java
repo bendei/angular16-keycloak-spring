@@ -23,8 +23,10 @@ public class KonnektorServiceDBTest {
     private static final String HOSTNAME = "127.0.0.1";
     @Mock
     Konnektor konnektor;
+    // a servicet nem mockoljuk ki mert valóban meg akarjuk hivni
     @Autowired
     KonnektorRepository konnektorRepository;
+    // a servicet nem mockoljuk ki mert valóban meg akarjuk hivni
     @Autowired
     KonnektorService konnektorService;
 
@@ -65,7 +67,8 @@ public class KonnektorServiceDBTest {
     @Test
     @Sql({"/test_data.sql"})
     void filterKonnektors() {
-        List<Konnektor> lista = konnektorService.filterKonnektors("127.0.0.3", "213232", "11.03", null, LocalDateTime.now());
+        List<Konnektor> lista = konnektorService.filterKonnektors("127.0.0.3", "213232", "11.03", null, null);
+        System.out.println("-----"+ lista.size());
         Assertions.assertTrue(lista.size() == 2);
     }
 
@@ -79,6 +82,26 @@ public class KonnektorServiceDBTest {
         thenKonnektorUpdated(konnektorUpdated);
     }
 
+    @Test
+    @Sql({"/test_data.sql"})
+    void updateKonnektorHostname_ThrowsException() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () ->
+            konnektorService.updateKonnektorHostname(11111L, "hhh")
+        );
+    }
+
+    @Test
+    @Sql({"/test_data.sql"})
+    void updateKonnektorHostname_Success() {
+        givenKonnektorFromDB();
+        konnektorService.updateKonnektorHostname(10L, "newhostname");
+        givenKonnektorFromDB();
+        Assertions.assertEquals(konnektor.getHostname(), "newhostname");
+    }
+
+    private void givenKonnektorFromDB() {
+        konnektor = konnektorService.getKonnektor(10L);
+    }
 
     private void givenAnUnsavedKonnektor() {
         konnektor = new Konnektor();

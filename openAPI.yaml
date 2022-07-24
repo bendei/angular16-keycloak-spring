@@ -27,6 +27,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
+    put:
+      operationId:  updateKonnektorHostname
+      summary: Update konnektor hostname
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KonnektorHostnameDTO'
+      responses:
+        204:
+          description: Konnektors hostname changed successfully
+        403:
+          description: Forbidden
+        404:
+          description: Konnektor not found
+        500:
+          description: Server Error
     delete:
       description: deleteing a konnektor
       operationId: deleteKonnektor
@@ -280,6 +298,13 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/AuditLogDTO"
+      required:
+        - hostname
+    KonnektorHostnameDTO:
+      type: object
+      properties:
+        hostname:
+          type: string
       required:
         - hostname
     ErrorDTO:

@@ -21,4 +21,6 @@ public interface KonnektorService {
 
     void updateKonnektor(Konnektor konn);
 
+    void updateKonnektorHostname(Long id, String hostname);
+
 }
