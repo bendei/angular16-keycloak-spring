@@ -7,7 +7,15 @@ import {of} from "rxjs";
 import {click} from "../../test-common/helper";
 import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 import {ToastService} from "../toast/toast.service";
+import {Component, Input} from "@angular/core";
 
+@Component({
+  selector: 'app-konnektor-dropdown',
+  template: ''
+})
+class DropdownComponentStub {
+  @Input() konnektor = { };
+}
 
 describe('KonnektorViewComponent', () => {
 
@@ -20,7 +28,7 @@ describe('KonnektorViewComponent', () => {
 
   beforeEach(async() => {
     await TestBed.configureTestingModule({
-      declarations: [KonnektorViewComponent],
+      declarations: [KonnektorViewComponent, DropdownComponentStub],
       providers: [
         {provide: DefaultService, useValue: defaultServiceSpy},
         {provide: ToastService, useValue: toastServiceSpy}
@@ -77,6 +85,11 @@ describe('KonnektorViewComponent', () => {
     thenTableRendered();
     flush();
   }));
+
+  fit('should update hostName only', () => {
+
+
+  });
 
   const whenComponentHasStarted = () => {
     fixture = TestBed.createComponent(KonnektorViewComponent);

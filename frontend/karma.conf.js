@@ -6,10 +6,12 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
+      require('karma-firefox-launcher'),
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
-
+      require('karma-junit-reporter'),
+      require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
@@ -25,20 +27,47 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/frontend'),
+      dir: require('path').join(__dirname, './coverage'),
       subdir: '.',
-      reporters: [
+      reports: [
         { type: 'html' },
-        { type: 'text-summary' }
-      ]
+        { type: 'text-summary' },
+        { type: 'cobertura' },
+        { type: 'lcovonly' },
+      ],
+      // https://github.com/karma-runner/karma-coverage/blob/HEAD/docs/configuration.md#check
+      check: {
+        // global coverage requirements
+        global: {
+          statements: 60,
+          branches: 50,
+          functions: 50,
+          lines: 50,
+          excludes: []
+        },
+        // coverage requirement for each file
+        each: {
+          excludes: [],
+        }
+      },
     },
-    reporters: ['progress', 'kjhtml'],
+    reporters: ['progress', 'junit', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
     singleRun: false,
-    restartOnFileChange: true
-  });
+    restartOnFileChange: true,
+    junitReporter: {
+      outputDir: '../target/unit-tests/reports',
+      outputFile: 'unit-test-webchannel.xml',
+      suite: 'webchannel',
+      useBrowserName: true,
+      nameFormatter: undefined,
+      classNameFormatter: undefined
+    },
+  },
+    );
+
 };

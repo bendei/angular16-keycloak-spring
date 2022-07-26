@@ -9,7 +9,7 @@ import {KonnektorDTO} from "../../../../target/generated-sources/openapi";
 export class KonnektorDropdownComponent implements  OnInit {
 
   @Input()
-  konnektor: KonnektorDTO;
+  konnektor!: KonnektorDTO;
 
   constructor(private readonly router: Router) {
   }
