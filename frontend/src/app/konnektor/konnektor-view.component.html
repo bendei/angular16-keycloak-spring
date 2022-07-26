@@ -14,7 +14,7 @@
         <input type="text" class="form-control mb-2 mr-sm-2" id="id" formControlName="id">
 
         <label class="mr-sm-2" for="hostname">Hostname</label>
-        <input type="text" class="form-control mb-2 mr-sm-2" id="hostname" formControlName="hostname" placeholder="no whitespaces">
+        <input type="text" class="form-control mb-2 mr-sm-2" id="hostName" formControlName="hostName" placeholder="no whitespaces">
         <div *ngIf="containsWhitespace()" class="text-danger d-block">Hostname darf keine Leerzeichen enthalten</div>
 
         <label class="mr-sm-2" for="serialNumber">Serial Number</label>
@@ -50,11 +50,14 @@
       <ngx-datatable-column [width]="200" name="Hostname" prop="hostname" [canAutoResize]="false" [sortable]="true">
         <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
           <span *ngIf="row.active && !isEditMode[rowIndex]">
-            {{row.hostname}}
+            {{row.hostName}}
             <b  (click)="editMode(rowIndex)">M</b>
           </span>
           <span *ngIf="isEditMode[rowIndex]">
-              <input type="text" class="form-control mb-2 mr-sm-2" id=`hostname${rowIndex}` [value]="row.hostname" (blur)="onUpdateHostname($event, rowIndex, row)">
+              <input type="text" class="form-control mb-2 mr-sm-2" id=`hostName${rowIndex}` [value]="row.hostName" (blur)="onUpdateHostname($event, rowIndex, row)">
+          </span>
+          <span *ngIf="!row.active">
+            {{row.hostName}}
           </span>
         </ng-template>
 

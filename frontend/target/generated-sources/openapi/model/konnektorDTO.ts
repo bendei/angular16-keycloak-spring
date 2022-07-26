@@ -14,7 +14,7 @@ import { AuditLogDTO } from './auditLogDTO';
 
 export interface KonnektorDTO { 
     id?: number;
-    hostname: string;
+    hostName: string;
     serialNumber?: string;
     firmwareVersion?: string;
     hardwareVersion?: string;

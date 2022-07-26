@@ -6,4 +6,5 @@ export * from './createAuditLogRequestDTO';
 export * from './employeesResponseDTO';
 export * from './errorDTO';
 export * from './konnektorDTO';
+export * from './konnektorHostnameDTO';
 export * from './updateKonnektorRequestDTO';

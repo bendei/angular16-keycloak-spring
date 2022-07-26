@@ -5,7 +5,6 @@
     "start": "ng serve",
     "start-hmr": "ng serve --hmr",
     "build": "ng build --prod",
-    "test": "ng test --progress=false --code-coverage",
     "test-ci": "npm run test -- --watch=false",
     "ts-lint": "ng lint",
     "compress": "node scripts/compress.js",

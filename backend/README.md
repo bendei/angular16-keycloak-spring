@@ -58,15 +58,18 @@ https://www.toptal.com/java/spring-boot-rest-api-error-handling
 
 unit testing with JUnit5 ( Jupiter): https://www.baeldung.com/junit-5
 
-// leirja, hogy mi a @Mock ill @InjectMocj stb, nagyon jó
+## leirja, hogy mi a @Mock ill @InjectMocj stb, nagyon jó
 https://www.arhohuttunen.com/junit-5-mockito/
 
-// @Spy
+## @Spy
 https://www.baeldung.com/mockito-annotations
 
-// @Mock vagy @Spy ??:
+## @Mock vagy @Spy ??:
 https://stackoverflow.com/questions/15052984/what-is-the-difference-between-mocking-and-spying-when-using-mockito#:~:text=about%20partial%20mocks.-,Mockito.,passed%20to%20spy()%20method.
 
+## verify, mikor gyakorlatilag nincs mire assertelni, de a method hivásokat meg akarjuk csinálni: 
+https://www.youtube.com/watch?v=lbN2nfsC7C4
+KonnektorServiceTest deleteKonnektor_Success
 
 
 

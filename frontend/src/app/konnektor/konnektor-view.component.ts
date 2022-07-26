@@ -27,12 +27,12 @@ export class KonnektorViewComponent implements OnInit {
 
   public filterForm(): void {
     const id = this.konnektorFilterForm.get('id')?.value;
-    const hostname = this.konnektorFilterForm.get('hostname')?.value;
+    const hostName = this.konnektorFilterForm.get('hostName')?.value;
     const serialNumber = this.konnektorFilterForm.get('serialNumber')?.value;
     const firmwareVersion = this.konnektorFilterForm.get('firmwareVersion')?.value;
     const hardwareVersion = this.konnektorFilterForm.get('hardwareVersion')?.value;
     const created: string = '';
-    this.loadKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created);
+    this.loadKonnektors(hostName, serialNumber, firmwareVersion, hardwareVersion, created);
   }
 
   public clearForm(): void {
@@ -40,7 +40,7 @@ export class KonnektorViewComponent implements OnInit {
   }
 
   public containsWhitespace(): boolean {
-    return (this.konnektorFilterForm.get("hostname").value?.indexOf(' ')) > 0;
+    return (this.konnektorFilterForm.get("hostName").value?.indexOf(' ')) > 0;
   }
 
   public editMode(index: string) {
@@ -49,8 +49,11 @@ export class KonnektorViewComponent implements OnInit {
 
   public onUpdateHostname(event: any, rowIndex: string, dto: KonnektorDTO): void {
     this.isEditMode[rowIndex] = false;
-    let reqDto: KonnektorDTO = {id: dto.id, hostname : event.target.value};
-    this.defaultService.updateKonnektor(reqDto).subscribe(
+    const reqDto: KonnektorDTO = {
+      id: dto.id,
+      hostName : event.target.value
+    };
+    this.defaultService.updateKonnektorHostname(String(reqDto.id), reqDto).subscribe(
       () => {
         this.filterForm();
         this.toast.success("konnektor hostname updated")
@@ -71,7 +74,7 @@ export class KonnektorViewComponent implements OnInit {
   private cretaeForm(): void {
     this.konnektorFilterForm = this.formBuilder.group({
       id: [''],
-      hostname: [''],
+      hostName: [''],
       serialNumber: [''],
       firmwareVersion: [''],
       hardwareVersion: ['']

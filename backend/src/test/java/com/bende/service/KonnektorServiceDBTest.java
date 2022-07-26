@@ -99,6 +99,15 @@ public class KonnektorServiceDBTest {
         Assertions.assertEquals(konnektor.getHostname(), "newhostname");
     }
 
+    @Test
+    @Sql({"/test_data.sql"})
+    void deleteKonnektor_Success() {
+        givenKonnektorFromDB();
+        Assertions.assertNotNull(konnektor);
+        konnektorService.deleteKonnektor(konnektor.getId());
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> konnektorService.getKonnektor(10L));
+    }
+
     private void givenKonnektorFromDB() {
         konnektor = konnektorService.getKonnektor(10L);
     }

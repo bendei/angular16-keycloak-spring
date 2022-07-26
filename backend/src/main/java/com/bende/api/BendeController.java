@@ -6,6 +6,7 @@ import com.bende.api.model.AuditLogMessageDTO;
 import com.bende.api.model.CreateAuditLogRequestDTO;
 import com.bende.api.model.EmployeesResponseDTO;
 import com.bende.api.model.KonnektorDTO;
+import com.bende.api.model.KonnektorHostnameDTO;
 import com.bende.persistence.model.AuditLog;
 import com.bende.persistence.model.Employee;
 import com.bende.persistence.model.Konnektor;
@@ -107,7 +108,7 @@ public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, K
     @ApiOperation("")
     @CrossOrigin("http://localhost:4200")
     public ResponseEntity<Void> createKonnektor(KonnektorDTO konnektor) {
-        konnektorRepository.save(BendeController.convertKonnektorDto(konnektor));
+        konnektorRepository.save(BendeController.convertKonnektorDto(konnektor, null));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -123,18 +124,27 @@ public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, K
     @Override
     @ApiOperation("updating konnektors - PUT")
     @CrossOrigin("http://localhost:4200")
-    public ResponseEntity<Void> updateKonnektor(KonnektorDTO dto) {
-        Konnektor konn = convertKonnektorDto(dto);
+    public ResponseEntity<Void> updateKonnektor(String konnektorId, KonnektorDTO dto) {
+        Konnektor konn = convertKonnektorDto(dto, konnektorId);
         konnektorService.updateKonnektor(konn);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-/*
+
     @Override
-    @ApiImplicitParam("delete ")
+    @ApiOperation("updating konnektor hostname - PATCH")
+    @CrossOrigin("http://localhost:4200")
+    public ResponseEntity<Void> updateKonnektorHostname(String konnektorId, KonnektorHostnameDTO konnektorHostnameDTO) {
+        konnektorService.updateKonnektorHostname(Long.parseLong(konnektorId), konnektorHostnameDTO.getHostName());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    @ApiOperation("udeletes a konnektor")
+    @CrossOrigin("http://localhost:4200")
     public ResponseEntity<Void> deleteKonnektor(final String konnektorId) {
         konnektorService.deleteKonnektor(Long.valueOf(konnektorId));
         return new ResponseEntity<>(HttpStatus.OK);
-    }*/
+    }
 
     private static EmployeesResponseDTO convertToEmployeeDTO(Employee emp) {
         EmployeesResponseDTO dto = new EmployeesResponseDTO();
@@ -155,10 +165,14 @@ public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, K
         return dto;
     }
 
-    private static Konnektor convertKonnektorDto(KonnektorDTO dto) {
+    private static Konnektor convertKonnektorDto(KonnektorDTO dto, String konnektorId) {
         Konnektor konn = new Konnektor();
-        konn.setId(dto.getId().longValue());
-        konn.setHostname(dto.getHostname());
+        if (konnektorId == null) {
+            konn.setId(Long.getLong(konnektorId));
+        } else {
+            konn.setId(dto.getId().longValue());
+        }
+        konn.setHostname(dto.getHostName());
         konn.setSerialNumber(dto.getSerialNumber());
         konn.setFirmwareVersion(dto.getFirmwareVersion());
         konn.setHardwareVersion(dto.getHardwareVersion());
@@ -170,7 +184,7 @@ public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, K
     private static KonnektorDTO convertKonnektor(Konnektor ko) {
         KonnektorDTO dto = new KonnektorDTO();
         dto.setId(ko.getId().intValue());
-        dto.setHostname(ko.getHostname());
+        dto.setHostName(ko.getHostname());
         dto.serialNumber(ko.getSerialNumber());
         dto.setFirmwareVersion(ko.getFirmwareVersion());
         dto.setHardwareVersion(ko.getHardwareVersion());

@@ -2,6 +2,7 @@ package com.bende.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import com.bende.excpetions.ResourceNotFoundException;
 import com.bende.persistence.model.Konnektor;
@@ -40,13 +41,13 @@ public class KonnektorServiceTest {
     @Test
     void getKonnektor_returnsAKonnektor() {
         givenAKonnektor();
-        when(konnektorRepository.findById(1L)).thenReturn(Optional.of(konnektor));
+        when(konnektorRepository.findById(any(Long.class))).thenReturn(Optional.of(konnektor));
         thenKonnektorIsReturned();
     }
 
     @Test
     void GetKonnektor_shouldThrowResourceNotFoundException() {
-        when(konnektorRepository.findById(1L)).thenReturn(Optional.empty());
+        when(konnektorRepository.findById(any(Long.class))).thenReturn(Optional.empty());
         thenResourceNotFoundExceptionIsThrown();
     }
 
@@ -62,14 +63,14 @@ public class KonnektorServiceTest {
     void deleteKonnektor_Successfuly() {
         givenAKonnektor();
         when(konnektorRepository.findById(1L)).thenReturn(Optional.of(konnektor));
-        doNothing().when(konnektorRepository).deleteById(1L);
+        doNothing().when(konnektorRepository).deleteById(any(Long.class));
         konnektorService.deleteKonnektor(1L);
     }
 
     @Test
     void deleteKonnektor_whenKonnektorNotFound_ThrowsException() {
         when(konnektorRepository.findById(1L)).thenReturn(Optional.empty());
-        doNothing().when(konnektorRepository).deleteById(1L);
+        doNothing().when(konnektorRepository).deleteById(any(Long.class));
         thenResourceNotFoundExceptionIsThrown();
     }
 
@@ -98,6 +99,15 @@ public class KonnektorServiceTest {
         Assertions.assertEquals(konnektor.getHostname(), "127.3.3.3");
         konnektorService.updateKonnektorHostname(konnektor.getId(), "127.3.3.4");
         Assertions.assertEquals(konnektor.getHostname(), "127.3.3.4");
+    }
+
+    @Test
+    void deleteKonnektor_Success() {
+        when(konnektorRepository.findById(1L)).thenReturn(Optional.of(konnektor));
+        doNothing().when(konnektorRepository).deleteById(any(Long.class));
+        konnektorService.deleteKonnektor(1L);
+        verify(konnektorRepository).findById(1L);
+        verify(konnektorRepository).deleteById(1L);
     }
 
     private void givenAKonnektor() {

@@ -27,7 +27,7 @@ describe('KonnektorViewComponent', () => {
     defaultServiceSpy.getAllKonnektors.and.returnValue(of(konnektors));
   });
 
-  it('initial loading konnektors successful', fakeAsync(() => {
+  fit('initial loading konnektors successful', fakeAsync(() => {
     givenKonnektors();                // beallitjuk a spy altal visszaadando értékeket
     whenComponentHasStarted();        // és ne a befaoreEach()ben mert akkor a ngInit lefut közben még a spy nem is tud értékeket visszaadni, igy viszont igen
     tick();                           // várjuk be a Promise.of() visszaad: simulates the passage of time until all pending asynchronous activities finish
@@ -56,19 +56,19 @@ describe('KonnektorViewComponent', () => {
 
   it('should clear form', fakeAsync(() => {
     whenComponentHasStarted();
-    whenInputSet("hostname", "hhh");
+    whenInputSet("hostName", "hhh");
     whenInputSet("serialNumber", "sss");
     whenInputSet("firmwareVersion", "fff");
     whenInputSet("id", "111");
     whenClearButtonClicked();
-    thenInputCleared("hostname");
+    thenInputCleared("hostName");
     thenInputCleared("serialNumber");
     thenInputCleared("firmwareVersion");
     thenInputCleared("id");
     flush();
   }));
 
-  it('should show table of 2 rows', fakeAsync(() => {
+  it('should show table of 5 rows', fakeAsync(() => {
     givenKonnektorsForFiltering();
     whenComponentHasStarted();
     tick();
@@ -121,7 +121,7 @@ describe('KonnektorViewComponent', () => {
     konnektors.length = 0;  // mindig töröljuk a arrayt
     konnektors.push({
       id: 1,
-      hostname: '127.0.0.1',
+      hostName: '127.0.0.1',
       serialNumber: '213231',
       firmwareVersion: '21.11',
       hardwareVersion: '11.11',
@@ -131,7 +131,7 @@ describe('KonnektorViewComponent', () => {
     konnektors.push(
     {
       id: 2,
-      hostname: '127.0.0.2',
+      hostName: '127.0.0.2',
       serialNumber: '213232',
       firmwareVersion: '21.12',
       hardwareVersion: '11.12',
@@ -144,7 +144,7 @@ describe('KonnektorViewComponent', () => {
     konnektors.length = 0;  // mindig töröljuk a arrayt
     konnektors.push({
         id: 1,
-        hostname: '127.0.0.1',
+        hostName: '127.0.0.1',
         serialNumber: '213231',
         firmwareVersion: '21.11',
         hardwareVersion: '11.11',

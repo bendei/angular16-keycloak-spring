@@ -30,6 +30,8 @@ import { CreateAuditLogRequestDTO } from '../model/createAuditLogRequestDTO';
 import { EmployeesResponseDTO } from '../model/employeesResponseDTO';
 // @ts-ignore
 import { KonnektorDTO } from '../model/konnektorDTO';
+// @ts-ignore
+import { KonnektorHostnameDTO } from '../model/konnektorHostnameDTO';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -540,15 +542,19 @@ export class DefaultService {
     }
 
     /**
-     * Update the konnektors properties
+     * Update the complete konnektor
+     * @param konnektorId 
      * @param konnektorDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateKonnektor(konnektorDTO: KonnektorDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<any>;
-    public updateKonnektor(konnektorDTO: KonnektorDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpResponse<any>>;
-    public updateKonnektor(konnektorDTO: KonnektorDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpEvent<any>>;
-    public updateKonnektor(konnektorDTO: KonnektorDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined,}): Observable<any> {
+    public updateKonnektor(konnektorId: string, konnektorDTO: KonnektorDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<any>;
+    public updateKonnektor(konnektorId: string, konnektorDTO: KonnektorDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpResponse<any>>;
+    public updateKonnektor(konnektorId: string, konnektorDTO: KonnektorDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpEvent<any>>;
+    public updateKonnektor(konnektorId: string, konnektorDTO: KonnektorDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined,}): Observable<any> {
+        if (konnektorId === null || konnektorId === undefined) {
+            throw new Error('Required parameter konnektorId was null or undefined when calling updateKonnektor.');
+        }
         if (konnektorDTO === null || konnektorDTO === undefined) {
             throw new Error('Required parameter konnektorDTO was null or undefined when calling updateKonnektor.');
         }
@@ -588,8 +594,73 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/konnektors`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/konnektors/${encodeURIComponent(String(konnektorId))}`,
             konnektorDTO,
+            {
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * updates hostname only
+     * @param konnektorId 
+     * @param konnektorHostnameDTO 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public updateKonnektorHostname(konnektorId: string, konnektorHostnameDTO: KonnektorHostnameDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<any>;
+    public updateKonnektorHostname(konnektorId: string, konnektorHostnameDTO: KonnektorHostnameDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpResponse<any>>;
+    public updateKonnektorHostname(konnektorId: string, konnektorHostnameDTO: KonnektorHostnameDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpEvent<any>>;
+    public updateKonnektorHostname(konnektorId: string, konnektorHostnameDTO: KonnektorHostnameDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined,}): Observable<any> {
+        if (konnektorId === null || konnektorId === undefined) {
+            throw new Error('Required parameter konnektorId was null or undefined when calling updateKonnektorHostname.');
+        }
+        if (konnektorHostnameDTO === null || konnektorHostnameDTO === undefined) {
+            throw new Error('Required parameter konnektorHostnameDTO was null or undefined when calling updateKonnektorHostname.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/konnektors/${encodeURIComponent(String(konnektorId))}`,
+            konnektorHostnameDTO,
             {
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
