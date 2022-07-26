@@ -16,6 +16,7 @@ model/createAuditLogRequestDTO.ts
 model/employeesResponseDTO.ts
 model/errorDTO.ts
 model/konnektorDTO.ts
+model/konnektorHostnameDTO.ts
 model/models.ts
-model/updateKonnektorHostnameRequestDTO.ts
+model/updateKonnektorRequestDTO.ts
 variables.ts
