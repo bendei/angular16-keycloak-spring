@@ -6,6 +6,7 @@ import {DefaultService, KonnektorDTO} from "../../../target/generated-sources/op
 import {of} from "rxjs";
 import {click} from "../../test-common/helper";
 import {NgxDatatableModule} from "@swimlane/ngx-datatable";
+import {ToastService} from "../toast/toast.service";
 
 
 describe('KonnektorViewComponent', () => {
@@ -14,20 +15,22 @@ describe('KonnektorViewComponent', () => {
   let fixture: ComponentFixture<KonnektorViewComponent>;
 
   const defaultServiceSpy = createSpyObj('DefaultService', ['getAllKonnektors']);
+  const toastServiceSpy = createSpyObj('ToastService', ['error', 'success'])
   let konnektors: KonnektorDTO[] = [];
 
   beforeEach(async() => {
     await TestBed.configureTestingModule({
       declarations: [KonnektorViewComponent],
       providers: [
-        {provide: DefaultService, useValue: defaultServiceSpy}
+        {provide: DefaultService, useValue: defaultServiceSpy},
+        {provide: ToastService, useValue: toastServiceSpy}
       ],
       imports: [FormsModule, ReactiveFormsModule, NgxDatatableModule]
     }).compileComponents();
     defaultServiceSpy.getAllKonnektors.and.returnValue(of(konnektors));
   });
 
-  fit('initial loading konnektors successful', fakeAsync(() => {
+  it('initial loading konnektors successful', fakeAsync(() => {
     givenKonnektors();                // beallitjuk a spy altal visszaadando értékeket
     whenComponentHasStarted();        // és ne a befaoreEach()ben mert akkor a ngInit lefut közben még a spy nem is tud értékeket visszaadni, igy viszont igen
     tick();                           // várjuk be a Promise.of() visszaad: simulates the passage of time until all pending asynchronous activities finish
@@ -49,7 +52,6 @@ describe('KonnektorViewComponent', () => {
     whenComponentHasStarted();
     whenInputSet("serialNumber", "213231");
     whenFilterButtonClicked();
-
     thenSingleKonnektorFound();
     flush();              // https://stackoverflow.com/questions/58416969/angular-karma-unit-test-error-1-timers-still-in-the-queue
   }));
