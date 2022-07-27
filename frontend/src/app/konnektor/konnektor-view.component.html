@@ -1,8 +1,6 @@
-
 <ng-template #notloaded>
   Wird geladen...
 </ng-template>
-
 
 <ng-template #loaded>
   <div class="card">
@@ -37,7 +35,7 @@
 
   <div  class="card mt-3">
     <div class="card-body">
-    <ngx-datatable #konnektorDataTable
+    <ngx-datatable #konnektorDataTable id="konnektorDataTable"
                    [columnMode]="'force'"
                    [messages]="{emptyMessage: 'Keine Daten vorhanden'}"
                    [headerHeight]="headerHeight"
@@ -51,10 +49,10 @@
         <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
           <span *ngIf="row.active && !isEditMode[rowIndex]">
             {{row.hostName}}
-            <b  (click)="editMode(rowIndex)">M</b>
+            <b  id="editClicker" (click)="editMode(rowIndex)">M</b>
           </span>
           <span *ngIf="isEditMode[rowIndex]">
-              <input type="text" class="form-control mb-2 mr-sm-2" id=`hostName${rowIndex}` [value]="row.hostName" (blur)="onUpdateHostname($event, rowIndex, row)">
+              <input type="text" class="form-control mb-2 mr-sm-2" id=`updateHostName${rowIndex}` [value]="row.hostName" (blur)="onUpdateHostname($event, rowIndex, row)">
           </span>
           <span *ngIf="!row.active">
             {{row.hostName}}
@@ -77,13 +75,7 @@
     </ngx-datatable>
   </div>
   </div>
-
-
 </ng-template>
-
-
-
-
 
 <div *ngIf="!loading; then loaded; else notloaded">
 </div>

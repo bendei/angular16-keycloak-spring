@@ -22,7 +22,7 @@ describe('KonnektorViewComponent', () => {
   let component: KonnektorViewComponent;
   let fixture: ComponentFixture<KonnektorViewComponent>;
 
-  const defaultServiceSpy = createSpyObj('DefaultService', ['getAllKonnektors']);
+  const defaultServiceSpy = createSpyObj('DefaultService', ['getAllKonnektors', 'updateKonnektorHostname']);
   const toastServiceSpy = createSpyObj('ToastService', ['error', 'success'])
   let konnektors: KonnektorDTO[] = [];
 
@@ -36,6 +36,7 @@ describe('KonnektorViewComponent', () => {
       imports: [FormsModule, ReactiveFormsModule, NgxDatatableModule]
     }).compileComponents();
     defaultServiceSpy.getAllKonnektors.and.returnValue(of(konnektors));
+    defaultServiceSpy.updateKonnektorHostname.and.returnValue(of(null));
   });
 
   it('initial loading konnektors successful', fakeAsync(() => {
@@ -86,10 +87,18 @@ describe('KonnektorViewComponent', () => {
     flush();
   }));
 
-  fit('should update hostName only', () => {
-
-
-  });
+  it('should update hostName only', fakeAsync(() => {
+    givenKonnektorsForFiltering();
+    whenComponentHasStarted();        // és ne a befaoreEach()ben mert akkor a ngInit lefut közben még a spy nem is tud értékeket visszaadni, igy viszont igen
+    expect(konnektors[0].hostName).toEqual("127.0.0.1");
+    const rowIndex = 0;
+    component.editMode(String(rowIndex));
+    fixture.detectChanges();  // kell ide , különben nem jelenik meg a input beviteli mező!!
+    const el = fixture.nativeElement.querySelector(`updateHostName${rowIndex}`);
+  // nem tudom a table ben lévő hostname inputjat referenciálni!! :(
+    component.onUpdateHostname({target: {value: 'newhostname'}}, '0', {hostName: "newhostname", id: 5});
+    flush();
+  }));
 
   const whenComponentHasStarted = () => {
     fixture = TestBed.createComponent(KonnektorViewComponent);
