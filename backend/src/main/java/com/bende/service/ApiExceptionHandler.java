@@ -22,7 +22,7 @@ public class ApiExceptionHandler {
     protected ResponseEntity handleEntityNotFound(
         ResourceNotFoundException ex) {
         ApiError apiError = new ApiError();
-        apiError.setStatus("NOT_FOUND");
+        apiError.setStatus("NOT_FOUND .. bizony");
         apiError.setMessage(ex.getMessage());
         apiError.setTimestamp(String.valueOf(LocalDateTime.now()));
         return buildResponseEntity(apiError, NOT_FOUND);

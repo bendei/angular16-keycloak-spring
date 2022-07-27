@@ -87,7 +87,7 @@ public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, K
             log.setTimestamp(LocalDateTime.now());
             log.setUser(request.getUser());
             log.setUserAction(UserActionType.valueOf(request.getUserAction().getValue()));
-            log.setKonnektor(konnektor.get());
+            //log.setKonnektor(konnektor.get());
             auditLogRepository.save(log);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
@@ -159,7 +159,7 @@ public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, K
         AuditLogDTO dto = new AuditLogDTO();
         dto.setId(log.getId().intValue());
         dto.setUser(log.getUser());
-        dto.setKonnektor(log.getKonnektor().getId().intValue());
+        //dto.setKonnektor(log.getKonnektor().getId().intValue());
         dto.setUserAction(AuditLogMessageDTO.valueOf(log.getUserAction().name()));
         dto.setTimestamp(log.getTimestamp());
         return dto;
@@ -190,11 +190,11 @@ public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, K
         dto.setHardwareVersion(ko.getHardwareVersion());
         dto.setActive(ko.isActive());
         dto.setCreated(ko.getCreated());
-        /*if (ko.getAuditlogs() != null && !ko.getAuditlogs().isEmpty()) {
+        if (ko.getAuditlogs() != null && !ko.getAuditlogs().isEmpty()) {
             List logs = new ArrayList<AuditLog>();
             logs.addAll(ko.getAuditlogs());
             dto.setAuditlogs(logs);
-        }*/
+        }
         return dto;
     }
 

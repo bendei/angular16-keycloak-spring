@@ -1,6 +1,7 @@
 package com.bende.persistence.model;
 
 import com.bende.support.LocalDateTimeConverter;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.time.LocalDateTime;
 import java.util.Set;
 import javax.persistence.Column;
@@ -50,7 +51,8 @@ public class Konnektor {
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime created;
 
-    @OneToMany(mappedBy="konnektor", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="konnektor", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private Set<AuditLog> auditlogs;
 
 

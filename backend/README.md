@@ -48,6 +48,9 @@ https://www.baeldung.com/jpa-and-or-criteria-predicates
 ## integration teszhez @SQL
 https://www.baeldung.com/spring-boot-data-sql-and-schema-sql
 
+## manytoone json stackoverflow exceptionra:
+https://ashishontech.xyz/jackson-json-infinite-recursion-problem/
+
 ---------------------------------------------------------------------------------------------------------
 ## ERROR HANDLING 
 

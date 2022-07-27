@@ -11,7 +11,7 @@ import {ToastService} from "../../toast/toast.service";
 export class KonnektorModifyComponent implements OnInit {
 
   private konnektorId;
-  private konnektor: KonnektorDTO;
+  public konnektor: KonnektorDTO;
   public konnektorForm!: FormGroup;
 
   constructor(private readonly fb: FormBuilder, private route: ActivatedRoute, private readonly defaultService: DefaultService, private readonly toast: ToastService,

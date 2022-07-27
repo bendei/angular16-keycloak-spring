@@ -1,0 +1,304 @@
+#### Angular Testing
+
+xit - nem hajtja végre
+fit - csak ezt hajtja végre
+
+// szuper teszt esetek
+https://angular.io/guide/testing-components-scenarios#use-a-page-object
+
+Testing with Mock:
+KITÜNŐ ALAP LEÍRÁS
+https://luardo.medium.com/testing-with-mocks-spies-using-createspyobj-in-angular-1e31bf7f6147
+
+...................
+
+TEST:
+MOCKING out dependencies:
+
+A. using STUB to mock a constructor parameter service
+
+	   let authServiceStub;
+
+	  beforeEach(waitForAsync(() => {
+
+		authServiceStub = {
+		  isLoggedIn: true,
+		  user: {name: 'Janika'},
+		  getRole: () => 'ADMIN'
+		};
+
+		TestBed.configureTestingModule({
+		  declarations: [KonnektorOverviewComponent],
+		  providers: [
+			USE_MOCK_APP_DEFAULT_SERVICE,
+			USE_MOCK_TOAST_SERVICE,
+			LoadingDialogService,
+			{  provide: AuthService,useValue: authServiceStub}],
+
+B.
+
+  let backend;
+  let toastService;
+
+   backend = {
+      remove1: () => 'OK'
+    };
+
+    toastService = {
+      success: () => {},
+      warning: () => {}
+    };
+
+    await TestBed.configureTestingModule({
+      declarations: [CardTerminalInfoComponent],
+      providers: [
+        { provide: DefaultService, useValue: backend },
+        { provide: ToastService,useValue: toastService
+        FONTOS:  }
+      ]
+    })
+      .compileComponents();
+  });
+
+
+C. spy objektum használata: (add-card-terminal.component.spec.ts
+	a spy arra való, hogy egy async call-t mockoljunk ki vele, mert a spy egy syncronous Observable-t ad vissza, aminek az értéke azonnal hozzáférhető
+	akkor használjuk, ha egy metódus Observablet vagy Promise-t ad vissza.
+
+	import createSpyObj = jasmine.createSpyObj;
+
+	describe('AddCardTerminalComponent', () => {...
+		const defaultServiceSpy = createSpyObj('DefaultService', ['getNetworkInterfaces']);		// getNetworkInterfaces ez a metódus amit kimockolunk
+...
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+		  declarations: [AddCardTerminalComponent],
+		  providers: [
+			{provide: DefaultService, useValue: defaultServiceSpy}
+		  ],
+		  imports: [FormsModule]
+		}).compileComponents();
+		defaultServiceSpy.getNetworkInterfaces.and.returnValue(of(networkInterfaceDtos));	// itt megadjuk, hogy mit adjon vissza a metódus hiváaskor,
+																							// egy Observablet ami dto-t tartalmaz
+	  });
+
+
+
+Kettő beforeEach: ha a tesztet nem csak a command cli-n keresztül futtatjuk le ( ng test), hanem pl: sonar teszt is, és a component külső fájlra hagyatkozik (html, css)
+akkor a compilernek a merevlemezről kell betöltenie a fájlokat, ami időigényes lehet és ezért asynchron módn megy. Ezért csinálunk egy async és egy sync beforeEach metódust:
+add-card-terminal.component.spec.ts
+https://angular.io/guide/testing-components-scenarios#use-a-page-object   ( Calling compileComponents() résznél )
+
+.....................
+TEST: https://angular.io/guide/testing-components-scenarios#use-a-page-object
+https://angular.io/guide/testing-components-basics
+
+fixture használata, ha Componentrol van szó: add-card-termianl-component.spec.ts
+
+FONTOS: itt vannak a jasmin helper metódusok, mint a    createSpyObj -> index.d.ts
+
+toast es modal dialog testelése: card-terminal.component.spec.ts
+1.	a toast-nál ha error-t akarunk tesztelni, akkor elég ha csak az bizonyitjuk hogy toastService.error metódusát error message objektummal hívtuk meg.
+2. ha leteszteljük, hogy a componens sikeresen http get-telte a adatokat a servertől
+3. a tesztelendő componen child componentjet, ha nem akarunk rajta semmit tesztelni akkor kimockoljuk: AddCardTerminalStubComponent:
+	spec.ts -ben: @Component({selector: 'app-add-card-terminal', template: ''})
+	class AddCardTerminalStubComponent {
+	}
+
+	template: `
+    <app-add-card-terminal (....
+............................
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4. querySelector haszbálata ( card-terminal-info.component.spec.ts )
+ <dd class="card-terminal-name">{{cardTerminalInfo.cardTerminalName}}</dd>
+	erre igy kérdezünk rá:
+-	this.fixture.nativeElement.querySelector('dd.card-terminal-name').textContent;
+-	.querySelector('thead tr');
+-	.querySelector('.coverage-summary tbody'),
+-	select option értékének lekérdezése:
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const option = element.querySelector('option')!;
+    expect(option.value).toContain(inet4Address);
+
+
+Ha datatable táblázatunk van a GUI-n és annak az adatait akarjuk letsztelni, hogy mit is irt ki: ( card-management.c.spec.ts )
+	expect(fixture.nativeElement.querySelectorAll('.datatable-body-row').length).toBe(1);
+    const textContent = fixture.nativeElement.querySelector('datatable-body').textContent;
+    expect(textContent).toContain(component.displayedCardInfos[0].cardTerminalHostname);
+    expect(textContent).toContain(component.displayedCardInfos[0].cardTerminalId);
+    expect(textContent).toContain(datePipe.transform(component.displayedCardInfos[0].cardInsertTime, 'dd.MM.yyyy HH:mm'));
+    expect(textContent).toContain(datePipe.transform(component.displayedCardInfos[0].certExpirationDate, 'dd.MM.yyyy HH:mm'));
+    expect(textContent).toContain(cardTypePipe.transform(component.displayedCardInfos[0].cardType));
+
+// diasbled a button
+ expect(fixture.nativeElement.querySelector('.btn-primary').disabled).toBeFalsy();
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+card-settings-dropdown.component.spec.ts
+
+Teszteljük a köv. metódust:
+
+	public async unblockPin(pinType: PinTypeEnum) {
+	 try {
+      const pinResultResponse = await this.backend.unblockPin(unblockPinRequest).toPromise();
+      if (pinResultResponse.pinResult === PinResultResponse.PinResultEnum.Ok) {
+        this.toast.success('PIN wurde entsperrt');
+      } else {
+        this.toast.error('PIN konnte nicht entsperrt werden');
+      }
+    } catch (error) {
+      this.toast.error('Bei der PIN Entsperrung ist ein Fehler aufgetreten');
+    } finally {
+      this.unblockPinRequestPending = false;
+    }
+
+
+1.	Ha a metódus amit tesztelnmi akarok throws an error és catch blockot akarjuk covergarelni:
+  egy error objektumot kreálunk és azt adjuk vissza:
+
+	it('should show error toast if error comes while PIN unblocked', fakeAsync(() => {
+		const err = {error: {name: 'error', message: ''}};
+		const errResponse = new Observable((observer: Observer<any>) => {
+		  observer.error(err);
+		});
+		defaultServiceSpy.unblockPin.and.returnValue(errResponse);   //FONTOS az errResponse nem csinálunk belőle Observable-t of-fal!!!
+
+ B. Ha a backend.unblockPin egy 400 hibával térhet vissza: (card-terminal-info.component.spec.ts )
+	// @ts-ignore*/
+	// itt gyakorlatilag megmondjuk, hogy a spyunkonmeghivjuk a unblockPin metódust, ami 400 error mesaget adjon vissza
+    backend.unblockPin.and.callFake(() => throwError({status: 400, error: 'card_terminal__remove_from_kvs_failed'}));// Az error propery értéke itt bármi lehet
+
+
+
+
+ha a metodus :
+it('should show success toast if PIN unblocked successfully', fakeAsync(() => {
+    givenOneKonnektorIsSet((CardInfoResponse.CardTypeEnum.Smcb));
+
+    const pinResultResponseDto: PinResultResponse = {pinResult: 'OK'};
+																		// igy példányosítjuk a return valuet a backend callból
+																		// ahol a unblockPin returns:  Observable<PinResultResponse>
+																		// ami egy interface tipus:
+																		export interface PinResultResponse {
+																			/**
+																			 * The card type
+																			 */
+																			pinResult: PinResultResponse.PinResultEnum;
+																		}
+
+
+    defaultServiceSpy.unblockPin.and.returnValue(of(pinResultResponseDto));	// mivek, ahogy fent is látszik ez egy Observable ezért of()-t használunk
+    component.unblockPin('CH');
+    tick();					// emiatt : await this.backend.unblockPin(unblockPinRequest).toPromise() kell várnunk és kell a fakeAsync is
+    expect(component).toBeTruthy();
+    expect(toastServiceSpy.success).toHaveBeenCalledWith(PIN_UNBLOCKED);
+  }));
+
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ https://scriptverse.academy/tutorials/jasmine-spyon.html
+spying on a function: amikor kimockoljuk az adott function hívását.
+spyOn felhasználási esetei:
+A spy replaces a real method with a stub.
+
+A. mikor egy metódust (calculate-t) akarjuk kimockolni:tehát itt megadjuk hogy ne a real calculatet hivja meg , hanem egy mock metódust az általunk megadot return értékkel
+	calculate(a, b) {
+		return valami;
+	}
+
+	saveData() {
+		let adata = this.calculate(2,4);
+		this.backend.save(adata);
+	}
+
+	it('', () => {
+		...
+		comp = fixture.componentInstance;
+		spyOn(comp, "calculate").and.return(1000);	// tehát itt megadjuk hogy ne a real calculatet hivja meg , hanem egy mock metódust az általunk megadot return értékkel
+		comp.saveData();
+	});
+
+B. egy event emittálást kimokolunk:  this.refreshCardTerminalsEvent.emit();
+	spyOn(component.refreshCardTerminalsEvent, 'emit');
+
+
+https://www.youtube.com/watch?v=l4oYN3TvKM4
+
+C. egyszerűen nem akarjuk, hogy a calculate() meghivódjon:
+	spyOn(component, "calculate");
+
+D. a spy meghívja a real metódust:
+	spyOn(component, "calculate").and.callThrough();
+
+E. spy a fake (stub) metódust hivja meg és visszaad egy értéket:
+	spyOn(component, "calculate").and.returnValue(obj);
+
+F. az egész spies functiont helyettesíthetjük:
+	spyOn(component, "calculate").and.callFake(function (arg) {
+		...valami mást csinál
+		console.log(arg);
+	});
+
+	vagy: spyOn(component, "calculate").and.callFake(() => {
+		console.log();
+	});
+
+	vagy ha Observablet adunk vissza:
+	spyOn(component, "calculate").and.callFake(() => {
+		return of({
+			"statusCode": 200
+		});
+	});
+	esetleg: defaultServiceSpy.pair.and.returnValue(of('OK'));
+
+
+	és akkor: expect(comp.data).toEqual({
+		"statusCode": 200
+	});
+
+https://scriptverse.academy/tutorials/jasmine-createspy-createspyobj.html
+createSpy() -> csak egy spy function van, amit kimokkolunk
+cerateSpyObj() -> ha több spy function van, amit kimokkolunk
+
+egy metódust mokkolunk ki, de nem érdekel hogy mit ad vissza, csak hogy meghvjuk: (TIC: working-environment.c.spec)
+ const exportFileServiceSpy = createSpyObj('ExportFileService', ['exportCsv', 'exportJson']);
+ expect(exportFileServiceSpy).toBeTruthy();
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Reactive form értékének beállítása testben: (add-card-terminal.comp.spec.ts  tiaas)
+componentben:
+   private createForm() {
+    this.pairCardTerminalForm = this.formBuilder.group({
+      network: ['', [Validators.required]],
+      ctIpAddress: ['', [ipAddressValidator()]],
+    });
+    this.pairCardTerminalForm.markAllAsTouched();
+  }
+
+és a karma testben:
+	component.pairCardTerminalForm.setValue({network: inet4Address, ctIpAddress: cardTerminalIp});
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+setTimeout hogy legyen ideje lefutni valaminek:(add-card-terminal.comp.spec.ts  tiias)
+
+private processedSuccessfulCardPairing() {
+    this.pairingRequestCompleted = true;
+    setTimeout(() => {
+      this.resetProcessMilestones();	// tetszőleges function
+    }, 1000);
+    if (this.successToast) {
+      this.toast.success('Kartenterminal erfolgreich hinzugefügt');
+    }
+}
+
+Testing input:
+https://angular.io/guide/testing-components-scenarios
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+nested components with @Input:
+java-angular-basic projektemben:
+KonnektorViewComponent;
+
