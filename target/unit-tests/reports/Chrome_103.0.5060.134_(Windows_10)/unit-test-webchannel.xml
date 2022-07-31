@@ -1,17 +1,19 @@
 <?xml version="1.0"?>
-<testsuite name="Chrome 103.0.5060.134 (Windows 10)" package="webchannel" timestamp="2022-07-27T08:03:32" id="0" hostname="DESKTOP-DEAGPB6" tests="6" errors="0" failures="0" time="0.479">
+<testsuite name="Chrome 103.0.5060.134 (Windows 10)" package="webchannel" timestamp="2022-07-31T07:37:25" id="0" hostname="DESKTOP-DEAGPB6" tests="9" errors="0" failures="0" time="0.44">
   <properties>
     <property name="browser.fullName" value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.134 Safari/537.36"/>
   </properties>
-  <testcase name="KonnektorViewComponent should filter by serialNumber with one konnektor" time="0.174" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorViewComponent"/>
-  <testcase name="KonnektorViewComponent should display initially loaded konnektors number" time="0.063" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorViewComponent"/>
-  <testcase name="KonnektorViewComponent should show table of 5 rows" time="0.06" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorViewComponent"/>
-  <testcase name="KonnektorViewComponent should clear form" time="0.06" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorViewComponent"/>
-  <testcase name="KonnektorViewComponent initial loading konnektors successful" time="0.053" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorViewComponent"/>
-  <testcase name="KonnektorViewComponent should update hostName only" time="0.069" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorViewComponent"/>
+  <testcase name="KonnektorViewComponent should display initially loaded konnektors number" time="0.129" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorViewComponent"/>
+  <testcase name="KonnektorViewComponent should filter by serialNumber with one konnektor" time="0.051" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorViewComponent"/>
+  <testcase name="KonnektorViewComponent initial loading konnektors successful" time="0.051" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorViewComponent"/>
+  <testcase name="KonnektorViewComponent should update hostName only" time="0.043" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorViewComponent"/>
+  <testcase name="KonnektorViewComponent should clear form" time="0.052" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorViewComponent"/>
+  <testcase name="KonnektorViewComponent should show table of 5 rows" time="0.05" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorViewComponent"/>
+  <testcase name="KonnektorModifyComponent should navigate back" time="0.032" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorModifyComponent"/>
+  <testcase name="KonnektorModifyComponent should prepopulate form fields correctly" time="0.015" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorModifyComponent"/>
+  <testcase name="KonnektorModifyComponent when on update error comes" time="0.017" classname="Chrome_103_0_5060_134_(Windows_10).webchannel.KonnektorModifyComponent"/>
   <system-out>
-    <![CDATA[Chrome 103.0.5060.134 (Windows 10) LOG: '...........clicked'
-
+    <![CDATA[
 ]]>
   </system-out>
   <system-err/>

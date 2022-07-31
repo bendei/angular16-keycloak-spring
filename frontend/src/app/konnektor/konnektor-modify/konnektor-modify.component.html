@@ -45,11 +45,8 @@
     </div>
   </div>
   <div class="form-group">
-
-    {{konnektor.auditlogs.length}}
-
-
   </div>
   <button type="submit" (click)="onSubmit()" class="btn btn-primary">Save</button>
-  <button style="margin-left: 10px;" ype="button" (click)="onBack()" class="btn btn-primary">Zurück</button>
+  <button id="back-button" style="margin-left: 10px;" (click)="onBack()" class="btn btn-primary">Zurück</button>
+  <button style="margin-left: 10px;" type="button"  (click)="open()" class="btn btn-primary" [disabled]="!konnektor?.auditlogs?.length" >Show auditlog modal</button>
 </form>

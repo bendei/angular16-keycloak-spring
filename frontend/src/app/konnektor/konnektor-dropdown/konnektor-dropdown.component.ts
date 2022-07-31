@@ -22,7 +22,6 @@ export class KonnektorDropdownComponent implements  OnInit {
   }
 
   public onModify(): void {
-    console.log(this.konnektor.id);
     // http://localhost:4200/konnektor/5/modify
     this.router.navigate(['/konnektor/', this.konnektor.id, 'modify']);
   }

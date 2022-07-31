@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DefaultService, KonnektorDTO} from "../../../../target/generated-sources/openapi";
 import {ToastService} from "../../toast/toast.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {AuditLogModal} from "../auditlog-modal/auditlog-modal.component";
 
 @Component({
   selector: 'app-konnektor-modify',
@@ -15,20 +17,17 @@ export class KonnektorModifyComponent implements OnInit {
   public konnektorForm!: FormGroup;
 
   constructor(private readonly fb: FormBuilder, private route: ActivatedRoute, private readonly defaultService: DefaultService, private readonly toast: ToastService,
-              private readonly router: Router) {
-    this.createForm();
+              private readonly router: Router, private modalService: NgbModal) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit() { this.createForm();
     this.konnektorId = this.route.snapshot.paramMap.get('id');
 
     if(this.konnektorId) {
-      this.defaultService.getKonnektor(this.konnektorId).subscribe(konnektor => {
-        this.konnektor = konnektor;
+      const konn = await this.defaultService.getKonnektor(this.konnektorId).toPromise();
+        this.konnektor = konn;
         this.loadFormData();
-      });
     }
-
   }
 
   public onSubmit(): void {
@@ -48,6 +47,12 @@ export class KonnektorModifyComponent implements OnInit {
 
   public onBack(): void {
     this.router.navigate(['/navigation/konnektor-view']);
+  }
+
+  open() {
+    const modalRef = this.modalService.open(AuditLogModal);
+    modalRef.componentInstance.name = 'World';
+    modalRef.componentInstance.auditlogs = this.konnektor.auditlogs;
   }
 
   private createForm(): void {
