@@ -1,7 +1,12 @@
 package com.bende.service;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.bende.Application;
 import com.bende.excpetions.ResourceNotFoundException;
+import com.bende.persistence.model.AuditLog;
 import com.bende.persistence.model.Konnektor;
 import com.bende.persistence.repos.KonnektorRepository;
 import java.time.LocalDateTime;
@@ -31,50 +36,49 @@ public class KonnektorServiceDBTest {
     KonnektorService konnektorService;
 
     @Test
-    void getKonnektor_returnsAKonnektor() {
+    public void testGetKonnektor_returnsAKonnektor() {
         Konnektor konnektor = konnektorService.getKonnektor(1L);
         Assertions.assertNotNull(konnektor);
         Assertions.assertEquals(konnektor.getHostname(), HOSTNAME);
     }
 
     @Test
-    void getKonnektor_shouldThrowException() {
+    public void testgetKonnektor_shouldThrowException() {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> konnektorService.getKonnektor(11111L));
     }
 
     @Test
-    void createKonnektor_shouldSuccessful() {
+    public void testCreateKonnektor_shouldSuccessful() {
         givenAnUnsavedKonnektor();
         konnektorService.createKonnektor(konnektor);
         thenNewKonnektorSaved();
     }
     @Test
     @Sql({"/test_data.sql"})
-    void getAllKonnektors() {
+    public void testGetAllKonnektors() {
         List<Konnektor> lista = konnektorService.getAllKonnektors(null, null, null, null);
-        Assertions.assertTrue(!lista.isEmpty());
+        Assertions.assertFalse(lista.isEmpty());
         Assertions.assertTrue(lista.size() >= 3);
     }
 
     @Test
     @Sql({"/test_data.sql"})
-    void findAllActiveAllKonnektors() {
+    public void testFindAllActiveAllKonnektors() {
         List<Konnektor> lista = konnektorService.findAllActiveKonnektors();
-        Assertions.assertTrue(!lista.isEmpty());
+        Assertions.assertFalse(lista.isEmpty());
         Assertions.assertTrue(lista.size() >= 2);
     }
 
     @Test
     @Sql({"/test_data.sql"})
-    void filterKonnektors() {
+    public void testFilterKonnektors() {
         List<Konnektor> lista = konnektorService.filterKonnektors("127.0.0.3", "213232", "11.03", null, null);
-        System.out.println("-----"+ lista.size());
-        Assertions.assertTrue(lista.size() == 2);
+        Assertions.assertEquals(lista.size(), 2);
     }
 
     @Test
     @Sql({"/test_data.sql"})
-    void updateKonnektor() {
+    public void testUpdateKonnektor() {
         Konnektor konnektor = konnektorService.getKonnektor(1L);
         givenKonnektorToBeUpdated(konnektor);
         konnektorService.updateKonnektor(konnektor);
@@ -84,7 +88,7 @@ public class KonnektorServiceDBTest {
 
     @Test
     @Sql({"/test_data.sql"})
-    void updateKonnektorHostname_ThrowsException() {
+    public void testUpdateKonnektorHostname_ThrowsException() {
         Assertions.assertThrows(ResourceNotFoundException.class, () ->
             konnektorService.updateKonnektorHostname(11111L, "hhh")
         );
@@ -92,7 +96,7 @@ public class KonnektorServiceDBTest {
 
     @Test
     @Sql({"/test_data.sql"})
-    void updateKonnektorHostname_Success() {
+    public void testUpdateKonnektorHostname_Success() {
         givenKonnektorFromDB();
         konnektorService.updateKonnektorHostname(10L, "newhostname");
         givenKonnektorFromDB();
@@ -101,7 +105,7 @@ public class KonnektorServiceDBTest {
 
     @Test
     @Sql({"/test_data.sql"})
-    void deleteKonnektor_Success() {
+    public void testDeleteKonnektor_Success() {
         givenKonnektorFromDB();
         Assertions.assertNotNull(konnektor);
         konnektorService.deleteKonnektor(konnektor.getId());
@@ -123,7 +127,7 @@ public class KonnektorServiceDBTest {
         Assertions.assertTrue(lista.size() >= 1);
         int lastIdx = lista.size() - 1;
         Konnektor lastElement = lista.get(lastIdx);
-        Assertions.assertTrue(lastElement.getHostname().equals(HOSTNAME));
+        Assertions.assertEquals(lastElement.getHostname(), HOSTNAME);
     }
 
     private void givenKonnektorToBeUpdated(Konnektor konn) {
@@ -138,12 +142,12 @@ public class KonnektorServiceDBTest {
 
     private void thenKonnektorUpdated(Konnektor konn) {
         Assertions.assertNotNull(konnektor);
-        Assertions.assertTrue(konn.getHostname().equals("127.3.3.3"));
-        Assertions.assertTrue(konn.getHardwareVersion().equals("hw.1.1"));
+        Assertions.assertEquals(konn.getHostname(), "127.3.3.3");
+        Assertions.assertEquals(konn.getHardwareVersion(), "hw.1.1");
         Assertions.assertNull(konn.getFirmwareVersion());
         Assertions.assertNull(konn.getSerialNumber());
         Assertions.assertTrue(konn.isActive());
-        Assertions.assertTrue(konn.getCreated().getYear() == 2015);
+        Assertions.assertEquals(konn.getCreated().getYear(), 2015);
     }
 
 }

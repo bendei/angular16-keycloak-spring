@@ -1,6 +1,5 @@
 package com.bende.api;
 
-import com.bende.api.model.ArtistResponseDTO;
 import com.bende.api.model.AuditLogDTO;
 import com.bende.api.model.AuditLogMessageDTO;
 import com.bende.api.model.CreateAuditLogRequestDTO;
@@ -14,6 +13,7 @@ import com.bende.persistence.model.UserActionType;
 import com.bende.persistence.repos.AuditLogRepository;
 import com.bende.persistence.repos.EmployeeRepository;
 import com.bende.persistence.repos.KonnektorRepository;
+import com.bende.service.AuditlogService;
 import com.bende.service.KonnektorService;
 import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 
 @RestController
-public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, KonnektorsApi {
+public class BendeController implements KonnektorsApi, AuditlogsApi {
 
     @Autowired
     KonnektorService konnektorService;
@@ -40,41 +40,17 @@ public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, K
     KonnektorRepository konnektorRepository;
 
     @Autowired
-    AuditLogRepository auditLogRepository;
+    AuditlogService auditlogService;
 
     @Override
-    public Optional<NativeWebRequest> getRequest() {
-        return ArtistsApi.super.getRequest();
-    }
-
-    @Override
-    @ApiOperation("the artists API")
+    @ApiOperation("the auditlogs API")
     @CrossOrigin("http://localhost:4200")
-    public ResponseEntity<List<ArtistResponseDTO>> getAllArtists() {
-        ArtistResponseDTO dto = new ArtistResponseDTO();
-        dto.setId(1);
-        dto.setUsername("bende www 3");
-        dto.setRole("role");
-        List<ArtistResponseDTO> lista = new ArrayList();
-        lista.add(dto);
+    public ResponseEntity<List<AuditLogDTO>> getAuditLogs() {
+        List<AuditLogDTO> lista = auditlogService.findAll().stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
-    @Override
-    @ApiOperation("the auditlog API")
-    @CrossOrigin("http://localhost:4200")
-    public ResponseEntity<List<AuditLogDTO>> getAuditLog() {
-        List<AuditLogDTO> lista = auditLogRepository.findAll().stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
-        return new ResponseEntity<>(lista, HttpStatus.OK);
-    }
 
-    @Override
-    @ApiOperation("")
-    @CrossOrigin("http://localhost:4200")
-    public ResponseEntity<List<EmployeesResponseDTO>> getAllEmployees() {
-        List<EmployeesResponseDTO> lista = employeeRepository.findAll().stream().map(au -> BendeController.convertToEmployeeDTO(au)).collect(Collectors.toList());
-        return new ResponseEntity<>(lista, HttpStatus.OK);
-    }
 
     @Override
     @ApiOperation(" create auditlog")
@@ -88,7 +64,7 @@ public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, K
             log.setUser(request.getUser());
             log.setUserAction(UserActionType.valueOf(request.getUserAction().getValue()));
             //log.setKonnektor(konnektor.get());
-            auditLogRepository.save(log);
+            auditlogService.createAuditLog(log);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -99,9 +75,14 @@ public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, K
     @ApiOperation("")
     @CrossOrigin("http://localhost:4200")
     public ResponseEntity<KonnektorDTO> getKonnektor(final String konnektorId) {
-        Konnektor konnektor = konnektorService.getKonnektor(Long.valueOf(Long.valueOf(konnektorId)));
+        Konnektor konnektor = konnektorService.getKonnektor(Long.valueOf(konnektorId));
         KonnektorDTO dto = convertKonnektor(konnektor);
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @Override
+    public Optional<NativeWebRequest> getRequest() {
+        return KonnektorsApi.super.getRequest();
     }
 
     @Override
@@ -167,10 +148,8 @@ public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, K
 
     private static Konnektor convertKonnektorDto(KonnektorDTO dto, String konnektorId) {
         Konnektor konn = new Konnektor();
-        if (konnektorId == null) {
-            konn.setId(Long.getLong(konnektorId));
-        } else {
-            konn.setId(dto.getId().longValue());
+        if (konnektorId != null) {
+           konn.setId(dto.getId().longValue());
         }
         konn.setHostname(dto.getHostName());
         konn.setSerialNumber(dto.getSerialNumber());
@@ -190,11 +169,12 @@ public class BendeController implements ArtistsApi, EmployeesApi, AuditLogApi, K
         dto.setHardwareVersion(ko.getHardwareVersion());
         dto.setActive(ko.isActive());
         dto.setCreated(ko.getCreated());
+
         if (ko.getAuditlogs() != null && !ko.getAuditlogs().isEmpty()) {
-            List logs = new ArrayList<AuditLog>();
-            logs.addAll(ko.getAuditlogs());
-            dto.setAuditlogs(logs);
+            List<AuditLogDTO> lista = ko.getAuditlogs().stream().map( au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
+            dto.setAuditlogs(lista);
         }
+
         return dto;
     }
 

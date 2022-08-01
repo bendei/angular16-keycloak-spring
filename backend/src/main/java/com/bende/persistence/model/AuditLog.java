@@ -54,6 +54,10 @@ public class AuditLog {
         return id;
     }
 
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
     public Konnektor getKonnektor() {
         return konnektor;
     }

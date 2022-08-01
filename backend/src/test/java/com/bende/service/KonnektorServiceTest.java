@@ -30,7 +30,7 @@ public class KonnektorServiceTest {
     @Mock
     Konnektor konnektor;
     @Spy
-    List<Konnektor> konns = new ArrayList<Konnektor>();
+    List<Konnektor> konns = new ArrayList<>();
 
 
     @BeforeEach
@@ -39,20 +39,20 @@ public class KonnektorServiceTest {
     }
 
     @Test
-    void getKonnektor_returnsAKonnektor() {
+    public void testGetKonnektor_returnsAKonnektor() {
         givenAKonnektor();
         when(konnektorRepository.findById(any(Long.class))).thenReturn(Optional.of(konnektor));
         thenKonnektorIsReturned();
     }
 
     @Test
-    void GetKonnektor_shouldThrowResourceNotFoundException() {
+    public void testGetKonnektor_shouldThrowResourceNotFoundException() {
         when(konnektorRepository.findById(any(Long.class))).thenReturn(Optional.empty());
         thenResourceNotFoundExceptionIsThrown();
     }
 
     @Test
-    void createKonnektorShouldSucceed() {
+    public void testCreateKonnektorShouldSucceed() {
         givenAnUnsavedKonnektor();
         konnektor.setId(1L);
         when(konnektorRepository.save(konnektor)).thenReturn(konnektor);
@@ -60,7 +60,7 @@ public class KonnektorServiceTest {
     }
 
     @Test
-    void deleteKonnektor_Successfuly() {
+    public void testDeleteKonnektor_Successfuly() {
         givenAKonnektor();
         when(konnektorRepository.findById(1L)).thenReturn(Optional.of(konnektor));
         doNothing().when(konnektorRepository).deleteById(any(Long.class));
@@ -68,31 +68,31 @@ public class KonnektorServiceTest {
     }
 
     @Test
-    void deleteKonnektor_whenKonnektorNotFound_ThrowsException() {
+    public void testDeleteKonnektor_whenKonnektorNotFound_ThrowsException() {
         when(konnektorRepository.findById(1L)).thenReturn(Optional.empty());
         doNothing().when(konnektorRepository).deleteById(any(Long.class));
         thenResourceNotFoundExceptionIsThrown();
     }
 
     @Test
-    void getAllKonnektors() {
+    public void testGetAllKonnektors() {
         givenListOfKonnektors();
         when(konnektorRepository.findAll()).thenReturn(konns);
         List<Konnektor> result = konnektorService.getAllKonnektors(null, null, null, null);
 
         // doReturn(2).when(konns).size();
-        Assertions.assertTrue(!result.isEmpty());
-        Assertions.assertTrue(result.size() == 2);
+        Assertions.assertFalse(result.isEmpty());
+        Assertions.assertEquals(result.size(), 2);
     }
 
     @Test
-    void updateKonnektorHostname_ThrowsException() {
+    public void testUpdateKonnektorHostname_ThrowsException() {
         when(konnektorRepository.findById(1L)).thenReturn(Optional.empty());
         thenResourceNotFoundExceptionIsThrown();
     }
 
     @Test
-    void updateKonnektorHostname_Success() {
+    public void testUpdateKonnektorHostname_Success() {
         givenAKonnektor();
         when(konnektorRepository.findById(1L)).thenReturn(Optional.of(konnektor));
         when(konnektorRepository.save(any(Konnektor.class))).thenReturn(konnektor);
@@ -101,8 +101,9 @@ public class KonnektorServiceTest {
         Assertions.assertEquals(konnektor.getHostname(), "127.3.3.4");
     }
 
+    //  a verify-t arra használjuk, hogy a business (tesztelendő metódusunkban belül lévő metódusok meghívását igazoljuk (mockkal természetesen)
     @Test
-    void deleteKonnektor_Success() {
+    public void testDeleteKonnektor_Success() {
         when(konnektorRepository.findById(1L)).thenReturn(Optional.of(konnektor));
         doNothing().when(konnektorRepository).deleteById(any(Long.class));
         konnektorService.deleteKonnektor(1L);
@@ -122,7 +123,7 @@ public class KonnektorServiceTest {
     }
 
     private void thenKonnektorIsReturned() {
-        Assertions.assertTrue(konnektorService.getKonnektor(1L).getId() == 1L);
+        Assertions.assertEquals(konnektorService.getKonnektor(1L).getId(), 1L);
     }
 
     private void thenResourceNotFoundExceptionIsThrown() {
@@ -131,7 +132,7 @@ public class KonnektorServiceTest {
 
     private void thenKonnektorCreated() {
         konnektorService.createKonnektor(konnektor);
-        Assertions.assertTrue(konnektor.getId() == 1L) ;
+        Assertions.assertEquals(konnektor.getId(), 1L) ;
     }
 
     private void givenListOfKonnektors() {

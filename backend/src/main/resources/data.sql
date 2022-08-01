@@ -16,3 +16,8 @@ INSERT INTO KONNEKTOR (konnektorid, hostname, serialNumber, firmwareVersion, har
 VALUES (5, '127.0.0.5', '213235', '11.05', '23.33.35', false, SYSTIMESTAMP);
 
 INSERT INTO AUDIT_LOG (id, user, konnektorid, useraction, timestamp) VALUES (1, 'bendeuser', 1, 'USER_LOGIN', SYSTIMESTAMP);
+INSERT INTO AUDIT_LOG (id, user, konnektorid, useraction, timestamp) VALUES (2, 'bendeuser', 1, 'USER_LOGOUT', SYSTIMESTAMP);
+INSERT INTO AUDIT_LOG (id, user, konnektorid, useraction, timestamp) VALUES (3, 'evauser', 1, 'USER_LOGIN', SYSTIMESTAMP);
+INSERT INTO AUDIT_LOG (id, user, konnektorid, useraction, timestamp) VALUES (4, 'evauser', 2, 'USER_LOGIN', SYSTIMESTAMP);
+INSERT INTO AUDIT_LOG (id, user, konnektorid, useraction, timestamp) VALUES (5, 'evauser', 2, 'USER_LOGOUT', SYSTIMESTAMP);
+INSERT INTO AUDIT_LOG (id, user, konnektorid, useraction, timestamp) VALUES (6, 'bendeuser', 2, 'ADD_NEW_KONNEKTOR', SYSTIMESTAMP);

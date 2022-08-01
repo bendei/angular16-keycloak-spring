@@ -50,8 +50,7 @@ export class KonnektorModifyComponent implements OnInit {
   }
 
   open() {
-    const modalRef = this.modalService.open(AuditLogModal);
-    modalRef.componentInstance.name = 'World';
+    const modalRef = this.modalService.open(AuditLogModal,  { size: 'xl' });
     modalRef.componentInstance.auditlogs = this.konnektor.auditlogs;
   }
 

@@ -59,6 +59,9 @@ https://www.toptal.com/java/spring-boot-rest-api-error-handling
 ---------------------------------------------------------------------------------------------------------
 ## Testing
 
+## Mockito methods:
+https://www.javatpoint.com/methods-of-mockito
+
 unit testing with JUnit5 ( Jupiter): https://www.baeldung.com/junit-5
 
 ## leirja, hogy mi a @Mock ill @InjectMocj stb, nagyon jó

@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h4 class="modal-title">Auditlogs</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+
+  <ngx-datatable #auditlogsDataTable id="auditlogsDataTable"
+                 [messages]="{emptyMessage: 'Keine Daten vorhanden'}"
+                 [headerHeight]="30"
+                 [rowHeight]="30"
+                 [rows]="auditlogs"
+                 [scrollbarV]="true"
+  >
+    <ngx-datatable-column  name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+    <ngx-datatable-column  name="user" prop="user" [canAutoResize]="true" [sortable]="true"></ngx-datatable-column>
+    <ngx-datatable-column  name="konnektor" prop="konnektor" [canAutoResize]="true" [sortable]="true"></ngx-datatable-column>
+    <ngx-datatable-column  name="userAction" prop="userAction" [canAutoResize]="true" [sortable]="true"></ngx-datatable-column>
+    <ngx-datatable-column  name="timestamp" prop="timestamp" [canAutoResize]="true" [sortable]="true"></ngx-datatable-column>
+    <ngx-datatable-column  name="Edit" [canAutoResize]="false" [sortable]="false"></ngx-datatable-column>
+    <ngx-datatable-column  name="Delete" [canAutoResize]="false" [sortable]="false"></ngx-datatable-column>
+
+  </ngx-datatable>
+
+
+
+</div>
+<div class="modal-footer">
+  <button id="new-button" style="margin-left: 10px;" (click)="onAddNew()" class="btn btn-primary">Add new Auditlog</button>
+  <button id="saveall-button" style="margin-left: 10px;" (click)="onSaveAll()" class="btn btn-primary">Save all</button>
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+</div>

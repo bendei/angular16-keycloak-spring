@@ -125,40 +125,9 @@ paths:
           description: konnektor created
         500:
           description: server error
-
-  /artists:
+  /auditlogs:
     get:
-      description: Returns a list of artists
-      operationId: getAllArtists
-      responses:
-        200:
-          description: request for all artists
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ArtistResponseDTO"
-        500:
-          description: Server Error
-  /employees:
-    get:
-      description: Return list of all employees
-      operationId: getAllEmployees
-      responses:
-        200:
-          description: request for all employees
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/EmployeesResponseDTO"
-        500:
-          description: Server error
-  /audit-log:
-    get:
-      operationId: getAuditLog
+      operationId: getAuditLogs
       responses:
         200:
           description:  OK
@@ -183,7 +152,24 @@ paths:
           description: Konnektor not found
         500:
           description: Server error
-
+    put:
+      operationId: updateAuditlog
+      summary: Update the complete auditlog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditLogDTO'
+      responses:
+        204:
+          description: auditlog updated successfully
+        403:
+          description: Forbidden
+        404:
+          description: auditlog not found
+        500:
+          description: Server Error
 components:
   parameters:
     konnektorId:
@@ -318,73 +304,10 @@ components:
         - ADD_NEW_KONNEKTOR
         - REMOVE_KONNEKTOR
         - UPDATE_KONNEKTOR_SETTINGS
-        - TOGGLE_KONNEKTOR_STATE_ACTIVE
-        - TOGGLE_KONNEKTOR_STATE_PAUSED
-        - EXPORT_KONNEKTOR_DATA
-        - UPDATE_MONITORING_STATE_ACTIVE
-        - UPDATE_MONITORING_STATE_PAUSED
         - USER_LOGIN
         - USER_LOGOUT
-        - REBOOT_KONNEKTOR
-        - DELETE_SCHEDULED_REBOOT
-        - UPDATE_SCHEDULED_REBOOT
-        - DELETE_PERIODIC_REBOOT
-        - UPDATE_PERIODIC_REBOOT
-        - UPDATE_UTILITY_SETTINGS
         - CREATE_USER
         - UPDATE_USER_DATA
-        - CHANGE_PASSWORD
-        - SET_PASSWORD
-        - ACCEPT_LICENSE
         - DELETE_USER
-        - UPDATE_EVENT_MONITORING_SETTINGS
-        - UPDATE_EVENT_NOTIFICATION_SETTINGS
-        - UPDATE_EVENT_NOTIFICATION_SETTINGS_VALUE
-        - SMC_B_CARD_VERIFICATION_STARTED
-        - SMC_B_CARD_VERIFICATION_ENDED
-        - CARD_TERMINAL_SICCT_LOGINS_UPDATED
-        - CARD_TERMINAL_ADDED
-        - CARD_TERMINAL_ASSIGNED
-        - CARD_TERMINAL_PAIRED
-        - CARD_TERMINAL_CHANGED_CORRELATION
-        - CARD_TERMINAL_DELETED
-        - CARD_TERMINAL_CONNECTED
-        - CARD_TERMINAL_DISCONNECTED
-        - UPDATE_DNS_SERVER_IP_ADRESSES
-        - UPDATE_INTERNET_ACCESS_GATEWAY
-        - UPDATE_SIGNATURE_SETTINGS
-        - UPDATE_USER_PASSWORD_EXPIRATION_DAYS
-        - KONNEKTOR_BACKUP_IMPORT
-        - KONNEKTOR_BACKUP_EXPORT
-        - KONNEKTOR_BACKUP_AUTO_EXPORT_FAILED
-        - KONNEKTOR_BACKUP_STORED
-        - KONNEKTOR_BACKUP_UPDATED
-        - KONNEKTOR_BACKUP_DELETED
-        - KONNEKTOR_BACKUP_CONFIGURATION_STORED
-        - KONNEKTOR_BACKUP_CONFIGURATION_DELETED
-        - KONNEKTOR_BACKUP_CREATE_ZIP_ARCHIVE
-        - KONNEKTOR_UPDATE_DESCRIPTION
-        - KONNEKTOR_UPDATE_HOSTNAME
-        - KONNEKTOR_USER_GROUP_CREATED
-        - KONNEKTOR_USER_GROUP_UPDATED
-        - KONNEKTOR_USER_GROUP_DELETED
-        - KONNEKTOR_CREATE_USER
-        - KONNEKTOR_DELETE_USER
-        - KONNEKTOR_INFO_MODEL_UPDATED
-        - KONNEKTOR_CARD_TERMINAL_MOVED
-        - CREATE_MASTER_POOL_ENTRY
-        - DELETE_MASTER_POOL_ENTRY
-        - KONNEKTOR_FIRMWARE_UPDATE_PLACED_IN_QUEUE
-        - CARD_TERMINAL_FIRMWARE_UPDATE_PLACED_IN_QUEUE
-        - CARD_TERMINAL_UPDATE_DESCRIPTION
-        - ADD_KONNEKTOR_CLIENT_SYSTEM_CREDENTIAL
-        - UPDATE_KONNEKTOR_CLIENT_SYSTEM_CREDENTIAL
-        - DELETE_KONNEKTOR_CLIENT_SYSTEM_CREDENTIAL
-        - UPDATE_KONNEKTOR_CLIENT_SYSTEM_CERTIFICATE
-        - DELETE_KONNEKTOR_CLIENT_SYSTEM_CERTIFICATE
-        - IMPORT_KONNEKTOR_CLIENT_SYSTEM_CERTIFICATE
-        - UPDATE_CLIENT_SYSTEM_CONFIG
-        - QUEUE_CLEANED_FOR_INVALID_CARD_TERMINAL_UPDATES
-        - CARD_CHANGE_PIN
-        - CARD_UNBLOCK_PIN
+
 
