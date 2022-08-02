@@ -1,12 +1,7 @@
 package com.bende.service;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.bende.Application;
 import com.bende.excpetions.ResourceNotFoundException;
-import com.bende.persistence.model.AuditLog;
 import com.bende.persistence.model.Konnektor;
 import com.bende.persistence.repos.KonnektorRepository;
 import java.time.LocalDateTime;
@@ -39,7 +34,7 @@ public class KonnektorServiceDBTest {
     public void testGetKonnektor_returnsAKonnektor() {
         Konnektor konnektor = konnektorService.getKonnektor(1L);
         Assertions.assertNotNull(konnektor);
-        Assertions.assertEquals(konnektor.getHostname(), HOSTNAME);
+        Assertions.assertEquals(konnektor.getHostname(), "127.0.0.2");
     }
 
     @Test
@@ -57,6 +52,7 @@ public class KonnektorServiceDBTest {
     @Sql({"/test_data.sql"})
     public void testGetAllKonnektors() {
         List<Konnektor> lista = konnektorService.getAllKonnektors(null, null, null, null);
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ size:" + lista.size());
         Assertions.assertFalse(lista.isEmpty());
         Assertions.assertTrue(lista.size() >= 3);
     }
@@ -73,7 +69,7 @@ public class KonnektorServiceDBTest {
     @Sql({"/test_data.sql"})
     public void testFilterKonnektors() {
         List<Konnektor> lista = konnektorService.filterKonnektors("127.0.0.3", "213232", "11.03", null, null);
-        Assertions.assertEquals(lista.size(), 2);
+        Assertions.assertEquals(lista.size(), 3);
     }
 
     @Test
