@@ -77,5 +77,8 @@ https://stackoverflow.com/questions/15052984/what-is-the-difference-between-mock
 https://www.youtube.com/watch?v=lbN2nfsC7C4
 KonnektorServiceTest deleteKonnektor_Success
 
+## sql script használata a testhez:
+https://www.baeldung.com/spring-boot-data-sql-and-schema-sql
+
 
 

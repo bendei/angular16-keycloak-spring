@@ -27,10 +27,12 @@
       <label for="hardwareVersion">hardwareVersion</label>
       <input type="text" formControlName="hardwareVersion" class="form-control" id="hardwareVersion">
     </div>
+
     <div class="form-group col-md-6">
       <label for="created">created</label>
-      <input type="text"formControlName="created" class="form-control" id="created">
+      <input ngbDatepicker #d="ngbDatepicker" type="text" class="form-control" id="created" formControlName="created">
     </div>
+
   </div>
 
   <div class="form-row">
@@ -50,3 +52,4 @@
   <button id="back-button" style="margin-left: 10px;" (click)="onBack()" class="btn btn-primary">Zurück</button>
   <button style="margin-left: 10px;" type="button"  (click)="open()" class="btn btn-primary" [disabled]="!konnektor?.auditlogs?.length" >Show auditlog modal</button>
 </form>
+<input ngbDatepicker #d="ngbDatepicker" type="text" [(ngModel)]="model" class="form-control" id="created2">
