@@ -1,5 +1,5 @@
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from "@angular/core/testing";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
 import createSpyObj = jasmine.createSpyObj;
 import {KonnektorModifyComponent} from "./konnektor-modify.component";
 import {DefaultService } from "../../../../target/generated-sources/openapi";
@@ -7,6 +7,7 @@ import {ToastService} from "../../toast/toast.service";
 import {Observable, Observer, of} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {click} from "../../../test-common/helper";
+import {NgbDatepickerModule} from "@ng-bootstrap/ng-bootstrap";
 
 describe('KonnektorModifyComponent', () => {
 
@@ -51,7 +52,7 @@ describe('KonnektorModifyComponent', () => {
         {provide: ActivatedRoute, useValue: activatedRouterStub},
         {provide: Router, useValue: routerSpy}
       ],
-      imports: [FormsModule, ReactiveFormsModule]
+      imports: [FormsModule, ReactiveFormsModule, NgbDatepickerModule]
     }).compileComponents();
 
     defaultServiceSpy.getKonnektor.and.returnValue(of(konnektor));
@@ -89,6 +90,12 @@ describe('KonnektorModifyComponent', () => {
     expect(toastServiceSpy.error).toHaveBeenCalled();
   }));
 
+  it('date picker showed correctly', fakeAsync(() => {
+    whenComponentHasStarted();
+    const inputElement = fixture.nativeElement.querySelector(`input#${'created'}`);
+    console.log(inputElement.value);
+  }));
+
   const whenComponentHasStarted = () => {
     fixture = TestBed.createComponent(KonnektorModifyComponent);
     component = fixture.componentInstance;
@@ -108,6 +115,7 @@ describe('KonnektorModifyComponent', () => {
     inputElement.dispatchEvent(new Event('input'));
     fixture.detectChanges();
   };
+
 
   const thenToastSuccess = () => {
     expect(toastServiceSpy.success).toHaveBeenCalled();

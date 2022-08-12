@@ -1,19 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DefaultService, KonnektorDTO} from "../../../../target/generated-sources/openapi";
 import {ToastService} from "../../toast/toast.service";
 import {NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AuditLogModal} from "../auditlog-modal/auditlog-modal.component";
 import {NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
-
-function toInteger(value: any): number {
-  return parseInt(`${value}`, 10);
-}
-
-function isNumber(value: any): value is number {
-  return !isNaN(toInteger(value));
-}
+import {TimeStruct} from "../../core/helper";
+import {isNumber} from "lodash";
 
 @Component({
   selector: 'app-konnektor-modify',
@@ -43,11 +37,14 @@ export class KonnektorModifyComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    const {id, hostName, serialNumber, firmwareVersion, hardwareVersion, active, created} = this.konnektorForm.getRawValue();
-
+    const {id, hostName, serialNumber, firmwareVersion, hardwareVersion, active, created, createdTime} = this.konnektorForm.getRawValue();
     const createdISO = this.ngbDateStructToISO(created);
+    const createdTimeISO = this.timeStructToISO(createdTime);
+
+    console.log("createdTimeISO:", createdTimeISO);
+
     this.defaultService.updateKonnektor(id, {
-      id, hostName, serialNumber, firmwareVersion, hardwareVersion, active, created: createdISO}).subscribe(
+      id, hostName, serialNumber, firmwareVersion, hardwareVersion, active, created: createdISO + "" + createdTimeISO}).subscribe(
       () => {
         this.toast.success("konnektor updated");
         this.router.navigate(['/navigation/konnektor-view']);
@@ -75,6 +72,7 @@ export class KonnektorModifyComponent implements OnInit {
         firmwareVersion: '',
         hardwareVersion: '',
         created: '',
+        createdTime: '',
         active: ''
       });
   }
@@ -88,6 +86,7 @@ export class KonnektorModifyComponent implements OnInit {
         firmwareVersion: this.konnektor.firmwareVersion,
         hardwareVersion: this.konnektor.hardwareVersion,
         created: this.konnektor.created,
+        createdTime: this.isoToTime(this.konnektor.created),
         active: this.konnektor.active
       });
     }
@@ -97,6 +96,29 @@ export class KonnektorModifyComponent implements OnInit {
     this.konnektorForm.get('created')?.setValue(date);
   }
 
+  // format: 2022-08-14T08:00:50.44
+  private isoToTime(isoString: string): TimeStruct {
+    if (isoString) {
+      const timeString = isoString.trim().substring(isoString.indexOf('T') + 1);
+      const timeParts = timeString.trim().split(':');
+      return {
+        hour: parseInt(timeParts[0]),
+        minute: parseInt(timeParts[1].substring(0,2))
+      };
+    }
+    return {
+      hour: 0,
+      minute: 0
+    };
+  }
+
+  // format: 2022-08-14T08:00:50.44
+  private timeStructToISO(time: TimeStruct): string {
+    if (isNumber(time.hour) && isNumber(time.minute)) {
+      return "T" + time.hour.toString().padStart(2, "0") + ":" + time.minute.toString().padStart(2, "0") + ":00.50"
+    }
+    return "T00:00:00.44";
+  }
 
   private isoToNgbDateStruct(isoString: string): NgbDateStruct {
     if(isoString) {
@@ -114,7 +136,7 @@ export class KonnektorModifyComponent implements OnInit {
     const padMonth = (m: number) => {
       if (isNumber(m)) {
         if (m.toString().trim().length == 1) {
-        return "0" + m;
+        return m.toString().trim().padStart(2,"0");
       } else {
         return m;
       }
@@ -122,7 +144,7 @@ export class KonnektorModifyComponent implements OnInit {
     };
 
     if (model && isNumber(model.year) && isNumber(model.month) && isNumber(model.day)) {
-      return model.year + '-' + padMonth(model.month) + '-' + padMonth(model.day) + padTime();
+      return model.year + '-' + padMonth(model.month) + '-' + padMonth(model.day); // + padTime();
     }
   }
 

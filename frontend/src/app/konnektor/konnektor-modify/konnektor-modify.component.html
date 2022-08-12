@@ -27,13 +27,23 @@
       <label for="hardwareVersion">hardwareVersion</label>
       <input type="text" formControlName="hardwareVersion" class="form-control" id="hardwareVersion">
     </div>
+  </div>
 
+
+  <div class="form-row" style="border-bottom-style: dot-dash">
     <div class="form-group col-md-6">
-      <label for="created">created</label>
+      <label for="created">created date</label>
       <input ngbDatepicker #d="ngbDatepicker" type="text" class="form-control" id="created" formControlName="created">
     </div>
-
+    <div class="form-group col-md-6">
+      <label for="created">created time</label>
+      <ngb-timepicker ngDefaultControl formControlName="createdTime" id="createdTime"></ngb-timepicker>
+    </div>
   </div>
+
+
+
+
 
   <div class="form-row">
 
