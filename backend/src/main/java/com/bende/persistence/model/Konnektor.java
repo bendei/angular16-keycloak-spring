@@ -51,6 +51,10 @@ public class Konnektor {
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime created;
 
+    @Column(name = "VALIDUNTIL")
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime validUntil;
+
     @OneToMany(mappedBy="konnektor", fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<AuditLog> auditlogs;
@@ -110,5 +114,13 @@ public class Konnektor {
 
     public void setCreated(final LocalDateTime created) {
         this.created = created;
+    }
+
+    public LocalDateTime getValidUntil() {
+        return validUntil;
+    }
+
+    public void setValidUntil(final LocalDateTime validUntil) {
+        this.validUntil = validUntil;
     }
 }

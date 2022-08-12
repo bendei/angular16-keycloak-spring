@@ -169,6 +169,7 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
         dto.setHardwareVersion(ko.getHardwareVersion());
         dto.setActive(ko.isActive());
         dto.setCreated(ko.getCreated());
+        dto.setValidUntil(ko.getValidUntil());
 
         if (ko.getAuditlogs() != null && !ko.getAuditlogs().isEmpty()) {
             List<AuditLogDTO> lista = ko.getAuditlogs().stream().map( au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());

@@ -20,6 +20,7 @@ export interface KonnektorDTO {
     hardwareVersion?: string;
     active?: boolean;
     created?: string;
+    validUntil?: string;
     auditlogs?: Array<AuditLogDTO>;
 }
 

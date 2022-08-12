@@ -93,7 +93,7 @@ public class KonnektorServiceDBTest {
     @Sql({"/test_data.sql"})
     public void testUpdateKonnektorHostname_Success() {
         givenKonnektorFromDB();
-        konnektorService.updateKonnektorHostname(10L, "newhostname");
+        konnektorService.updateKonnektorHostname(3L, "newhostname");
         givenKonnektorFromDB();
         Assertions.assertEquals(konnektor.getHostname(), "newhostname");
     }
@@ -104,11 +104,11 @@ public class KonnektorServiceDBTest {
         givenKonnektorFromDB();
         Assertions.assertNotNull(konnektor);
         konnektorService.deleteKonnektor(konnektor.getId());
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> konnektorService.getKonnektor(10L));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> konnektorService.getKonnektor(3L));
     }
 
     private void givenKonnektorFromDB() {
-        konnektor = konnektorService.getKonnektor(10L);
+        konnektor = konnektorService.getKonnektor(3L);
     }
 
     private void givenAnUnsavedKonnektor() {

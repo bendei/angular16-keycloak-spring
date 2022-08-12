@@ -280,6 +280,9 @@ components:
         created:
           type: string
           format: date-time
+        validUntil:
+          type: string
+          format: date-time
         auditlogs:
           type: array
           items:
