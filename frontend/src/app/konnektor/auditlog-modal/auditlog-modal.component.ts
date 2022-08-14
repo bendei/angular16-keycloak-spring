@@ -1,12 +1,13 @@
 import {Component} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {AuditLogDTO} from "../../../../target/generated-sources/openapi";
+import {AuditLogDTO, AuditLogMessageDTO} from "../../../../target/generated-sources/openapi";
+import {mapToString} from '../../core/AuditLogMessageMapper';
 
 @Component({
   selector: 'app-modal-content',
   templateUrl: './auditlog-modal.component.html',
 })
-export class AuditLogModal {
+export class AuditlogModalComponent {
 
   public auditlogs: Array<AuditLogDTO> = [];
 
@@ -19,6 +20,10 @@ export class AuditLogModal {
 
   public onSaveAll(): void {
 
+  }
+
+  public mapUserActionToString(action: AuditLogMessageDTO): string {
+    return mapToString(action);
   }
 
 }

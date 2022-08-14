@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {DefaultService, KonnektorDTO} from "../../../../target/generated-sources/openapi";
 import {ToastService} from "../../toast/toast.service";
 import {NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {AuditLogModal} from "../auditlog-modal/auditlog-modal.component";
+import {AuditlogModalComponent} from "../auditlog-modal/auditlog-modal.component";
 import {NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 import {TimeStruct} from "../../core/helper";
 import {isNumber} from "lodash";
@@ -60,7 +60,7 @@ export class KonnektorModifyComponent implements OnInit {
   }
 
   open() {
-    const modalRef = this.modalService.open(AuditLogModal,  { size: 'xl' });
+    const modalRef = this.modalService.open(AuditlogModalComponent,  { size: 'xl' });
     modalRef.componentInstance.auditlogs = this.konnektor.auditlogs;
   }
 

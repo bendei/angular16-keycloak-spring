@@ -11,10 +11,10 @@ import {KonnektorRemoveComponent} from "./konnektor-remove/konnektor-remove.comp
 import {RouterModule} from "@angular/router";
 import {konnektorRoutes} from "./konnektor.routing";
 import {KonnektorModifyComponent} from "./konnektor-modify/konnektor-modify.component";
-import {AuditLogModal} from "./auditlog-modal/auditlog-modal.component";
+import {AuditlogModalComponent} from "./auditlog-modal/auditlog-modal.component";
 
 @NgModule({
-  declarations: [KonnektorViewComponent, KonnektorDropdownComponent, KonnektorRemoveComponent, KonnektorModifyComponent, AuditLogModal],
+  declarations: [KonnektorViewComponent, KonnektorDropdownComponent, KonnektorRemoveComponent, KonnektorModifyComponent, AuditlogModalComponent],
   providers: [ ToastService, FormBuilder],
   imports: [CommonModule, BrowserModule, NgxDatatableModule, FormsModule,
     ReactiveFormsModule, NgbModule,
