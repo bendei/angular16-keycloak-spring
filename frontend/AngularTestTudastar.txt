@@ -302,3 +302,6 @@ nested components with @Input:
 java-angular-basic projektemben:
 KonnektorViewComponent;
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+selector
+https://shashankvivek-7.medium.com/getting-to-know-fixture-debugelement-angular-unit-testing-f8389ea61f02

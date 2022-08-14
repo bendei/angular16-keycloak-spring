@@ -35,15 +35,11 @@
       <label for="created">created date</label>
       <input ngbDatepicker #d="ngbDatepicker" type="text" class="form-control" id="created" formControlName="created">
     </div>
-    <div class="form-group col-md-6">
+    <div class="form-group col-md-6" id="createdTimeDiv">
       <label for="created">created time</label>
-      <ngb-timepicker ngDefaultControl formControlName="createdTime" id="createdTime"></ngb-timepicker>
+      <ngb-timepicker ngDefaultControl formControlName="createdTime" id="createdTime" #createdTime></ngb-timepicker>
     </div>
   </div>
-
-
-
-
 
   <div class="form-row">
 
@@ -62,4 +58,3 @@
   <button id="back-button" style="margin-left: 10px;" (click)="onBack()" class="btn btn-primary">Zurück</button>
   <button style="margin-left: 10px;" type="button"  (click)="open()" class="btn btn-primary" [disabled]="!konnektor?.auditlogs?.length" >Show auditlog modal</button>
 </form>
-<input ngbDatepicker #d="ngbDatepicker" type="text" [(ngModel)]="model" class="form-control" id="created2">

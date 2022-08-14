@@ -8,6 +8,8 @@ import {Observable, Observer, of} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {click} from "../../../test-common/helper";
 import {NgbDatepickerModule} from "@ng-bootstrap/ng-bootstrap";
+import {By} from "@angular/platform-browser";
+import {toInteger} from "../../core/helper";
 
 describe('KonnektorModifyComponent', () => {
 
@@ -93,7 +95,17 @@ describe('KonnektorModifyComponent', () => {
   it('date picker showed correctly', fakeAsync(() => {
     whenComponentHasStarted();
     const inputElement = fixture.nativeElement.querySelector(`input#${'created'}`);
-    console.log(inputElement.value);
+    expect(konnektor.created.substring(0, 10)).toEqual(inputElement.value);
+  }));
+
+  it('time picker showed correctlyx', fakeAsync(() => {
+    whenComponentHasStarted();
+    const inputElement = fixture.debugElement.query(By.css('#createdTime'))
+    //console.log(inputElement.nativeNode.value.hour);
+    //console.log(inputElement.nativeNode.value.minute);
+    expect(inputElement.nativeNode.value.hour).toEqual(toInteger(konnektor.created.substring(11, 13)));
+    expect(inputElement.nativeNode.value.minute).toEqual(toInteger(konnektor.created.substring(15, 16)));
+
   }));
 
   const whenComponentHasStarted = () => {

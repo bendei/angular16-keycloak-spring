@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DefaultService, KonnektorDTO} from "../../../../target/generated-sources/openapi";
 import {ToastService} from "../../toast/toast.service";
@@ -73,7 +73,8 @@ export class KonnektorModifyComponent implements OnInit {
         hardwareVersion: '',
         created: '',
         createdTime: '',
-        active: ''
+        active: '',
+        validUntil: ''
       });
   }
 
@@ -87,7 +88,8 @@ export class KonnektorModifyComponent implements OnInit {
         hardwareVersion: this.konnektor.hardwareVersion,
         created: this.konnektor.created,
         createdTime: this.isoToTime(this.konnektor.created),
-        active: this.konnektor.active
+        active: this.konnektor.active,
+        validUntil: this.konnektor.validUntil
       });
     }
 
