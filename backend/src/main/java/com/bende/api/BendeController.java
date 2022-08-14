@@ -10,14 +10,12 @@ import com.bende.persistence.model.AuditLog;
 import com.bende.persistence.model.Employee;
 import com.bende.persistence.model.Konnektor;
 import com.bende.persistence.model.UserActionType;
-import com.bende.persistence.repos.AuditLogRepository;
 import com.bende.persistence.repos.EmployeeRepository;
 import com.bende.persistence.repos.KonnektorRepository;
 import com.bende.service.AuditlogService;
 import com.bende.service.KonnektorService;
 import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,12 +43,10 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
     @Override
     @ApiOperation("the auditlogs API")
     @CrossOrigin("http://localhost:4200")
-    public ResponseEntity<List<AuditLogDTO>> getAuditLogs() {
+    public ResponseEntity<List<AuditLogDTO>> getAuditLogs(final String auditlogId) {
         List<AuditLogDTO> lista = auditlogService.findAll().stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
-
-
 
     @Override
     @ApiOperation(" create auditlog")
@@ -63,11 +59,26 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
             log.setTimestamp(LocalDateTime.now());
             log.setUser(request.getUser());
             log.setUserAction(UserActionType.valueOf(request.getUserAction().getValue()));
-            //log.setKonnektor(konnektor.get());
+            log.setKonnektor(konnektor.get());
             auditlogService.createAuditLog(log);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Override
+    @ApiOperation(" update auditlog")
+    @CrossOrigin("http://localhost:4200")
+    public  ResponseEntity<Void> updateAuditlog(final String auditlogId, AuditLogDTO request) {
+        Optional<AuditLog> log = auditlogService.findById(request.getId());
+        Konnektor konn = konnektorService.getKonnektor(request.getKonnektor().longValue());
+
+        if (log.isPresent() && konn != null) {
+            auditlogService.updateAuditlog(convertToAuditLog(request, konn));
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -140,10 +151,24 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
         AuditLogDTO dto = new AuditLogDTO();
         dto.setId(log.getId().intValue());
         dto.setUser(log.getUser());
-        //dto.setKonnektor(log.getKonnektor().getId().intValue());
+        if (log.getKonnektor() != null) {
+            dto.setKonnektor(log.getKonnektor().getId().intValue());
+        }
         dto.setUserAction(AuditLogMessageDTO.valueOf(log.getUserAction().name()));
         dto.setTimestamp(log.getTimestamp());
         return dto;
+    }
+
+    private static AuditLog convertToAuditLog(AuditLogDTO dto, Konnektor konnektor) {
+        AuditLog log = new AuditLog();
+        log.setId(dto.getId().longValue());
+        log.setTimestamp(dto.getTimestamp());
+        log.setUser(dto.getUser());
+        log.setUserAction(UserActionType.valueOf(dto.getUserAction().getValue()));
+        if (konnektor != null) {
+            log.setKonnektor(konnektor);
+        }
+        return log;
     }
 
     private static Konnektor convertKonnektorDto(KonnektorDTO dto, String konnektorId) {

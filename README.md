@@ -40,4 +40,8 @@ To the basic example I added some 'showcases' extra features:
 - Test with RestTemplateTest
 - OpenApi using Spring Doc (code first). Swagger-ui is accessible here: http://localhost:8080/swagger-ui
 
-
+### making subsequent commits locally and than pushing it all as one with one commit message:
+1. Go to Git pane in the IDE down below -> stand with coursor with Remote-origin-master: click "compare with master"
+2. In the window in the middle "Commits that exists in master but dont exist in origin/master" -> jobb erér click -> squash commits : write a new message
+3. Now check the squased message apperas  in the pane where you can find commits (and #1 #2 commits disappear)
+4. Push

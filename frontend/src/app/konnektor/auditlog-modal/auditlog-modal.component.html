@@ -1,9 +1,15 @@
 <div class="modal-header">
   <h4 class="modal-title">Auditlogs</h4>
+
   <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
 </div>
-<div class="modal-body">
 
+<!--INLINE EDITING TABLE CELL FIELDS !! :)-->
+<!--https://swimlane.github.io/ngx-datatable/#inline-edit-->
+
+<div class="modal-body">
+  <div class="mb-3" >If you click edit in the row, than static fields become input fields, by subsequent click on edit will convert them into static fields, but not save them.
+  Rows already edited will have black pencil icon, not edited white ones.</div>
   <ngx-datatable #auditlogsDataTable id="auditlogsDataTable"
                  [messages]="{emptyMessage: 'Keine Daten vorhanden'}"
                  [headerHeight]="30"
@@ -13,16 +19,33 @@
   >
     <ngx-datatable-column  name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
     <ngx-datatable-column  name="user" prop="user" [canAutoResize]="true" [sortable]="true"></ngx-datatable-column>
-    <ngx-datatable-column  name="konnektor" prop="konnektor" [canAutoResize]="true" [sortable]="true"></ngx-datatable-column>
+    <ngx-datatable-column  name="konnektor" prop="konnektor" [canAutoResize]="true" [sortable]="true">
+
+    </ngx-datatable-column>
     <ngx-datatable-column  name="userAction" prop="userAction" [canAutoResize]="true" [sortable]="true">
       <ng-template  let-row="row" ngx-datatable-cell-template>
         {{mapUserActionToString(row.userAction)}}
       </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column  name="timestamp" prop="timestamp" [canAutoResize]="true" [sortable]="true"></ngx-datatable-column>
-    <ngx-datatable-column  name="Edit" [canAutoResize]="false" [sortable]="false"></ngx-datatable-column>
-    <ngx-datatable-column  name="Delete" [canAutoResize]="false" [sortable]="false"></ngx-datatable-column>
 
+    <ngx-datatable-column  name="timestamp" [canAutoResize]="true" [sortable]="true">
+      <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex" >
+        <span title="double click to edit" *ngIf="!editable[rowIndex + '-timestamp']" (dblclick)="editable[rowIndex + '-timestamp'] = true">
+         {{row.timestamp | date:"YYYY-MM-dd"}}
+        </span>
+        <input ngbDatepicker #d="ngbDatepicker" type="text" class="form-control"  *ngIf="editable[rowIndex + '-timestamp']" [value]="convertISODateToString(row.timestamp)"
+          (blur)="onUpdateCell(row.id, rowIndex, '-timestamp', $event)">
+
+      </ng-template>
+    </ngx-datatable-column>
+
+
+
+    <ngx-datatable-column  name="Delete" [canAutoResize]="false" [sortable]="false">
+      <ng-template  let-row="row" ngx-datatable-cell-template>
+        <i class="bi bi-trash"></i>
+      </ng-template>
+    </ngx-datatable-column>
   </ngx-datatable>
 
 

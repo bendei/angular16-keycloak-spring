@@ -27,6 +27,13 @@ https://www.jetbrains.com/help/idea/running-unit-tests-on-karma.html#ws_karma_co
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
+## bootstrap like gridsystem/spacing etc.
+https://www.w3schools.com/bootstrap/bootstrap_grid_system.asp
+
+## ha az icon nem jelenik meg:
+1. npm i bootstrap-icon
+2. @import "~bootstrap-icons/font/bootstrap-icons.css";
+
 ## bootstrap:
 ## spacing, floating element , text aligning etc:
 https://getbootstrap.com/docs/4.0/utilities/float/
@@ -39,6 +46,7 @@ https://ng-bootstrap.github.io/#/getting-started
 
 ## UI datatable component
 https://swimlane.gitbook.io/ngx-datatable/
+https://swimlane.github.io/ngx-datatable/#row-grouping
 
 ## routing:
 https://blog.angular-university.io/angular2-router/
@@ -52,6 +60,9 @@ https://lachimi.com/angular/version/migration-guide/update-from-angular-13-to-an
 ha a frontend mappában futtatom a npm install-t akkor nem kell -g (global) kapcsoló mert valahogy nem installálja
 
 https://update.angular.io/?l=3&v=12.0-13.0
+
+## ng-template with structural etc. komplex példatár:
+https://www.tektutorialshub.com/angular/ng-template-in-angular/
 
 
 

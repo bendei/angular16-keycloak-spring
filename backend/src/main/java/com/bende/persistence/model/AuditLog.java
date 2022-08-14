@@ -2,6 +2,7 @@ package com.bende.persistence.model;
 
 import com.bende.support.LocalDateTimeConverter;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -39,7 +40,6 @@ public class AuditLog {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "KONNEKTORID")
-    @JsonBackReference
     private Konnektor konnektor;
 
     public String getUser() {

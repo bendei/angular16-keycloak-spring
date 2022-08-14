@@ -1,11 +1,15 @@
 import {AuditlogModalComponent} from "./auditlog-modal.component";
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from "@angular/core/testing";
-import {AuditLogDTO, AuditLogMessageDTO, KonnektorDTO} from "../../../../target/generated-sources/openapi";
+import {ComponentFixture, fakeAsync, TestBed} from "@angular/core/testing";
+import {AuditLogDTO, AuditLogMessageDTO, DefaultService, KonnektorDTO} from "../../../../target/generated-sources/openapi";
 import {KonnektorModifyComponent} from "../konnektor-modify/konnektor-modify.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgbActiveModal, NgbDatepickerModule} from "@ng-bootstrap/ng-bootstrap";
 import {createCurrentDateTimeISOString} from "../../core/helper";
 import {NgxDatatableModule} from "@swimlane/ngx-datatable";
+import {DatePipe} from "@angular/common";
+import createSpyObj = jasmine.createSpyObj;
+import {ToastService} from "../../toast/toast.service";
+import {Router} from "@angular/router";
 
 
 describe('AuditLogModal', () => {
@@ -16,9 +20,10 @@ describe('AuditLogModal', () => {
   const USER_1: string = 'bende';
   const USER_2: string = 'sas';
   const activeModal = {};
-  const konnektor: KonnektorDTO = {id: 1, hostName: '123.22.33.2', validUntil: '2022-12-21T13:01:29.533Z', serialNumber: '2222', created: createCurrentDateTimeISOString(), active: true,
-      hardwareVersion: '3333', firmwareVersion: '4444'};
-
+  const defaultServiceSpy = createSpyObj('DefaultService', ['updateAuditlog']);
+  const toastServiceSpy = createSpyObj('ToastService', ['success', 'error']);
+  const defaultDatePipeSpy = createSpyObj('DatePipe', ['transform']);
+  const routerSpy = createSpyObj('Router', ['navigate']);
 
   let auditlogs: AuditLogDTO[] = [
     {id: 1, user: USER_1, userAction: AuditLogMessageDTO.UserLogin, konnektor: 1, timestamp: '2022-06-21T13:01:29.533Z'},
@@ -32,13 +37,17 @@ describe('AuditLogModal', () => {
       declarations: [KonnektorModifyComponent],
       providers: [
         {provide: NgbActiveModal, useValue: activeModal},
+        {provide: DatePipe, useValue: defaultDatePipeSpy},
+        {provide: DefaultService, useValue: defaultServiceSpy},
+        {provide: ToastService, useValue: toastServiceSpy},
+        {provide: Router, useValue: routerSpy}
       ],
       imports: [FormsModule, ReactiveFormsModule, NgbDatepickerModule, NgxDatatableModule]
     }).compileComponents();
 
   });
 
-  fit('should show table', fakeAsync(() => {
+  it('should show table', fakeAsync(() => {
     whenComponentHasStarted();
     const tblElement = fixture.nativeElement.querySelector(`#auditlogsDataTable`);
     expect(tblElement.rows).toHaveSize(4);

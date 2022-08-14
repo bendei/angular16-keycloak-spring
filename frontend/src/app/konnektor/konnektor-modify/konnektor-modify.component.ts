@@ -61,6 +61,7 @@ export class KonnektorModifyComponent implements OnInit {
 
   open() {
     const modalRef = this.modalService.open(AuditlogModalComponent,  { size: 'xl' });
+    //console.table(this.konnektor.auditlogs);
     modalRef.componentInstance.auditlogs = this.konnektor.auditlogs;
   }
 

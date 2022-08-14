@@ -344,13 +344,17 @@ export class DefaultService {
     }
 
     /**
+     * @param auditlogId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAuditLogs(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json',}): Observable<Array<AuditLogDTO>>;
-    public getAuditLogs(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json',}): Observable<HttpResponse<Array<AuditLogDTO>>>;
-    public getAuditLogs(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json',}): Observable<HttpEvent<Array<AuditLogDTO>>>;
-    public getAuditLogs(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json',}): Observable<any> {
+    public getAuditLogs(auditlogId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json',}): Observable<Array<AuditLogDTO>>;
+    public getAuditLogs(auditlogId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json',}): Observable<HttpResponse<Array<AuditLogDTO>>>;
+    public getAuditLogs(auditlogId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json',}): Observable<HttpEvent<Array<AuditLogDTO>>>;
+    public getAuditLogs(auditlogId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json',}): Observable<any> {
+        if (auditlogId === null || auditlogId === undefined) {
+            throw new Error('Required parameter auditlogId was null or undefined when calling getAuditLogs.');
+        }
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -379,7 +383,7 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.get<Array<AuditLogDTO>>(`${this.configuration.basePath}/auditlogs`,
+        return this.httpClient.get<Array<AuditLogDTO>>(`${this.configuration.basePath}/auditlogs/${encodeURIComponent(String(auditlogId))}`,
             {
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
@@ -443,14 +447,18 @@ export class DefaultService {
 
     /**
      * Update the complete auditlog
+     * @param auditlogId 
      * @param auditLogDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateAuditlog(auditLogDTO: AuditLogDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<any>;
-    public updateAuditlog(auditLogDTO: AuditLogDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpResponse<any>>;
-    public updateAuditlog(auditLogDTO: AuditLogDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpEvent<any>>;
-    public updateAuditlog(auditLogDTO: AuditLogDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined,}): Observable<any> {
+    public updateAuditlog(auditlogId: string, auditLogDTO: AuditLogDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<any>;
+    public updateAuditlog(auditlogId: string, auditLogDTO: AuditLogDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpResponse<any>>;
+    public updateAuditlog(auditlogId: string, auditLogDTO: AuditLogDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpEvent<any>>;
+    public updateAuditlog(auditlogId: string, auditLogDTO: AuditLogDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined,}): Observable<any> {
+        if (auditlogId === null || auditlogId === undefined) {
+            throw new Error('Required parameter auditlogId was null or undefined when calling updateAuditlog.');
+        }
         if (auditLogDTO === null || auditLogDTO === undefined) {
             throw new Error('Required parameter auditLogDTO was null or undefined when calling updateAuditlog.');
         }
@@ -490,7 +498,7 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/auditlogs`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/auditlogs/${encodeURIComponent(String(auditlogId))}`,
             auditLogDTO,
             {
                 responseType: <any>responseType_,

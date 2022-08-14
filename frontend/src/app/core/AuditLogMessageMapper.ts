@@ -11,16 +11,16 @@ export function mapToString(actionType: AuditLogMessageDTO): string {
     break;
     case "CREATE_USER": return "user created";
     break;
-    case "DELETE_USER": "User deleted";
+    case "DELETE_USER": return "User deleted";
     break;
-    case "ADD_NEW_KONNEKTOR": "New konnektor added";
+    case "ADD_NEW_KONNEKTOR": return "New konnektor added";
     break;
-    case "REMOVE_KONNEKTOR": "Konnektor removed";
+    case "REMOVE_KONNEKTOR": return "Konnektor removed";
     break;
-    case "UPDATE_KONNEKTOR_SETTINGS": "konnektor setting are updated";
+    case "UPDATE_KONNEKTOR_SETTINGS": return "konnektor setting are updated";
     break;
-    case "UPDATE_USER_DATA": "User settings are updated";
+    case "UPDATE_USER_DATA": return "User settings are updated";
     break;
-    default: "No constant found"
+    default: return "No constant found"
   }
 }
