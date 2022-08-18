@@ -3,11 +3,9 @@ package com.bende.api;
 import com.bende.api.model.AuditLogDTO;
 import com.bende.api.model.AuditLogMessageDTO;
 import com.bende.api.model.CreateAuditLogRequestDTO;
-import com.bende.api.model.EmployeesResponseDTO;
 import com.bende.api.model.KonnektorDTO;
 import com.bende.api.model.KonnektorHostnameDTO;
 import com.bende.persistence.model.AuditLog;
-import com.bende.persistence.model.Employee;
 import com.bende.persistence.model.Konnektor;
 import com.bende.persistence.model.UserActionType;
 import com.bende.persistence.repos.EmployeeRepository;
@@ -16,6 +14,7 @@ import com.bende.service.AuditlogService;
 import com.bende.service.KonnektorService;
 import io.swagger.annotations.ApiOperation;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,7 +43,7 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
     @ApiOperation("the auditlogs API")
     @CrossOrigin("http://localhost:4200")
     public ResponseEntity<List<AuditLogDTO>> getAuditLogs(final String auditlogId) {
-        List<AuditLogDTO> lista = auditlogService.findAll().stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
+        List<AuditLogDTO> lista = auditlogService.findById(Long.valueOf(auditlogId)).stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
@@ -80,6 +79,23 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    @ApiOperation(" update auditlog")
+    @CrossOrigin("http://localhost:4200")
+    public  ResponseEntity<Void>  updateMoreAuditlog(List<AuditLogDTO> auditLogDTO) {
+        Konnektor konn = konnektorService.getKonnektor(Long.valueOf(auditLogDTO.get(0).getKonnektor()));
+        if (konn == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<AuditLog> logs = new ArrayList<>();
+        auditLogDTO.forEach(dto -> {
+           AuditLog log =  BendeController.convertToAuditLog(dto, konn);
+           logs.add(log);
+        });
+        auditlogService.updateAuditlogs(logs);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Override
@@ -138,16 +154,7 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private static EmployeesResponseDTO convertToEmployeeDTO(Employee emp) {
-        EmployeesResponseDTO dto = new EmployeesResponseDTO();
-        dto.setId(emp.getId().intValue());
-        dto.setEmail(emp.getEmail());
-        dto.setFirstname(emp.getFirstName());
-        dto.setLastname(emp.getLastName());
-        return dto;
-    }
-
-    private static AuditLogDTO convertToAuditLogDTO(AuditLog log) {
+   private static AuditLogDTO convertToAuditLogDTO(AuditLog log) {
         AuditLogDTO dto = new AuditLogDTO();
         dto.setId(log.getId().intValue());
         dto.setUser(log.getUser());
