@@ -14,4 +14,6 @@ public interface AuditlogService {
 
     Optional<AuditLog> findById(long id);
 
+    void updateAuditlogs(List<AuditLog> auditlogs);
+
 }

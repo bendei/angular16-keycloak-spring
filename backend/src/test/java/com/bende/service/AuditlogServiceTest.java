@@ -11,6 +11,7 @@ import com.bende.persistence.repos.AuditLogRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,6 +67,19 @@ public class AuditlogServiceTest {
         log.setId(1L);
         when(auditLogRepository.existsById(any(long.class))).thenReturn(false);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> auditlogService.updateAuditlog(log));
+    }
+
+    @Test
+    public void testUpdatingMoreAuditlogs() {
+        givenAuditlogs();
+        AtomicInteger counter = new AtomicInteger(1);
+        logs.stream().forEach(log -> {
+
+            log.setId(new Long(counter.decrementAndGet()));
+        });
+        when(auditLogRepository.existsById(any(long.class))).thenReturn(true);
+        when(auditLogRepository.save(any(AuditLog.class))).thenReturn(logs.get(0));
+        auditlogService.updateAuditlogs(logs);
     }
 
     private void thenAuditlogsReturned() {

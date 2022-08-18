@@ -6,6 +6,7 @@ import com.bende.persistence.model.AuditLog;
 import com.bende.persistence.model.UserActionType;
 import com.bende.persistence.repos.AuditLogRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ public class AuditlogServiceDBTest {
     AuditLogRepository repo;
 
     AuditLog log;
+    List<AuditLog> auditlogs = new ArrayList<>();
 
     @Test
     public void testGetAllAuditlogs() {
@@ -51,7 +53,6 @@ public class AuditlogServiceDBTest {
             Assertions.assertEquals(saved.getId(), id);
             Assertions.assertEquals(saved.getUser(), "pisti");
         }
-
     }
 
     @Test
@@ -61,11 +62,39 @@ public class AuditlogServiceDBTest {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> service.updateAuditlog(log));
     }
 
+    @Test
+    public void testUpdatingMoreAuditlogs() {
+        givenAuditlogs();
+        whenAuditlogsSaved();
+        thenAuditlogsChanged();
+    }
+
     private void givenAuditlog() {
         log = new AuditLog();
         log.setUserAction(UserActionType.CREATE_USER);
         log.setUser("user");
         log.setTimestamp(LocalDateTime.now());
+    }
+
+    private void givenAuditlogs() {
+        auditlogs = service.findAll();
+    }
+
+    private void whenAuditlogsSaved() {
+        AuditLog log = auditlogs.get(0);
+        log.setUserAction(UserActionType.KONNEKTOR_CREATE_USER);
+        AuditLog log2 = auditlogs.get(1);
+        log2.setUserAction(UserActionType.KONNEKTOR_DELETE_USER);
+        service.updateAuditlogs(auditlogs);
+        auditlogs.clear();
+        givenAuditlogs();
+    }
+
+    private void thenAuditlogsChanged() {
+        AuditLog log = auditlogs.get(0);
+        Assertions.assertEquals(log.getUserAction(), UserActionType.KONNEKTOR_CREATE_USER);
+        AuditLog log2 = auditlogs.get(1);
+        Assertions.assertEquals(log2.getUserAction(), UserActionType.KONNEKTOR_DELETE_USER);
     }
 
 }
