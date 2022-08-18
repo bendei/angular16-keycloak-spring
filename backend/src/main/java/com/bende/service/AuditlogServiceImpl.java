@@ -35,4 +35,11 @@ public class AuditlogServiceImpl implements AuditlogService {
     public Optional<AuditLog> findById(long id) {
         return repo.findById(id);
     }
+
+    @Override
+    public void updateAuditlogs(final List<AuditLog> auditlogs) {
+        if (!auditlogs.isEmpty()) {
+            auditlogs.forEach( log -> updateAuditlog(log));
+        }
+    }
 }

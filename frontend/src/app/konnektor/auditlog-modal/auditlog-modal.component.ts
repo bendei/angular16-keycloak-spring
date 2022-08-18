@@ -30,15 +30,13 @@ export class AuditlogModalComponent {
   public onSaveAll(): void {
     console.table(this.auditlogsToBeSaved);
     if (this.auditlogsToBeSaved.length != 0) {
-      this.auditlogsToBeSaved.forEach( log => {
-        this.defaultService.updateAuditlog(log.id.toString(), log).subscribe(() => {
+        this.defaultService.updateMoreAuditlog(this.auditlogsToBeSaved).subscribe(() => {
             this.toast.success("auditlogs updated");
             this.router.navigate(['/navigation/konnektor-view']);
           },
           (error:any) => {
             this.toast.error("auditlogs could not be updated.");
           });
-      });
     }
   }
 

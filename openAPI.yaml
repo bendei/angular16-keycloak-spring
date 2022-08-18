@@ -141,6 +141,26 @@ paths:
           description: Konnektor not found
         500:
           description: Server error
+    put:
+      operationId: updateMoreAuditlog
+      summary: Update more auditlog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/AuditLogDTO"
+      responses:
+        204:
+          description: auditlog updated successfully
+        403:
+          description: Forbidden
+        404:
+          description: auditlog not found
+        500:
+          description: Server Error
   /auditlogs/{auditlogId}:
     parameters:
       - name: auditlogId
