@@ -3,7 +3,6 @@ import {AuditLogMessageDTO} from "../../../target/generated-sources/openapi";
 export function mapToString(actionType: AuditLogMessageDTO): string {
 
   if (actionType == null) return null;
-
   switch(actionType) {
     case "USER_LOGIN": return "User loggen in";
     break;

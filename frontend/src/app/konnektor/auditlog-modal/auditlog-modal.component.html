@@ -11,20 +11,32 @@
   <div class="mb-3" >If you click edit in the row, than static fields become input fields, by subsequent click on edit will convert them into static fields, but not save them.
   Rows already edited will have black pencil icon, not edited white ones.</div>
   <ngx-datatable #auditlogsDataTable id="auditlogsDataTable"
+                 [columnMode]="'force'"
                  [messages]="{emptyMessage: 'Keine Daten vorhanden'}"
                  [headerHeight]="30"
                  [rowHeight]="30"
                  [rows]="auditlogs"
                  [scrollbarV]="true"
   >
-    <ngx-datatable-column  name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+    <ngx-datatable-column  [width]="66" name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
     <ngx-datatable-column  name="user" prop="user" [canAutoResize]="true" [sortable]="true"></ngx-datatable-column>
-    <ngx-datatable-column  name="konnektor" prop="konnektor" [canAutoResize]="true" [sortable]="true">
-
+    <ngx-datatable-column  [width]="66" name="konnektor" prop="konnektor" [canAutoResize]="true" [sortable]="true">
     </ngx-datatable-column>
-    <ngx-datatable-column  name="userAction" prop="userAction" [canAutoResize]="true" [sortable]="true">
-      <ng-template  let-row="row" ngx-datatable-cell-template>
-        {{mapUserActionToString(row.userAction)}}
+
+
+    <!-- [value] or [ngValue] -->
+    <!--  https://upmostly.com/angular/using-value-vs-ngvalue-in-angular -->
+    <ngx-datatable-column  [width]="266" name="userAction" prop="userAction" [canAutoResize]="true" [sortable]="true">
+      <ng-template  ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+        <span *ngIf="!editable[rowIndex + '-useraction']" (dblclick)="editable[rowIndex + '-useraction'] = true">
+          {{mapUserActionToString(row.userAction)}}
+        </span>
+        <select *ngIf="editable[rowIndex + '-useraction']" (blur)="onUpdateCell(row.id, rowIndex, '-useraction', $event)">
+          <option [value]="row"> {{mapUserActionToString(row.userAction)}}</option>
+          <option *ngFor="let sor of messagesTypes" [value]="sor" [hidden]="row.userAction == sor">
+            {{mapUserActionToString(sor)}}
+          </option>
+        </select>
       </ng-template>
     </ngx-datatable-column>
 
@@ -35,22 +47,18 @@
         </span>
         <input ngbDatepicker #d="ngbDatepicker" type="text" class="form-control"  *ngIf="editable[rowIndex + '-timestamp']" [value]="convertISODateToString(row.timestamp)"
           (blur)="onUpdateCell(row.id, rowIndex, '-timestamp', $event)">
-
       </ng-template>
     </ngx-datatable-column>
 
-
-
-    <ngx-datatable-column  name="Delete" [canAutoResize]="false" [sortable]="false">
+    <ngx-datatable-column [width]="66" name="Delete" [canAutoResize]="false" [sortable]="false">
       <ng-template  let-row="row" ngx-datatable-cell-template>
         <i class="bi bi-trash"></i>
       </ng-template>
     </ngx-datatable-column>
   </ngx-datatable>
 
-
-
 </div>
+
 <div class="modal-footer">
   <button id="new-button" style="margin-left: 10px;" (click)="onAddNew()" class="btn btn-primary">Add new Auditlog</button>
   <button id="saveall-button" style="margin-left: 10px;" (click)="onSaveAll()" class="btn btn-primary">Save all</button>
