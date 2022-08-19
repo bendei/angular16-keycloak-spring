@@ -40,8 +40,6 @@ export class AuditlogModalComponent {
     }
   }
 
-  // proba push to remote
-
   public mapUserActionToString(action: AuditLogMessageDTO): string {
     return mapToString(action);
   }
