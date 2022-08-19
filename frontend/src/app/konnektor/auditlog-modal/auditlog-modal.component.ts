@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AuditLogDTO, AuditLogMessageDTO, DefaultService} from "../../../../target/generated-sources/openapi";
 import {mapToString} from '../../core/AuditLogMessageMapper';
@@ -13,14 +13,23 @@ const PAD_TIME = "T01:00:00.59";
   templateUrl: './auditlog-modal.component.html',
   providers: [DatePipe]
 })
-export class AuditlogModalComponent {
+export class AuditlogModalComponent implements OnInit {
 
   public auditlogs: Array<AuditLogDTO> = [];
   private auditlogsToBeSaved: AuditLogDTO[] = [];
   public editable = {}; // empty object type, with later members editable[2]=true;
+  public messagesTypes: AuditLogMessageDTO[] = [];
+  person = {
+    firstname:"Tom",
+    lastname:"Hanks"
+  };
 
   constructor(public activeModal: NgbActiveModal, private datePipe: DatePipe, private readonly defaultService: DefaultService, private readonly toast: ToastService,
               private readonly router: Router) {}
+
+  ngOnInit(): void {
+    this.messagesTypes = Object.values(AuditLogMessageDTO);
+  }
 
   public onAddNew(): void {
     console.log(this.auditlogs.length);
@@ -47,7 +56,17 @@ export class AuditlogModalComponent {
   public onUpdateCell(id: number, rowIndex: number, name: string, event: any): void {
     const value = event.target.value;
     this.editable[rowIndex + name] = false;
-    this.auditlogs.filter( log => log.id == id)[0].timestamp = value.toString() + PAD_TIME;
+    console.log("----" + value + ", " + name);
+    switch (name) {
+      case "-timestamp":
+        this.auditlogs.filter( log => log.id == id)[0].timestamp = value.toString() + PAD_TIME;
+        break;
+      case "-useraction":
+        this.auditlogs.filter(log => log.id == id)[0].userAction = value;
+        break;
+
+    }
+
     this.auditlogsToBeSaved.push(this.auditlogs.filter( log => log.id == id)[0]);
   }
 
