@@ -23,8 +23,6 @@ import { ApiError } from '../model/apiError';
 // @ts-ignore
 import { AuditLogDTO } from '../model/auditLogDTO';
 // @ts-ignore
-import { CreateAuditLogRequestDTO } from '../model/createAuditLogRequestDTO';
-// @ts-ignore
 import { KonnektorDTO } from '../model/konnektorDTO';
 // @ts-ignore
 import { KonnektorHostnameDTO } from '../model/konnektorHostnameDTO';
@@ -96,16 +94,16 @@ export class DefaultService {
     }
 
     /**
-     * @param createAuditLogRequestDTO 
+     * @param auditLogDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createAuditLog(createAuditLogRequestDTO: CreateAuditLogRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<any>;
-    public createAuditLog(createAuditLogRequestDTO: CreateAuditLogRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpResponse<any>>;
-    public createAuditLog(createAuditLogRequestDTO: CreateAuditLogRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpEvent<any>>;
-    public createAuditLog(createAuditLogRequestDTO: CreateAuditLogRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined,}): Observable<any> {
-        if (createAuditLogRequestDTO === null || createAuditLogRequestDTO === undefined) {
-            throw new Error('Required parameter createAuditLogRequestDTO was null or undefined when calling createAuditLog.');
+    public createAuditLog(auditLogDTO: Array<AuditLogDTO>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<any>;
+    public createAuditLog(auditLogDTO: Array<AuditLogDTO>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpResponse<any>>;
+    public createAuditLog(auditLogDTO: Array<AuditLogDTO>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined,}): Observable<HttpEvent<any>>;
+    public createAuditLog(auditLogDTO: Array<AuditLogDTO>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined,}): Observable<any> {
+        if (auditLogDTO === null || auditLogDTO === undefined) {
+            throw new Error('Required parameter auditLogDTO was null or undefined when calling createAuditLog.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -144,7 +142,7 @@ export class DefaultService {
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/auditlogs`,
-            createAuditLogRequestDTO,
+            auditLogDTO,
             {
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,

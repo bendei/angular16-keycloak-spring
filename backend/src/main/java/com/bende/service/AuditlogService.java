@@ -16,4 +16,6 @@ public interface AuditlogService {
 
     void updateAuditlogs(List<AuditLog> auditlogs);
 
+    void createAuditLos(List<AuditLog> auditlogs);
+
 }

@@ -2,7 +2,6 @@ package com.bende.api;
 
 import com.bende.api.model.AuditLogDTO;
 import com.bende.api.model.AuditLogMessageDTO;
-import com.bende.api.model.CreateAuditLogRequestDTO;
 import com.bende.api.model.KonnektorDTO;
 import com.bende.api.model.KonnektorHostnameDTO;
 import com.bende.persistence.model.AuditLog;
@@ -50,21 +49,28 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
     @Override
     @ApiOperation(" create auditlog")
     @CrossOrigin("http://localhost:4200")
-    public  ResponseEntity<Void> createAuditLog(CreateAuditLogRequestDTO request) {
-        Optional<Konnektor> konnektor = konnektorRepository.findById(Long.valueOf(request.getKonnektor()));
+    public  ResponseEntity<Void> createAuditLog(List<AuditLogDTO> dtos) {
 
-        if (konnektor.isPresent()) {
-            AuditLog log = new AuditLog();
-            log.setTimestamp(LocalDateTime.now());
-            log.setUser(request.getUser());
-            log.setUserAction(UserActionType.valueOf(request.getUserAction().getValue()));
-            log.setKonnektor(konnektor.get());
-            auditlogService.createAuditLog(log);
+        if (dtos != null && !dtos.isEmpty()) {
+            Optional<Konnektor> konnektor = konnektorRepository.findById(Long.valueOf(dtos.get(0).getKonnektor()));
+            if (konnektor.isPresent()) {
+                dtos.forEach(dto -> createNewAuditLog(dto, konnektor.get()));
+            }
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    private void createNewAuditLog(AuditLogDTO dto, Konnektor konnektor) {
+        AuditLog log = new AuditLog();
+        log.setTimestamp(LocalDateTime.now());
+        log.setUser(dto.getUser());
+        log.setUserAction(UserActionType.valueOf(dto.getUserAction().getValue()));
+        log.setKonnektor(konnektor);
+        auditlogService.createAuditLog(log);
+    }
+
 
     @Override
     @ApiOperation(" update auditlog")

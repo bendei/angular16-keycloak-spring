@@ -42,4 +42,9 @@ public class AuditlogServiceImpl implements AuditlogService {
             auditlogs.forEach( log -> updateAuditlog(log));
         }
     }
+
+    @Override
+    public void createAuditLos(final List<AuditLog> auditlogs) {
+        auditlogs.forEach(log -> createAuditLog(log));
+    }
 }

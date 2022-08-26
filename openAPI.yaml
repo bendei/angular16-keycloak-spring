@@ -133,7 +133,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref:  "#/components/schemas/CreateAuditLogRequestDTO"
+              type: array
+              items:
+                $ref: "#/components/schemas/AuditLogDTO"
       responses:
         204:
           description: AuditLog created

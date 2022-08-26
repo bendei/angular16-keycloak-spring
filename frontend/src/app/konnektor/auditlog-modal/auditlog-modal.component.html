@@ -19,19 +19,26 @@
                  [scrollbarV]="true"
   >
     <ngx-datatable-column  [width]="66" name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-    <ngx-datatable-column  name="user" prop="user" [canAutoResize]="true" [sortable]="true"></ngx-datatable-column>
+    <ngx-datatable-column  name="user" prop="user" [canAutoResize]="true" [sortable]="true">
+      <ng-template  ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+        <span *ngIf="!editable[row.id + '-user']" (dblclick)="editable[row.id + '-user'] = true">
+          {{row.user}}
+          {{rowIndex}}
+        </span>
+        <input type="text" class="form-control"  *ngIf="editable[row.id + '-user']" (blur)="onUpdateCell(row.id, '-user', $event)" [value] = "row.user">
+      </ng-template>
+    </ngx-datatable-column>
     <ngx-datatable-column  [width]="66" name="konnektor" prop="konnektor" [canAutoResize]="true" [sortable]="true">
     </ngx-datatable-column>
-
 
     <!-- [value] or [ngValue] -->
     <!--  https://upmostly.com/angular/using-value-vs-ngvalue-in-angular -->
     <ngx-datatable-column  [width]="266" name="userAction" prop="userAction" [canAutoResize]="true" [sortable]="true">
       <ng-template  ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
-        <span *ngIf="!editable[rowIndex + '-useraction']" (dblclick)="editable[rowIndex + '-useraction'] = true">
+        <span *ngIf="!editable[row.id + '-useraction']" (dblclick)="editable[row.id + '-useraction'] = true">
           {{mapUserActionToString(row.userAction)}}
         </span>
-        <select *ngIf="editable[rowIndex + '-useraction']" (blur)="onUpdateCell(row.id, rowIndex, '-useraction', $event)">
+        <select *ngIf="editable[row.id + '-useraction']" (blur)="onUpdateCell(row.id, '-useraction', $event)">
           <option [value]="row"> {{mapUserActionToString(row.userAction)}}</option>
           <option *ngFor="let sor of messagesTypes" [value]="sor" [hidden]="row.userAction == sor">
             {{mapUserActionToString(sor)}}
@@ -42,17 +49,17 @@
 
     <ngx-datatable-column  name="timestamp" [canAutoResize]="true" [sortable]="true">
       <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex" >
-        <span title="double click to edit" *ngIf="!editable[rowIndex + '-timestamp']" (dblclick)="editable[rowIndex + '-timestamp'] = true">
+        <span title="double click to edit" *ngIf="!editable[row.id + '-timestamp']" (dblclick)="editable[row.id + '-timestamp'] = true">
          {{row.timestamp | date:"YYYY-MM-dd"}}
         </span>
-        <input ngbDatepicker #d="ngbDatepicker" type="text" class="form-control"  *ngIf="editable[rowIndex + '-timestamp']" [value]="convertISODateToString(row.timestamp)"
-          (blur)="onUpdateCell(row.id, rowIndex, '-timestamp', $event)">
+        <input ngbDatepicker #d="ngbDatepicker" type="text" class="form-control"  *ngIf="editable[row.id + '-timestamp']" [value]="convertISODateToString(row.timestamp)"
+          (blur)="onUpdateCell(row.id, '-timestamp', $event)">
       </ng-template>
     </ngx-datatable-column>
 
     <ngx-datatable-column [width]="66" name="Delete" [canAutoResize]="false" [sortable]="false">
-      <ng-template  let-row="row" ngx-datatable-cell-template>
-        <i class="bi bi-trash"></i>
+      <ng-template  let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+        <i class="bi bi-trash" (click)="removeAuditlog(row, rowIndex)"></i>
       </ng-template>
     </ngx-datatable-column>
   </ngx-datatable>
