@@ -8,10 +8,12 @@ import com.bende.persistence.repos.AuditLogRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional  // rolls back transaction after each Test -> no after cleanup is necessary (like deleteing entity after creating one in Test)
@@ -67,6 +69,33 @@ public class AuditlogServiceDBTest {
         givenAuditlogs();
         whenAuditlogsSaved();
         thenAuditlogsChanged();
+    }
+
+    @Test
+    @Sql({"/test_data.sql"})
+    public void testDeleteAuditlog() {
+        givenAuditlogFromDB();
+        Assertions.assertNotNull(log);
+        service.deleteAuditlog(log.getId());
+        givenAuditlogFromDB();
+        Assertions.assertNull(log);
+    }
+
+    @Test
+    @Sql({"/test_data.sql"})
+    public void testFindAuditLogsForKonnektor() {
+        List<AuditLog> lista = service.findAuditLogsByKonnektorId(1L);
+        Assertions.assertEquals(3, lista.size());
+        Assertions.assertTrue(lista.stream().allMatch( log -> log.getKonnektor().getId() == 1L));
+    }
+
+    private void givenAuditlogFromDB() {
+        Optional<AuditLog> logOpt =  service.findById(1L);
+        if (!logOpt.isEmpty()) {
+            log = logOpt.get();
+        } else {
+            log = null;
+        }
     }
 
     private void givenAuditlog() {

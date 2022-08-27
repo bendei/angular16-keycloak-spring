@@ -18,4 +18,8 @@ public interface AuditlogService {
 
     void createAuditLos(List<AuditLog> auditlogs);
 
+    void deleteAuditlog(long id);
+
+    List<AuditLog> findAuditLogsByKonnektorId(Long id);
+
 }

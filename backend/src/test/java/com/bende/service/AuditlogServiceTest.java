@@ -1,6 +1,7 @@
 package com.bende.service;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -80,6 +81,14 @@ public class AuditlogServiceTest {
         when(auditLogRepository.existsById(any(long.class))).thenReturn(true);
         when(auditLogRepository.save(any(AuditLog.class))).thenReturn(logs.get(0));
         auditlogService.updateAuditlogs(logs);
+    }
+
+    @Test
+    public void testDeleteAuditlog() {
+        givenAuditlog();
+        doNothing().when(auditLogRepository).deleteById(any(Long.class));
+        auditlogService.deleteAuditlog(1L);
+        verify(auditLogRepository).deleteById(1L);
     }
 
     private void thenAuditlogsReturned() {

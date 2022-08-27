@@ -47,4 +47,15 @@ public class AuditlogServiceImpl implements AuditlogService {
     public void createAuditLos(final List<AuditLog> auditlogs) {
         auditlogs.forEach(log -> createAuditLog(log));
     }
+
+    @Override
+    public void deleteAuditlog(final long id) {
+        repo.deleteById(id);
+    }
+
+    @Override
+    public List<AuditLog> findAuditLogsByKonnektorId(final Long id) {
+        return repo.findAuditLogsByKonnektorId(id);
+    }
+
 }

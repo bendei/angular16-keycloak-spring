@@ -7,7 +7,6 @@ import com.bende.api.model.KonnektorHostnameDTO;
 import com.bende.persistence.model.AuditLog;
 import com.bende.persistence.model.Konnektor;
 import com.bende.persistence.model.UserActionType;
-import com.bende.persistence.repos.EmployeeRepository;
 import com.bende.persistence.repos.KonnektorRepository;
 import com.bende.service.AuditlogService;
 import com.bende.service.KonnektorService;
@@ -30,9 +29,6 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
     KonnektorService konnektorService;
 
     @Autowired
-    EmployeeRepository employeeRepository;
-
-    @Autowired
     KonnektorRepository konnektorRepository;
 
     @Autowired
@@ -43,6 +39,15 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
     @CrossOrigin("http://localhost:4200")
     public ResponseEntity<List<AuditLogDTO>> getAuditLogs(final String auditlogId) {
         List<AuditLogDTO> lista = auditlogService.findById(Long.valueOf(auditlogId)).stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
+        return new ResponseEntity<>(lista, HttpStatus.OK);
+    }
+
+    @Override
+    @ApiOperation("auditlogs to a given konnektor")
+    @CrossOrigin("http://localhost:4200")
+    public ResponseEntity<List<AuditLogDTO>> getAllAuditLog(final Integer konnektorId) {
+        List<AuditLogDTO> lista = auditlogService.findAuditLogsByKonnektorId(Long.valueOf(konnektorId.longValue())).stream()
+            .map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
@@ -62,6 +67,14 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
         }
     }
 
+    @Override
+    @ApiOperation(" delete auditlog")
+    @CrossOrigin("http://localhost:4200")
+    public ResponseEntity<Void> deleteAuditlog(final String auditlogId) {
+        auditlogService.deleteAuditlog(Long.valueOf(auditlogId));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     private void createNewAuditLog(AuditLogDTO dto, Konnektor konnektor) {
         AuditLog log = new AuditLog();
         log.setTimestamp(LocalDateTime.now());
@@ -70,7 +83,6 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
         log.setKonnektor(konnektor);
         auditlogService.createAuditLog(log);
     }
-
 
     @Override
     @ApiOperation(" update auditlog")

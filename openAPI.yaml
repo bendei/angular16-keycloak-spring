@@ -125,6 +125,24 @@ paths:
           description: konnektor created
         500:
           description: server error
+  /auditlogs/konnektor/{konnektorId}:
+    parameters:
+      - name: konnektorId
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      operationId: getAllAuditLog
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AuditLogDTO"
   /auditlogs:
     post:
       operationId: createAuditLog
@@ -199,6 +217,12 @@ paths:
           description: auditlog not found
         500:
           description: Server Error
+    delete:
+      description: deleteing an auditlog
+      operationId: deleteAuditlog
+      responses:
+        '200':
+          description: Auditlog deleted
 components:
   parameters:
     konnektorId:

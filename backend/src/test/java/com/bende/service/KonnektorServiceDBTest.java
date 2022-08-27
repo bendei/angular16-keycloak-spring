@@ -109,6 +109,7 @@ public class KonnektorServiceDBTest {
 
     private void givenKonnektorFromDB() {
         konnektor = konnektorService.getKonnektor(3L);
+        Assertions.assertNotNull(konnektor);
     }
 
     private void givenAnUnsavedKonnektor() {

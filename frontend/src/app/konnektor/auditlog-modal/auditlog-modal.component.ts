@@ -51,11 +51,13 @@ export class AuditlogModalComponent implements OnInit {
   }
 
   public onSaveAll(): void {
+    console.table(this.auditlogsToBeUpdated);
+    console.table(this.auditlogsToBeSaved);
 
     if (this.auditlogsToBeUpdated.length != 0) {
         this.defaultService.updateMoreAuditlog(this.auditlogsToBeUpdated).subscribe(() => {
             this.toast.success("auditlogs updated");
-            this.router.navigate(['/navigation/konnektor-view']);
+            //this.router.navigate(['/navigation/konnektor-view']);
           },
           (error:any) => {
             this.toast.error("auditlogs could not be updated.");
@@ -63,22 +65,36 @@ export class AuditlogModalComponent implements OnInit {
     }
 
     // newly created logs saving
-    this.defaultService.createAuditLog(this.auditlogsToBeSaved).subscribe( () => {
-        this.toast.success("auditlogs created");
-        this.router.navigate(['/navigation/konnektor-view']);
-      },
-      (error:any) => {
-        this.toast.error("auditlogs could not be created.");
-    });
+    if (this.auditlogsToBeSaved.length != 0) {
+      this.defaultService.createAuditLog(this.auditlogsToBeSaved).subscribe(() => {
+          this.toast.success("auditlogs updated");
+          //this.router.navigate(['/navigation/konnektor-view']);
+        },
+        (error: any) => {
+          this.toast.error("auditlogs could not be updated.");
+        });
+    }
 
   }
 
   public removeAuditlog(log: AuditLogDTO, rowIndex: number): void {
-    // newly created but not saved logs
-    if (log.id == 0) {
-      this.auditlogs.splice(rowIndex, 1);
-    } else {  // persisted log
+    console.log(log.id +", " + rowIndex);
 
+    // persisted log
+    if (log.id >= 0) {
+      this.defaultService.deleteAuditlog(log.id.toString()).subscribe( () => {
+          this.toast.success("auditlogs deleted");
+          //this.router.navigate(['/navigation/konnektor-view']);
+        },
+        (error:any) => {
+          this.toast.error("auditlogs could not be deleted.");
+      });
+      const ez: AuditLogDTO[] = this.auditlogs.filter( (l) => l.id != log.id);
+      this.auditlogs = ez;
+    } else {
+      // newly created but not saved logs
+      const ez: AuditLogDTO[] = this.auditlogs.filter( (l) => l.id != log.id);
+      this.auditlogs = ez;
     }
   }
 
