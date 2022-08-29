@@ -27,15 +27,14 @@ export class AuditlogModalComponent implements OnInit {
   @ViewChild('auditlogsDataTable', {static: false})
   private auditlogsDataTable: DatatableComponent;
 
-  constructor(public activeModal: NgbActiveModal, private datePipe: DatePipe, private readonly defaultService: DefaultService, private readonly toast: ToastService,
-              private readonly router: Router) {}
+  constructor(public activeModal: NgbActiveModal, private datePipe: DatePipe, private readonly defaultService: DefaultService,
+              private readonly toast: ToastService) {}
 
   ngOnInit(): void {
     this.messagesTypes = Object.values(AuditLogMessageDTO);
   }
 
   public onAddNew(): void {
-
     let newLog = {
       id: this.latestNewIdForAuditlog,
       user: '',
@@ -48,11 +47,10 @@ export class AuditlogModalComponent implements OnInit {
     this.auditlogsToBeSaved.push(newLog);
     this.editable[this.latestNewIdForAuditlog + '-user'] = true;
     --this.latestNewIdForAuditlog;
+    this.auditlogsDataTable.rows = this.auditlogs;
   }
 
   public onSaveAll(): void {
-    console.table(this.auditlogsToBeUpdated);
-    console.table(this.auditlogsToBeSaved);
 
     if (this.auditlogsToBeUpdated.length != 0) {
         this.defaultService.updateMoreAuditlog(this.auditlogsToBeUpdated).subscribe(() => {
@@ -77,9 +75,7 @@ export class AuditlogModalComponent implements OnInit {
 
   }
 
-  public removeAuditlog(log: AuditLogDTO, rowIndex: number): void {
-    console.log(log.id +", " + rowIndex);
-
+  public removeAuditlog(log: AuditLogDTO): void {
     // persisted log
     if (log.id >= 0) {
       this.defaultService.deleteAuditlog(log.id.toString()).subscribe( () => {

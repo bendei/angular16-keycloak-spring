@@ -19,17 +19,27 @@ export class KonnektorModifyComponent implements OnInit {
   public konnektor: KonnektorDTO;
   public konnektorForm!: FormGroup;
   public model: NgbDateStruct;
+  private ember: [number, string, boolean];
+  private emberArray: [number, string, boolean][];
 
   constructor(private readonly fb: FormBuilder, private route: ActivatedRoute, private readonly defaultService: DefaultService, private readonly toast: ToastService,
               private readonly router: Router, private modalService: NgbModal,  private readonly calender: NgbCalendar) {
+
+    // just for learning
+    this.ember = [50, 'bende', true];
+    this.ember.push(55, 'qqq', false);
+    console.log(this.ember[0]);
+    this.emberArray = [[11, 'aaa', true]];
+    this.emberArray.push([22, 'bbb', true]);
+    console.log(this.emberArray);
+    console.log(this.emberArray[0][0]);
   }
 
   async ngOnInit() { this.createForm();
     this.konnektorId = this.route.snapshot.paramMap.get('id');
 
     if(this.konnektorId) {
-      const konn = await this.defaultService.getKonnektor(this.konnektorId).toPromise();
-        this.konnektor = konn;
+        this.konnektor = await this.defaultService.getKonnektor(this.konnektorId).toPromise();
         this.loadFormData();
     }
 
@@ -39,7 +49,7 @@ export class KonnektorModifyComponent implements OnInit {
   public onSubmit(): void {
     const {id, hostName, serialNumber, firmwareVersion, hardwareVersion, active, created, createdTime} = this.konnektorForm.getRawValue();
     const createdISO = this.ngbDateStructToISO(created);
-    const createdTimeISO = this.timeStructToISO(createdTime);
+    const createdTimeISO = KonnektorModifyComponent.timeStructToISO(createdTime);
 
     console.log("createdTimeISO:", createdTimeISO);
 
@@ -59,13 +69,9 @@ export class KonnektorModifyComponent implements OnInit {
     this.router.navigate(['/navigation/konnektor-view']);
   }
 
-  open() {
+  async open() {
     const modalRef = this.modalService.open(AuditlogModalComponent,  { size: 'xl' });
-    console.log(this.konnektor.id);
-    const auditLogs = this.defaultService.getAllAuditLog(this.konnektor.id).subscribe( data => {
-      modalRef.componentInstance.auditlogs = this.konnektor.auditlogs;
-    });
-
+    modalRef.componentInstance.auditlogs = await this.defaultService.getAllAuditLog(this.konnektor.id).toPromise();
   }
 
   private createForm(): void {
@@ -91,19 +97,19 @@ export class KonnektorModifyComponent implements OnInit {
         firmwareVersion: this.konnektor.firmwareVersion,
         hardwareVersion: this.konnektor.hardwareVersion,
         created: this.konnektor.created,
-        createdTime: this.isoToTime(this.konnektor.created),
+        createdTime: KonnektorModifyComponent.isoToTime(this.konnektor.created),
         active: this.konnektor.active,
         validUntil: this.konnektor.validUntil
       });
     }
 
-    const date: NgbDateStruct = this.isoToNgbDateStruct(this.konnektor.created);
+    const date: NgbDateStruct = KonnektorModifyComponent.isoToNgbDateStruct(this.konnektor.created);
     //this.konnektorForm.get('created')?.setValue(this.calender.getToday());
     this.konnektorForm.get('created')?.setValue(date);
   }
 
   // format: 2022-08-14T08:00:50.44
-  private isoToTime(isoString: string): TimeStruct {
+  private static isoToTime(isoString: string): TimeStruct {
     if (isoString) {
       const timeString = isoString.trim().substring(isoString.indexOf('T') + 1);
       const timeParts = timeString.trim().split(':');
@@ -119,14 +125,14 @@ export class KonnektorModifyComponent implements OnInit {
   }
 
   // format: 2022-08-14T08:00:50.44
-  private timeStructToISO(time: TimeStruct): string {
+  private static timeStructToISO(time: TimeStruct): string {
     if (isNumber(time.hour) && isNumber(time.minute)) {
       return "T" + time.hour.toString().padStart(2, "0") + ":" + time.minute.toString().padStart(2, "0") + ":00.50"
     }
     return "T00:00:00.44";
   }
 
-  private isoToNgbDateStruct(isoString: string): NgbDateStruct {
+  private static isoToNgbDateStruct(isoString: string): NgbDateStruct {
     if(isoString) {
       const dateParts = isoString.trim().split('-');
       if (dateParts.length == 3) {
@@ -137,7 +143,7 @@ export class KonnektorModifyComponent implements OnInit {
 
   // format: 2022-08-14T08:00:50.44
   private ngbDateStructToISO(model: NgbDateStruct): string {
-    const padTime = () => "T06:00:50.43";
+    //const padTime = () => "T06:00:50.43";
 
     const padMonth = (m: number) => {
       if (isNumber(m)) {

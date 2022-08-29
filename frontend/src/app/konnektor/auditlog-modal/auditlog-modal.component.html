@@ -16,14 +16,13 @@
                  [headerHeight]="30"
                  [rowHeight]="30"
                  [rows]="auditlogs"
-                 [scrollbarV]="true"
+                 [scrollbarV]="false"
   >
     <ngx-datatable-column  [width]="66" name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
     <ngx-datatable-column  name="user" prop="user" [canAutoResize]="true" [sortable]="true">
       <ng-template  ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
         <span *ngIf="!editable[row.id + '-user']" (dblclick)="editable[row.id + '-user'] = true">
           {{row.user}}
-          {{rowIndex}}
         </span>
         <input type="text" class="form-control"  *ngIf="editable[row.id + '-user']" (blur)="onUpdateCell(row.id, '-user', $event)" [value] = "row.user">
       </ng-template>
@@ -59,7 +58,7 @@
 
     <ngx-datatable-column [width]="66" name="Delete" [canAutoResize]="false" [sortable]="false">
       <ng-template  let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-        <i class="bi bi-trash" (click)="removeAuditlog(row, rowIndex)"></i>
+        <i class="bi bi-trash" (click)="removeAuditlog(row)"></i>
       </ng-template>
     </ngx-datatable-column>
   </ngx-datatable>
