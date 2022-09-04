@@ -1,10 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, Component, DoCheck, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AuditLogDTO, AuditLogMessageDTO, DefaultService} from "../../../../target/generated-sources/openapi";
 import {mapToString} from '../../core/AuditLogMessageMapper';
 import {DatePipe} from "@angular/common";
 import {ToastService} from "../../toast/toast.service";
-import {Router} from "@angular/router";
 import {createCurrentDateTimeISOString} from "../../core/helper";
 import {DatatableComponent} from "@swimlane/ngx-datatable";
 
@@ -15,8 +14,12 @@ const PAD_TIME = "T01:00:00.59";
   templateUrl: './auditlog-modal.component.html',
   providers: [DatePipe]
 })
-export class AuditlogModalComponent implements OnInit {
+export class AuditlogModalComponent implements OnInit, OnChanges, DoCheck, AfterViewChecked {
 
+  public fontSizePx = 15;
+  public title = "dynamic property binding";
+  public templateString = '';
+  private incrementator = 0;
   public auditlogs: Array<AuditLogDTO> = [];
   private auditlogsToBeUpdated: AuditLogDTO[] = [];
   private auditlogsToBeSaved: AuditLogDTO[] = [];
@@ -32,6 +35,37 @@ export class AuditlogModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.messagesTypes = Object.values(AuditLogMessageDTO);
+  }
+
+  ngDoCheck(): void {
+    console.log(".....onDoCheck");
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(".....ngOnChanges");
+  }
+
+  public templateMethodOne(username: string): number {
+    ++this.incrementator;
+    console.log("----templateMethodOne called: " + this.incrementator);
+    return username.length;
+  }
+
+  public changeTitle() {
+    this.title = "dddddd";
+  }
+
+  public inc() {
+    ++this.fontSizePx;
+  }
+
+  public dec() {
+    --this.fontSizePx;
+  }
+
+  public printlogUser(user: string) {
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@printlogUser");
+    return user + "---";
   }
 
   public onAddNew(): void {
@@ -50,25 +84,26 @@ export class AuditlogModalComponent implements OnInit {
     this.auditlogsDataTable.rows = this.auditlogs;
   }
 
-  public onSaveAll(): void {
+  public async onSaveAll() {
 
     if (this.auditlogsToBeUpdated.length != 0) {
-        this.defaultService.updateMoreAuditlog(this.auditlogsToBeUpdated).subscribe(() => {
+        await this.defaultService.updateMoreAuditlog(this.auditlogsToBeUpdated).toPromise().then(() => {
             this.toast.success("auditlogs updated");
             //this.router.navigate(['/navigation/konnektor-view']);
-          },
-          (error:any) => {
+          })
+          .catch(() => {
             this.toast.error("auditlogs could not be updated.");
           });
     }
 
     // newly created logs saving
     if (this.auditlogsToBeSaved.length != 0) {
-      this.defaultService.createAuditLog(this.auditlogsToBeSaved).subscribe(() => {
+      await this.defaultService.createAuditLog(this.auditlogsToBeSaved).toPromise().then( () => {
           this.toast.success("auditlogs updated");
           //this.router.navigate(['/navigation/konnektor-view']);
-        },
-        (error: any) => {
+          // DEV itt kellene a visszaadott id-vel updatelni a tablet
+        })
+        .catch(() => {
           this.toast.error("auditlogs could not be updated.");
         });
     }
@@ -78,20 +113,17 @@ export class AuditlogModalComponent implements OnInit {
   public removeAuditlog(log: AuditLogDTO): void {
     // persisted log
     if (log.id >= 0) {
-      this.defaultService.deleteAuditlog(log.id.toString()).subscribe( () => {
+      this.defaultService.deleteAuditlog(log.id.toString()).subscribe(() => {
           this.toast.success("auditlogs deleted");
           //this.router.navigate(['/navigation/konnektor-view']);
         },
-        (error:any) => {
+        () => {
           this.toast.error("auditlogs could not be deleted.");
-      });
-      const ez: AuditLogDTO[] = this.auditlogs.filter( (l) => l.id != log.id);
-      this.auditlogs = ez;
-    } else {
+        });
+    }
       // newly created but not saved logs
       const ez: AuditLogDTO[] = this.auditlogs.filter( (l) => l.id != log.id);
       this.auditlogs = ez;
-    }
   }
 
   public mapUserActionToString(action: AuditLogMessageDTO): string {
@@ -121,6 +153,10 @@ export class AuditlogModalComponent implements OnInit {
 
   public convertISODateToString(date: string): string {
     return this.datePipe.transform(date,'yyyy-MM-dd');
+  }
+
+  ngAfterViewChecked(): void {
+    console.log("#######AfterViewChecked");
   }
 
 }

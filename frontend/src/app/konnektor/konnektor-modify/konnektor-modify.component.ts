@@ -8,6 +8,7 @@ import {AuditlogModalComponent} from "../auditlog-modal/auditlog-modal.component
 import {NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 import {TimeStruct} from "../../core/helper";
 import {isNumber} from "lodash";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-konnektor-modify',
@@ -19,8 +20,12 @@ export class KonnektorModifyComponent implements OnInit {
   public konnektor: KonnektorDTO;
   public konnektorForm!: FormGroup;
   public model: NgbDateStruct;
+  // tuples
   private ember: [number, string, boolean];
   private emberArray: [number, string, boolean][];
+  // 2-way binding
+  public fullName = 'pista';
+
 
   constructor(private readonly fb: FormBuilder, private route: ActivatedRoute, private readonly defaultService: DefaultService, private readonly toast: ToastService,
               private readonly router: Router, private modalService: NgbModal,  private readonly calender: NgbCalendar) {
@@ -33,20 +38,26 @@ export class KonnektorModifyComponent implements OnInit {
     this.emberArray.push([22, 'bbb', true]);
     console.log(this.emberArray);
     console.log(this.emberArray[0][0]);
+
   }
 
   async ngOnInit() { this.createForm();
     this.konnektorId = this.route.snapshot.paramMap.get('id');
 
     if(this.konnektorId) {
-        this.konnektor = await this.defaultService.getKonnektor(this.konnektorId).toPromise();
-        this.loadFormData();
+        await this.defaultService.getKonnektor(this.konnektorId).toPromise().then( result => {
+          this.konnektor = result;
+          this.loadFormData();
+        }).catch( error => {
+            this.toast.error((error as HttpErrorResponse).message);
+          }
+        )
     }
 
     this.model = this.calender.getToday();
   }
 
-  public onSubmit(): void {
+  public async onSubmit() {
     const {id, hostName, serialNumber, firmwareVersion, hardwareVersion, active, created, createdTime} = this.konnektorForm.getRawValue();
     const createdISO = this.ngbDateStructToISO(created);
     const createdTimeISO = KonnektorModifyComponent.timeStructToISO(createdTime);
@@ -54,12 +65,12 @@ export class KonnektorModifyComponent implements OnInit {
     console.log("createdTimeISO:", createdTimeISO);
 
     this.defaultService.updateKonnektor(id, {
-      id, hostName, serialNumber, firmwareVersion, hardwareVersion, active, created: createdISO + "" + createdTimeISO}).subscribe(
+      id, hostName, serialNumber, firmwareVersion, hardwareVersion, active, created: createdISO + "" + createdTimeISO}).toPromise().then(
       () => {
         this.toast.success("konnektor updated");
         this.router.navigate(['/navigation/konnektor-view']);
-      },
-      (error:any) => {
+      })
+      .catch(() => {
         this.toast.error("konnektor could not be updated.");
       }
     );
@@ -70,8 +81,15 @@ export class KonnektorModifyComponent implements OnInit {
   }
 
   async open() {
-    const modalRef = this.modalService.open(AuditlogModalComponent,  { size: 'xl' });
-    modalRef.componentInstance.auditlogs = await this.defaultService.getAllAuditLog(this.konnektor.id).toPromise();
+    await this.defaultService.getAllAuditLog(this.konnektor.id).toPromise().then( result => {
+        result => console.log("hahahaha:   " + result);
+        const modalRef = this.modalService.open(AuditlogModalComponent,  { size: 'xl' });
+        modalRef.componentInstance.auditlogs = result;
+      }
+    ).catch( error => {
+      this.toast.error((error as HttpErrorResponse).message);
+    });
+
   }
 
   private createForm(): void {
@@ -158,6 +176,10 @@ export class KonnektorModifyComponent implements OnInit {
     if (model && isNumber(model.year) && isNumber(model.month) && isNumber(model.day)) {
       return model.year + '-' + padMonth(model.month) + '-' + padMonth(model.day); // + padTime();
     }
+  }
+
+  public twoway(event: any) {
+    this.fullName = event.target.value;
   }
 
 }

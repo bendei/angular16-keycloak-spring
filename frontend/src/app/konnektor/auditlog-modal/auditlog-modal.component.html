@@ -7,7 +7,7 @@
 <!--INLINE EDITING TABLE CELL FIELDS !! :)-->
 <!--https://swimlane.github.io/ngx-datatable/#inline-edit-->
 
-<div class="modal-body">
+<div class="modal-body" [title]="title">
   <div class="mb-3" >If you click edit in the row, than static fields become input fields, by subsequent click on edit will convert them into static fields, but not save them.
   Rows already edited will have black pencil icon, not edited white ones.</div>
   <ngx-datatable #auditlogsDataTable id="auditlogsDataTable"
@@ -19,14 +19,19 @@
                  [scrollbarV]="false"
   >
     <ngx-datatable-column  [width]="66" name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+
     <ngx-datatable-column  name="user" prop="user" [canAutoResize]="true" [sortable]="true">
       <ng-template  ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
         <span *ngIf="!editable[row.id + '-user']" (dblclick)="editable[row.id + '-user'] = true">
           {{row.user}}
+          {{templateMethodOne(row.user)}} <!--template expression ami a user string hosszat adja vissza-->
+          {{row.user | demo}} <!--pure pipe, ami a a user string hosszat adja vissza-->
+          {{row.user | usernamelength}} <!--caching vlaue with un-pure pipe, ami a a user string hosszat adja vissza-->
         </span>
         <input type="text" class="form-control"  *ngIf="editable[row.id + '-user']" (blur)="onUpdateCell(row.id, '-user', $event)" [value] = "row.user">
       </ng-template>
     </ngx-datatable-column>
+
     <ngx-datatable-column  [width]="66" name="konnektor" prop="konnektor" [canAutoResize]="true" [sortable]="true">
     </ngx-datatable-column>
 
@@ -69,4 +74,12 @@
   <button id="new-button" style="margin-left: 10px;" (click)="onAddNew()" class="btn btn-primary">Add new Auditlog</button>
   <button id="saveall-button" style="margin-left: 10px;" (click)="onSaveAll()" class="btn btn-primary">Save all</button>
   <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+  <button type="button"  (click)="changeTitle()">Change title</button>
+  <button type="button"  (click)="inc()">Increase text</button>
+  <button type="button"  (click)="dec()">Decrease text</button>
+</div>
+<div [style.font-size.px]="fontSizePx">Resizable Text</div>
+
+<div *ngFor="let log of auditlogs"> <!--ha az uditlog változik vagy ujat adunk hozzá akkor a pipe bemebete is változik es lefut a transform maskülönben nem-->
+  {{log.user | printuser}}
 </div>

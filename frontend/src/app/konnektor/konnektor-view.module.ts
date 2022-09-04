@@ -12,9 +12,13 @@ import {RouterModule} from "@angular/router";
 import {konnektorRoutes} from "./konnektor.routing";
 import {KonnektorModifyComponent} from "./konnektor-modify/konnektor-modify.component";
 import {AuditlogModalComponent} from "./auditlog-modal/auditlog-modal.component";
+import {DemoPipe} from "./auditlog-modal/demopipe";
+import {UsernamelengthpipePipe} from "./auditlog-modal/usernamelengthpipe";
+import {PrintuserpipePipe} from "./auditlog-modal/printuserpipe";
 
 @NgModule({
-  declarations: [KonnektorViewComponent, KonnektorDropdownComponent, KonnektorRemoveComponent, KonnektorModifyComponent, AuditlogModalComponent],
+  declarations: [KonnektorViewComponent, KonnektorDropdownComponent, KonnektorRemoveComponent, KonnektorModifyComponent, AuditlogModalComponent, DemoPipe, UsernamelengthpipePipe,
+  PrintuserpipePipe],
   providers: [ ToastService, FormBuilder],
   imports: [CommonModule, BrowserModule, NgxDatatableModule, FormsModule,
     ReactiveFormsModule, NgbModule,

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {DefaultService, KonnektorDTO } from '../../../target/generated-sources/openapi';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'konnektor-view',
@@ -47,18 +48,18 @@ export class KonnektorViewComponent implements OnInit {
     this.isEditMode[index] = !this.isEditMode[index];
   }
 
-  public onUpdateHostname(event: any, rowIndex: string, dto: KonnektorDTO): void {
+  public async onUpdateHostname(event: any, rowIndex: string, dto: KonnektorDTO) {
     this.isEditMode[rowIndex] = false;
     const reqDto: KonnektorDTO = {
       id: dto.id,
       hostName : event.target.value
     };
-    this.defaultService.updateKonnektorHostname(String(reqDto.id), reqDto).subscribe(
+    this.defaultService.updateKonnektorHostname(String(reqDto.id), reqDto).toPromise().then(
       () => {
         this.filterForm();
         this.toast.success("konnektor hostname updated")
-      },
-      (error:any) => {
+      })
+      .catch(() => {
         this.toast.error("konnektor hostname could not be updated.");
       }
     );
@@ -66,9 +67,12 @@ export class KonnektorViewComponent implements OnInit {
 
   private async loadKonnektors(hostname: string, serialNumber: string, firmwareVersion: string, hardwareVersion: string, created: string) {
     this.loading = true;
-    const konns = await this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created).toPromise();
-    this.konnektors = [...konns];
-    this.loading = false;
+
+    await this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created).toPromise().then( result => {
+      this.konnektors = [...result];
+    }).catch( error => {
+      this.toast.error((error as HttpErrorResponse).message);
+    }).finally( () => this.loading = false);
   }
 
   private cretaeForm(): void {
