@@ -1,0 +1,349 @@
+kell még: spring jwt rest authentication, JPA spring boottal
+
+
+Spring Boot Rest Service:
+
+1.	Make sure, you maven dependency section has spring-boot-starter-web dependency.
+2.	starting point Application.java has the friendly public static void main method. Where we actually start a Spring Boot Application:
+	running the Application.java like any other Java class and see the server being up and listening for port 8080 (configurable).
+
+	@SpringBootApplication: viele Entwickler annotieren main class mit @Configuration, @EnableAutoConfiguration and @ComponentScan.
+	Spring Boot provides a convenient @SpringBootApplication alternative.
+	Dises Annotation hat folgende Properties: exclude = exclude lis of classes; scanBasePackage = list  of packages for ComponentScan.
+		@ComponentScan: gtells Spring to look for other components, configurations, and services in the specified package. Spring is able to auto scan, detect and register your beans
+			or components from pre-defined project package. If no package is specified current class package is taken as the root package.
+		@Configuration: annotation indicates that the class is a source of bean definitions. We can also add it to multiple configuration classe
+		@EnableAutoConfiguration: If HSQLDB is on your classpath, and you have not manually configured any database connection beans, then Spring will auto-configure an in-memory database.
+
+https://okt.sed.hu/spring_uzleti/eloadas/02_ioc/
+
+	DI:  DI esetében az úgynevezett IoC konténer injektálja be a függőséget a függő komponensbe.
+		constructor: der Consumer deklariert seine Abhängigkeit in seinem Konstruktor Methode als Parameter. DI container injiziert es automatisch bem Instanzieren des Beans,
+					d.h. es muss schon vor dem Instanzieren zur Verfügung stehen.
+		Setter und  based dependency injection: Abhängigkeit wird durch ein Setter Methode injiziert, soll nicht unbedingt beim Consumer-Instanzierung existieren, plus
+					es kann im Laufe auch ausgetauscht werden.
+
+		Bean Definitionen in xml config Datei
+		Zentrales Komponent: BeanFactory, es verwaltet die Komponente (=beans) und ihre Lebenscyklen in dem Container.
+		Im einfachsten Fall: wir definieren ein Hund Schnittstelle, und ein HundImpl Klasse die diese Schnittstelle implenentiert. bean-definitions.xml wo wir die bean registrieren:
+			 <bean id="hund" name="wiseworm" class="HundImpl"/>
+			  DefaultListableBeanFactory factory = new DefaultListableBeanFactory(); // egy BeanFactrory megvalósítás
+              XmlBeanDefinitionReader rdr = new XmlBeanDefinitionReader(factory);  // bean definíciók beolvasása fájlból
+			  Hund hund = beanFactory.getBean("hund"); 	// so erhalten wir ein
+
+		BeanFactory schnittstelle unterstüzt die Annotation-based bean Konfiguration nicht ->
+			AplicationContext: unterstüzt es, plus, Transaktionsmanagement, Mehrsprachigkeit etc.
+
+		Bean Definitionen mit Anntoationen: @Bean
+		Stereotype Annotationen: @Component/Service/Repository/Controller/Configuration, sie werden je nach Rolle verwendet in der Bean Klasse.
+		Anstatt einem beans-definition.xml Implementieren wir eine Klasse, wo wir die bean Definitionen mit Annotationen angeben:
+			@Configuration
+			public class HelloWorldConfiguration {
+
+				@Bean	// signalisiert daß diese Methode ein Instanz bean zurückliefert
+				public MessageProvider provider() {
+					return new HelloWorldMessageProvider();
+				}
+
+	Bean zu bekommen vom Container:
+
+		ApplicationContext ctx = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class);
+			MessageRenderer mr = ctx.getBean("provider", MessageProvider.class);
+
+		Wenn wir die Bean-Klasse mit den stereotype Annotationen regitrieren, dann brauchen wird es mit dem @Bean in der @COnfiguration Klasse nicht mehr zu tun.
+			Dabei sollen wir aber @ComponentScan(basePackages = {"com.suaf"}) angeben, damit der DI weiß wo es nach bean suchen soll.
+
+		Verwendung ein bean in einem anderem:
+
+			@Service("renderer")
+			public class StandardOutMessageRenderer implements MessageRenderer {
+				private MessageProvider messageProvider;
+				...
+				@Autowired	// damit Spring die bean anhand @ComponentScan (verwendet in der Configuration Klasse) findet und mit setter injiziert.
+				public void setMessageProvider(MessageProvider provider) {
+					this.messageProvider = provider;
+				}
+			}
+
+			mit Konstruktor:
+				private MyDao mydao;
+
+			//we can use autowiring on properties, setters, and constructors.:
+https://www.baeldung.com/spring-autowire
+			  @Autowired
+			  public ConfigurableMessageProvider(MyDAO mydao) {
+				this.mydao = mydao;
+			 }
+
+	Bean haben scopes: @Scope("singleton")
+		- singleton
+		- prototype: für jede Anfrage wird eine neue Instanz erstellt.
+		- web fähiges Scopes: request: Instanz für jede Http Request
+							  session für jede Session
+							  application: für jede ServletContext
+
+########################################################################################################################################################################
+
+REST:
+
+GET:
+	As we indicated above, using content negotiation, the client can be proactive about what is requested as long as the server supports it.
+	One of the key points about the GET request is that it should not modify anything on the server side. It is fundamentally a safe
+	request.
+	http://example.com/res/action=update?data=1234  Do not do this! GET requests are also intended to be idempotent. This means
+	that issuing a request more than once will have no consequences.
+		1. Server return 200
+		2. if not found: return 404
+POST:
+	for creating a new resource
+	place orders, submit forms, etc., we cannot predict how the server will name these resources we are creating. This is why we POST a
+	representation of the resource to a handler (e.g. servlet). The server will accept the input, validate it, verify the user’s credentials, etc.
+
+	Upon successful processing, the server will return a 201 HTTP response code with a “Location” header indicating the location of
+	the newly created resource.
+
+	Another major use of the POST verb is to “append” a resource. This is an incremental edit or a partial update, not a full resource
+	submission. For that, use the PUT operation. A POST update to a known resource would be used for something like adding a new
+	shipping address to an order or updating the quantity of an item in a cart.
+
+	- The API need not return the created resource in the Response Stream.
+	- It should return an empty response body.
+	- Instead the API must return a HTTP Status 201 indicating the resource was created.
+	- Also in the location header of the response it must return a URL needed to access the newly created resource. The client can if it needs fetch the new resource
+	  by making a GET call to the returned URL.
+
+	A final common use of POST is to submit queries
+
+	Részletesen:
+	https://stackoverflow.com/questions/1860645/create-request-with-post-which-response-codes-200-or-201-and-content
+PUT:
+	updateing the resource, but the whole entity. If there are certain entity propertiesprovided by the put request than they
+	should be set to null on the entity.
+PATCH:
+	updateing the resource, partially updating the resource. So the patch doest not represents the whole resource (entity object).
+	Only attributes that are present must be updated, the others shoud remain unchanged(unlike by put where they et set to null).
+	It could also send a list of modifications. Each modification can be a dict specifying the JSON path of the node to modify, the modification (‘add’, ‘remove’, ‘change’) and the new value.
+DELETE:
+	server rsponses with 204(no content) or with 404 if the resource was not found.
+HEAD:
+	The HEAD verb is used to issue a request for a resource without actually retrieving it. It is a way for a client to check for the
+	existence of a resource and possibly discover metadata about it.
+OPTIONS:
+	The OPTIONS verb is also used to interrogate a server about a resource b
+
+	Response codes:
+	restfularchitecure.pdf ben
+
+
+HttpEntity represents an HTTP request or response consists of headers and body. // Only talks about body & headers, but doesn't talk about status code
+public HttpEntity(T body, MultiValueMap<String,String> headers)
+
+ResponseEntity extends HttpEntity but also adds a Http status code.
+
+// i.e ResponseEntity = HttpEntity + StatusCode
+public ResponseEntity(T body, MultiValueMap<String,String> headers, HttpStatus statusCode)
+
+########################################################################################################################################################################
+
+Exception handling:
+https://springframework.guru/exception-handling-in-spring-boot-rest-api/
+
+Wir implementieren custom Exceptions für jede typsche Exceptionen, zB BookNotFoundException, BookAlreadyExistException (extending RuntimeException).
+Beim Abfangen diese werden responses zu den Angular client zurückgeschickt:
+
+Wir verwendeten ein globales Exception Handler Klasse, die alle in den RestController auftretetnde Business Exceptionen abfängt und behandelt.
+Zb: beim GET wird ein book id angegeben wofür die Repository keinen Eintrag i  dem DB findet und so wirft ein custom ResourceNotFoundException Ausnahme zurück zum Controller.
+Hier tritt der globaler Exceptionhandler ein, es ist ein spring AOP @ControllerAdvice annotierte Klasse. Für jede Exceptiontypen implementieren wir eine HandlerMethode
+mit @ExceptionHandler Annotation. Der ExceptionHandler gibt ein ResponseEntity<error, status> , zurück.
+
+	@ExceptionHandler(value = ResourceNotFoundException.class)
+	public ResponseEntity<ExceptionResponse> handleNotCreated(ResourceNotFoundException e) {
+		ExceptionResponse resp = new ExceptionResponse();
+		resp.setErrorCode("56565: internal restone app error code.");
+		resp.setMsg(e.getMessage());
+		resp.setResourceId(e.getResourceId());
+		resp.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+		resp.setOriginalMsg(e.getOriginalMsg());
+		resp.setExcTime(LocalDateTime.now());
+		return new ResponseEntity<ExceptionResponse>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+Repository specko exceptionokat dob, amiket a GlobalExceptionHandler ben kezelünk le.
+a rrepository dobhat EntityNotFoundException- de azt try cahctel a serviceImpl ben nem tudjuk elkapni, mert egy az egy szinttel lejjeb van -> GlobalExceptionHandler ben kezeljük le.
+
+Van olyan repo metódus amelyik nem dob exception, hanem Optionalt ad vissza és azt csekkeljük le hogy empty(), ha az akkor mi dobunk egy custom exceptiont a glolbalhandlernek
+########################################################################################################################################################################
+
+Request validierung in srping boot:
+Spring fördert domain Objekt Validierung durch die Verwendung von Hibernate (bean) Validatoren.
+Wenn Spring validiert das Model Objekt und es ist invalid, Spring wirft ein MethodArgumentNotValidException, das wir im globalen ExeptionHandler abfangen und behandln.
+Wir können custom Validator implementieren: https://www.baeldung.com/spring-mvc-custom-validator
+	Implementieren ein custom Validation Annotation und annotieren damit das Model Property. Wir schreiben ein Interface und dann eine Klasse die es implementiert.
+	es können class level Validatoren auch geschrieben werden, für cross-field Validation.
+
+########################################################################################################################################################################
+Repository interface -ről:
+https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
+
+Spring Data JPA supports find, read, query, count and get.
+
+
+Persistence: Spring Data JPA ( ez a Repository interfészes cucc)
+https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
+	Spring Boot Hibernate JPA
+
+spring-boot-starter-data-jpa ist nötig im pom Datei.
+Spring Boot configures Hibernate as the default JPA provider, so it's no longer necessary to define the entityManagerFactory bean unless we want to customize it.
+
+az embedded h2 databaset használom most tanulásra:
+https://www.baeldung.com/spring-boot-h2-database
+http://localhost:8080/h2-console
+
+Transaction:
+https://www.baeldung.com/transaction-configuration-with-jpa-and-spring
+If we're using a Spring Boot project and have a spring-data-* or spring-tx dependencies on the classpath, then transaction management will be enabled by default.
+
+Szupi leirás hogy mit és hogyan lehet konfigurálni egészen a hibernate-logginig
+https://thorben-janssen.com/configuring-spring-data-jpa-with-spring-boot/
+
+Da spring boot ist mit spring data jpa integriert ist, so es liefert eine Menge default Konfigurationen und addiert automatisch Abhaengigkeiten zu meinem Projekt,
+also spring-boot starter fügt alle nötigen und common Abhaengigkeiten zu dem Projekt und konfiguriert diese zugleich. Das einzige dass konfiguriert soll
+ist das connection information:
+
+( ohne bot: wir sollten EntityManager, DataSource und Transactionmanager explizit definieren)
+
+	-	Addiert by defaultHikariCP connection pool und konfiguriert es zuglecih. Es kann aber im applicatio.properties file konfiguriert werden.
+	-	In memory DB H2
+	-	verwendet Hibernate als default JPA Provider und konfiguriert EntityManagerFactory.
+	-	verwendet und konfiguriert embedded Transaction Manager Atomikos
+	-	Konfiguration um Data JPA Repositiores verwenden zu können.
+
+	Beim external DB  wir müssen bloß volgendes im application.properties angeben:
+		spring.datasource.url=jdbc:postgresql://localhost:5432/test
+		spring.datasource.username=postgres
+		spring.datasource.password=postgres
+
+	Konfigurieren explicit das connection pool:
+		spring.datasource.type=org.apache.tomcat.jdbc.pool.DataSource
+
+Entity manager speichert, holt zurück, aktualisiert, löscht entities from the DB. Es representiert ein DB connection und ist mit Persistent context zugeordnet,
+Entities und ihre Lebenszyklus sind innerhalbe PC verwaltet. Durch ein EM kann man mehrere Query / Criteria erstellen, zu jeder EM gehört ein EntityTransaction
+(wird durch EM erzeugt).
+
+   Entity manager kann auf 2 Weise erzeugt und verwendet werden:
+	-	container managed EM: beim Spring app wird ein EM direkt von spring container erzeugt und verwaltet durch DI.
+		Dabei sollte man im DAO Klasse die EM mit @PersistentContext annotieren und in das DAO injizieren:
+
+			@PersistenceContext
+			EntityManager entityManager;
+
+			@Override
+			public Optional<ServiceCredentialEntity> findById(String serviceId) {
+				ServiceCredentialEntity entity = entityManager.find(ServiceCredentialEntity.class, serviceId);
+				if (entity != null) {
+					return Optional.of(entity);
+				}
+				return null;
+			}
+
+	-	application managed EM: in disem Fall verwenden wir EntityManagerFactory API um ein factory und dann dadurch ein EM zu erzuegen.
+
+	Lebenszeklus Zustände des Entity:
+	Persistent Context verfolgt und verwaltet die Zustände des entity, deketiert eine Anderung dann speichert es automatisch.
+		- Transient: object erst erzeugt, PC kennt aber es nicht so macht es keinen insert / update wenn es deketiert eine änderung.
+					Hat kein PK und record im DB.
+					(mit find() wird es entity in Kenntnis nehmen, und in managed state versetzen.)
+		- Managed: alle Objkete die mit PC verbunden sind, sind in diesem Zustand. d.h. Hibernate will insert/update wenn es eine Anderung detektiert wenn
+					es das context flushes.
+					um ein Entity managed zu machen:
+													-	persist()
+													-	find()
+													-	merge/update
+
+		- Detached: früher managed, aber jetzt PC ist geschlossen, transaction closed. Mit EntityManager.merge() kann es wieder attached.
+
+		- Deleted: EM.remove() -> wird nicht gleich vom DB entfernt, sondern nur nachh dem flush()
+
+List kann Duplicates haben und ist ordered, wogegen Set kann keine Duplikate haben und ist nicht ordered.
+Set : interessiert mich order nicht.
+List: order ist wichtid zB.:ordered list, order by Datum, ich weiß es können duplikate vorkommen.
+
+
+
+
+########################################################################################################################################################################
+Json related collection of entities:
+
+ha a sellers collection lazy initialized és nincs is rá szükség akkor ha at entity: @JsonIgnoreProperties(value= {"sellers"}) nincsen akkor exceptiont dob a API mert a jackson
+nem tudja jsonná convertáléni a nem létező sellers collectiont. Ezt el lehet kerülni a fenti annotációvalés akkor a json nem is tartalmaz egyáltaláén sellers propertit.
+De ezzel az a baj, hogy az Entity-t JsonIgnoreProperties-nal beállítottam rra, hogy a sellers collectiont sose serializuálja  ajasckosn jsonná!
+Erre az a jó megoldás, hogy egy olyan custom VO-t deriválunk le az Entityből aminek nincsen sellers collection properitje és aazt serializáltatjuk a REST controllerben.
+
+
+Két issue:
+1. Ha van related collection akkor lehetőleg a jpa provider egyazon selectben szedje össze a többit adatot is
+2. illetve a lazy loading menjem
+Ezek megoldódnak, ha NamedEntiyGrapho-ot használok:
+	@NamedEntityGraph(name = "Book.sellers", attributeNodes = @NamedAttributeNode("sellers"))az Entity class-on
+
+	..és a repositoryban, felülírjuk a JPARepo által implementál gyári metódust:
+
+	@EntityGraph(value = "Book.sellers")
+	List<Book> findAll();
+
+https://thorben-janssen.com/5-ways-to-initialize-lazy-relations-and-when-to-use-them/
+https://dzone.com/articles/finding-and-fixing-spring-data-jpa-performance-iss
+
+https://thorben-janssen.com/5-ways-to-initialize-lazy-relations-and-when-to-use-them/
+ways to initialize lazy associations and when to use them:
+	1. Call a method on the mapped relation:
+		Order order = this.em.find(Order.class, orderId);
+		order.getItems().size();  -> n* query problem
+
+	2.	initialize lazy associations is to use a JPQL query  / Criteria with a fetch join:
+			-> Hibernate holt alles in einem query. Nachteil: man soll eine Query schreiben
+
+	3.  NamedEntityGraph: man definiert ein Graoph von verwandten Entitis in Annotation, es ist unabhängig von dem Query.
+			@NamedEntityGraph(name = "graph.Order.items", attributeNodes = @NamedAttributeNode("items"))
+
+Using Projection in JPA Repository interface:
+https://www.baeldung.com/spring-data-jpa-projections
+
+Closed Projection's Eigenschaften werden durch eine Interface definiert - hier wird title property aus dem Entity genommen:
+	public interface BookTitleView {
+		String getTitle();
+	}
+..und diese wird im Repo Method verwendet, kann man das Repository Methoden signaturen verwenden dabei: List<BookTitleView> findByTitle(String title);
+
+Open Projection: interface Methoden haben keine entsprechende property in entity, sondern wird dynamisch aus mehrere properties Werte berechnet.
+	@Value("#{target.firstName + ' ' + target.lastName}")
+    String getFullName();
+
+Class based projection (herkömmliche): Pojo mit constructor mit den properties aufgelistet als parameters.
+
+hogyan kell egy querit összerakni:
+https://www.baeldung.com/spring-data-derived-queries
+
+JOIN  vs JOIN FETCH:
+https://dzone.com/articles/how-to-decide-between-join-and-join-fetch
+
+Book on Spring Boot JPA
+https://books.google.hu/books?id=dIvgDwAAQBAJ&pg=PA264&lpg=PA264&dq=org.hibernate.QueryException:+query+specified+join+fetching,+but+the+owner+of+the+fetched+association+was+not+present+in+the+select+list&source
+=bl&ots=ouIqZUYbx-&sig=ACfU3U0JCYZq-L7Ta8t4D9NYhx9zR9i0RQ&hl=hu&sa=X&ved=2ahUKEwjbs6Krk5fzAhVJposKHQHUDKQQ6AF6BAgkEAM#v=onepage&q&f=false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

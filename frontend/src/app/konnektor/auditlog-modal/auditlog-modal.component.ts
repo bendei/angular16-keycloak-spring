@@ -17,7 +17,7 @@ const PAD_TIME = "T01:00:00.59";
 export class AuditlogModalComponent implements OnInit, OnChanges, DoCheck, AfterViewChecked {
 
   public fontSizePx = 15;
-  public title = "dynamic property binding";
+  public title = 'dynamic property binding';
   public templateString = '';
   private incrementator = 0;
   public auditlogs: Array<AuditLogDTO> = [];
@@ -28,13 +28,14 @@ export class AuditlogModalComponent implements OnInit, OnChanges, DoCheck, After
   private latestNewIdForAuditlog = -1;
 
   @ViewChild('auditlogsDataTable', {static: false})
-  private auditlogsDataTable: DatatableComponent;
+  public auditlogsDataTable: DatatableComponent;
 
   constructor(public activeModal: NgbActiveModal, private datePipe: DatePipe, private readonly defaultService: DefaultService,
               private readonly toast: ToastService) {}
 
   ngOnInit(): void {
     this.messagesTypes = Object.values(AuditLogMessageDTO);
+    console.log('-----ngOnInit:' + this.auditlogsDataTable);
   }
 
   ngDoCheck(): void {
@@ -122,8 +123,7 @@ export class AuditlogModalComponent implements OnInit, OnChanges, DoCheck, After
         });
     }
       // newly created but not saved logs
-      const ez: AuditLogDTO[] = this.auditlogs.filter( (l) => l.id != log.id);
-      this.auditlogs = ez;
+      this.auditlogs = this.auditlogs.filter( (l) => l.id != log.id);
   }
 
   public mapUserActionToString(action: AuditLogMessageDTO): string {

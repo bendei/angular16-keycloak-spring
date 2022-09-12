@@ -27,7 +27,7 @@ public class AuditlogServiceImpl implements AuditlogService {
     @Override
     public void updateAuditlog(final AuditLog auditlog) {
         if (!repo.existsById(auditlog.getId())) {
-            throw new ResourceNotFoundException("Auditlog mit dem id {id} nicht gefunden");
+            throw new ResourceNotFoundException("Auditlog mit dem id " + auditlog.getId() + " nicht gefunden");
         }
         repo.save(auditlog);
     }

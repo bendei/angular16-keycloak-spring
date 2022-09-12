@@ -6,6 +6,8 @@ fit - csak ezt hajtja végre
 // szuper teszt esetek
 https://angular.io/guide/testing-components-scenarios#use-a-page-object
 
+https://testing-angular.com/testing-components-with-children/#shallow-vs-deep-rendering
+
 Testing with Mock:
 KITÜNŐ ALAP LEÍRÁS
 https://luardo.medium.com/testing-with-mocks-spies-using-createspyobj-in-angular-1e31bf7f6147
@@ -305,3 +307,6 @@ KonnektorViewComponent;
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 selector
 https://shashankvivek-7.medium.com/getting-to-know-fixture-debugelement-angular-unit-testing-f8389ea61f02
+
+
+https://jasmine.github.io/pages/faq.html#return-reject

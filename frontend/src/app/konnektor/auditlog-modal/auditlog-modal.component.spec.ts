@@ -1,10 +1,9 @@
 import {AuditlogModalComponent} from "./auditlog-modal.component";
-import {ComponentFixture, fakeAsync, TestBed} from "@angular/core/testing";
-import {AuditLogDTO, AuditLogMessageDTO, DefaultService, KonnektorDTO} from "../../../../target/generated-sources/openapi";
+import {ComponentFixture, fakeAsync, TestBed, tick} from "@angular/core/testing";
+import {AuditLogDTO, AuditLogMessageDTO, DefaultService } from "../../../../target/generated-sources/openapi";
 import {KonnektorModifyComponent} from "../konnektor-modify/konnektor-modify.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgbActiveModal, NgbDatepickerModule} from "@ng-bootstrap/ng-bootstrap";
-import {createCurrentDateTimeISOString} from "../../core/helper";
 import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 import {DatePipe} from "@angular/common";
 import createSpyObj = jasmine.createSpyObj;
@@ -50,16 +49,31 @@ describe('AuditLogModal', () => {
   it('should show table', fakeAsync(() => {
     whenComponentHasStarted();
     const tblElement = fixture.nativeElement.querySelector(`#auditlogsDataTable`);
-    expect(tblElement.rows).toHaveSize(4);
+    expect(tblElement.rows).toHaveSize(4);  // itt mint js objektumra hivatkozunk
     expect(tblElement.rows[0].id).toEqual(1);
     expect(tblElement.rows[0].user).toEqual('bende');
   }));
+
+  /*it('user input value should change', fakeAsync(() => {
+    whenComponentHasStarted();
+    tick();
+    const tblElement = fixture.nativeElement.querySelector(`#auditlogsDataTable`);
+    expect(tblElement.rows[0].id).toEqual(1);
+    expect(tblElement.rows[0].user).toEqual('bende');
+    tick();
+
+
+  }));*/
 
   const whenComponentHasStarted = () => {
     fixture = TestBed.createComponent(AuditlogModalComponent);
     component = fixture.componentInstance;
     component.auditlogs = auditlogs;
     fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
   };
+
+
 
 })

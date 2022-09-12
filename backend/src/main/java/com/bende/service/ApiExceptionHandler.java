@@ -28,10 +28,6 @@ public class ApiExceptionHandler {
         return buildResponseEntity(apiError, NOT_FOUND);
     }
 
-    private ResponseEntity<ApiError> buildResponseEntity(ApiError apiError, HttpStatus status) {
-        return new ResponseEntity<>(apiError, status);
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity handleValidationExceptions(
         MethodArgumentNotValidException ex) {
@@ -49,5 +45,8 @@ public class ApiExceptionHandler {
         return buildResponseEntity(apiError, HttpStatus.BAD_REQUEST);
     }
 
+    private ResponseEntity<ApiError> buildResponseEntity(ApiError apiError, HttpStatus status) {
+        return new ResponseEntity<>(apiError, status);
+    }
 
 }

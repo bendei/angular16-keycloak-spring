@@ -1,0 +1,174 @@
+ criteriaBuilder.like(criteriaBuildergivenKonnektorsForFilteringvalid.lower(userRoot.get("user")), "%" + filterText + "%")));		AuditLogRepository ban
+
+  criteriaBuilder.like(criteriaBuilder.lower(userRoot.get("user")), "%" + filterText.trim().toLowerCase() + "%")));
+
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  SmcbCardServiceImpl? 2022-03-20 előtt
+
+   AuditLogParam auditLogParam = new AuditLogParam()
+            .addParam("iccsn", iccsn)
+            .addParam("pinVerificationResult", pinVerificationResult.getPinOperationResultType());
+  auditLogger.log(UserActionType.SMC_B_CARD_VERIFICATION_ENDED, konnektor.getId(), auditLogParam);
+
+  audit-log.message.pipe.ts
+  case AuditLogMessageDTO.SmcBCardVerificationEnded:
+        return this.format('SMC-B Karten Verifizierung für ${iccsn} wurde mit den Status ${pinVerificationResult} beendet', item.params);
+
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Java egyszerű enum:
+ tic -> KonnektorConnectionStatusEnum
+ es ts -> konnektor-component.ts
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ Munka List / stream / Optional kal:
+
+ com.rise_world.gematik.konnektor.utility.be.service.KonnektorServiceImpl
+
+ public Optional<Konnektor> getKonnektor(long id) {
+        return konnektorList.stream().filter(k -> k.getId() == id).findFirst();
+    }
+
+és a test ben:   when(konnektorService.getKonnektor(any(Long.class))).thenReturn(Optional.of(konnektor));
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ LOG.info("{} finished{} in {} ms.", task, taskResultString, sw.getTime(TimeUnit.MILLISECONDS));
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Date / dátióumok:
+
+public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
+LocalDateTime getCurrentLocalDateTime() { return LocalDateTime.now(); } // java.time.LocalDateTime
+
+utility.konnektor.scheduledreboot.rebootwindow=PT15M
+ Duration getRebootWindow() {
+        return Duration.parse(ConfigResolver.getPropertyValue(
+            "utility.konnektor.scheduledreboot.rebootwindow"));		// import java.time.Duration  , ez itt 15 percet jelent;
+    }
+
+LocalDateTime current = LocalDateTime.of(2019, Month.AUGUST, 1, 12, 15, 0);
+LocalDateTime lastReboot = current.minus(1, DAYS);
+LOG.info("Current day {} is a {}", current, current.getDayOfWeek());
+
+LocalDateTime ldt = LocalDateTime.of(2000, 1, 1, 12, 30, 0);
+// ehhez 15 percet hozzáadunk:
+ldt.plus(15, MINUTES);
+// kiloggoljuk a mai napot:
+LOG.info("Current day {} is a {}", current, current.getDayOfWeek());
+
+ public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
+egy DB Date converter:
+	import org.apache.commons.lang3.StringUtils;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+@Converter
+public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime, String> {
+
+    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SS";
+    private final DateTimeFormatter format = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
+
+    @Override
+    public String convertToDatabaseColumn(LocalDateTime dateTime) {
+        if (dateTime == null) {
+            return null;
+        }
+        return dateTime.format(format);
+    }
+
+    @Override
+    public LocalDateTime convertToEntityAttribute(String dateTime) {
+        if (StringUtils.isBlank(dateTime)) {
+            return null;
+        }
+        return LocalDateTime.from(format.parse(removeUnnecessaryMilliseconds(dateTime)));
+    }
+
+    private String removeUnnecessaryMilliseconds(String dateTime) {
+        return dateTime.substring(0, DATE_TIME_FORMAT.length());
+    }
+}
+
+pluszban:
+ublic class LocalDateConverter implements AttributeConverter<LocalDate, String> {
+
+    private final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    @Override
+    public String convertToDatabaseColumn(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
+        return date.format(format);
+    }
+
+    @Override
+    public LocalDate convertToEntityAttribute(String date) {
+        if (StringUtils.isBlank(date)) {
+            return null;
+        }
+        return LocalDate.from(format.parse(date));
+    }
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Format ting
+ private static final String API_URL_TEMPLATE = "https://%s:8443/api";
+ private static final String API_IPV6_URL_TEMPLATE = "https://[%s]:8443/api";
+ String.format(API_IPV6_URL_TEMPLATE, host)
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Optional:
+
+@Query("select e from KonnektorDiagnosticExport e where e.konnektor.id = ?1")
+Optional<KonnektorDiagnosticExport> findByKonnektorId(long konnektorId);
+
+meghívása:
+Optional<KonnektorDiagnosticExport> optionalExport = konnektorDiagnosticExportRepository.findByKonnektorId(konnektorId);
+ if (optionalExport.isEmpty()) {
+    return;
+ }
+ KonnektorDiagnosticExport konnektorDiagnosticExport = optionalExport.get();
+
+ Mikor visszaad értéket:
+ -- String name = Optional.ofNullable(nullName).orElse("john");	// ha empty akkor jogn a default value amit visszaad
+ --	String name = Optional.ofNullable(nullName).orElseGet(() -> "john");	// ha empty akkor egy supplier (ami szállit egy értéket vissza nekünk) function return valuet adja vissza
+ -- String nullName = null;
+    String name = Optional.ofNullable(nullName).orElseThrow(IllegalArgumentException::new);	// ha null az értéek akkor exception dob method reference által
+ -- Optional<String> opt = Optional.ofNullable(null);
+    String name = opt.get();	// csak akkor ad vissza ha nem null , máskülönben no such element exception dob, ezért ez nem az igai, ha csak előtte nem checckoltuk le isPresent() tel
+
+Running inline test on our wrapper value:
+ boolean is2016 = yearOptional.filter(y -> y == 2016).isPresent();	// predictae függvénnyel(ami kijelenti hogy valami igaz vagy hamis) leteszteljük az értékét és ha true
+																	// akkor visszaadja, ha nem akkor empty Optional lesz
+return Optional.ofNullable(modem2)	// vagy ha objektum az Optional értéke
+       .map(Modem::getPrice)
+       .filter(p -> p >= 10)
+       .filter(p -> p <= 15)
+       .isPresent();
+
+Optional new Exception:
+.orElseThrow(() -> new EntityyNotFoundException("Konnektor nicht gefunden"))
+.orElseThrow(EntityyNotFoundException::new)
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+method reference:
+	constructing object:
+	-	IllegalException::new
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+List
+List<String> messages = Arrays.asList("hello", "baeldung", "readers!");
+Collections.emptyList();
+
+comparator használata method referencevel: https://www.baeldung.com/java-method-references
+
+stream műveletek:
+https://www.baeldung.com/java-streams
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

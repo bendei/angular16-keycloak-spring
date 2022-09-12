@@ -4,6 +4,7 @@ import com.bende.api.model.AuditLogDTO;
 import com.bende.api.model.AuditLogMessageDTO;
 import com.bende.api.model.KonnektorDTO;
 import com.bende.api.model.KonnektorHostnameDTO;
+import com.bende.excpetions.ResourceNotFoundException;
 import com.bende.persistence.model.AuditLog;
 import com.bende.persistence.model.Konnektor;
 import com.bende.persistence.model.UserActionType;
@@ -38,7 +39,7 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
     @ApiOperation("the auditlogs API")
     @CrossOrigin("http://localhost:4200")
     public ResponseEntity<List<AuditLogDTO>> getAuditLogs(final String auditlogId) {
-        List<AuditLogDTO> lista = auditlogService.findById(Long.valueOf(auditlogId)).stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
+        List<AuditLogDTO> lista = auditlogService.findById(Long.parseLong(auditlogId)).stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
@@ -46,7 +47,7 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
     @ApiOperation("auditlogs to a given konnektor")
     @CrossOrigin("http://localhost:4200")
     public ResponseEntity<List<AuditLogDTO>> getAllAuditLog(final Integer konnektorId) {
-        List<AuditLogDTO> lista = auditlogService.findAuditLogsByKonnektorId(Long.valueOf(konnektorId.longValue())).stream()
+        List<AuditLogDTO> lista = auditlogService.findAuditLogsByKonnektorId(konnektorId.longValue()).stream()
             .map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
@@ -58,9 +59,12 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
 
         if (dtos != null && !dtos.isEmpty()) {
             Optional<Konnektor> konnektor = konnektorRepository.findById(Long.valueOf(dtos.get(0).getKonnektor()));
-            if (konnektor.isPresent()) {
+
+            konnektor.ifPresent( konn -> dtos.forEach(dto -> createNewAuditLog(dto, konnektor.get())));
+
+            /*  if (konnektor.isPresent()) {
                 dtos.forEach(dto -> createNewAuditLog(dto, konnektor.get()));
-            }
+            }*/
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -71,7 +75,7 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
     @ApiOperation(" delete auditlog")
     @CrossOrigin("http://localhost:4200")
     public ResponseEntity<Void> deleteAuditlog(final String auditlogId) {
-        auditlogService.deleteAuditlog(Long.valueOf(auditlogId));
+        auditlogService.deleteAuditlog(Long.parseLong(auditlogId));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -89,14 +93,16 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
     @CrossOrigin("http://localhost:4200")
     public  ResponseEntity<Void> updateAuditlog(final String auditlogId, AuditLogDTO request) {
         Optional<AuditLog> log = auditlogService.findById(request.getId());
-        Konnektor konn = konnektorService.getKonnektor(request.getKonnektor().longValue());
+        if (log.isEmpty()) {
+            throw new ResourceNotFoundException("Auditlog with id: " + auditlogId + " was not found");
+        }
 
-        if (log.isPresent() && konn != null) {
+        Konnektor konn = konnektorService.getKonnektor(request.getKonnektor().longValue());
+        if (konn != null) {
             auditlogService.updateAuditlog(convertToAuditLog(request, konn));
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override

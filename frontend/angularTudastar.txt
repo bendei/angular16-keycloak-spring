@@ -60,6 +60,7 @@ den gleichnamigen Eigenschaften aus dem Objekt befüllt.
 Wenn wir nicht alle Property eines Objekt brauchen, dann können wir die Properties extrahieren und in Variablen schreiben:
 let {objPropertyName1: newProp1, objPropertyName2: newProp2} = ObjektInstanzdenwirdestrukturieren;
 let { neve } = pista;	-> wir extrahieren den neve property in dem pista Objekt;  wenn wir den gleichen Variablennamen erhalten wollen.
+oder: const {smcbCard, hbaCard, egkCard, gsmcktCard, gsmckCard, unknownCard} = this.cardTypeForm.getRawValue();
 
 DECORATOR
 Es ist eine Funktion, Mit Decorators können wir Klassen, Methoden und Eigenschaften dekorieren und damit Metadaten hinzufügen. Man erkennt einen Decorator stets am @-Zeichen
@@ -282,11 +283,13 @@ wie ngIf aus dem DOM ausgebaut wird. Dieses gilt für Komponente und Direktive a
 })
 constructor(private logService: logService) ...
 
+
+https://angular.io/guide/lifecycle-hooks
 Lebenszyklus einer Komponente / Directive:
 	1.	Angular instanziert die Komponente, wobei der Konstruktor aufgerufen und ihre Abhaengigkeiten injiziert werden.
 	2.	Change detection startet: Angular prüft und setzt/aktualisiert die input Propertys (@Input) => die Komponente wird inizialisiert.
 		https://www.tektutorialshub.com/angular/angular-ngonchanges-life-cycle-hook/
-	3.	Onchanges: Diese Methode wird aufgerufen, sobald ein Input-Property durch ein Property Binding gesetzt oder verändert wird. Als Argument erhält die Methode
+	3.	Onchanges: Diese Methode wird aufgerufen, nachdem change detector die data binding geprüft hat, und mindenstens eine geaendert wurde. Als Argument erhält die Methode
 		ein Objekt vom Typ SimpleChange, in dem die veränderten Propertys und ihr aktueller und vorheriger Wert angegeben sind.
 		(wird nicht aufgerufen wenn input property ein array/Object ist, weil change detection verwendet ===
 		  strict equality operator zum Erkennen Aenderung in input propertys. Für pirimitive Typen geht dass, für Objekten wird aber die Referenzen verglichen die gleich sind,
@@ -599,7 +602,7 @@ JSONPIPE: verwendet js Funktion JSON.stringify(); vor allem zum Debuggeil js Obj
 Mit dieser Pipe wird der Inhalt eines Objekt im template angezeigt.
 {{myobject | json}}
 
-ASYNCPIPE: damit können wir Werte aus einem Observable oder Promise (wird nicht mehr in Ang verwendet)direkt im Template auflösen. schreiben wir das Observable direkt in ein Property
+ASYNCPIPE: damit können wir Werte aus einem Observable oder Promise direkt im Template auflösen. schreiben wir das Observable direkt in ein Property
  der Klasse, sodass wir aus dem Template darauf zugreifen können. (im Normalfall wird haben wir keine Property von Observable type, sondern eine Property für dieDen Rest erledigt die
  erhaltene Werten.  Pipe für uns: Sie erstellt eine Subscription und liefert die empfangenen Werte direkt
  ins Template. Wird mehrmals  in der Template verwendet so wird erneuet ein Request gesendet ( wenn man nicht share() Operator verwendet)
@@ -681,7 +684,7 @@ VC liefert das erste passende Element zurück.
  Wird auf Kompoenenten-Property verwendet, hat 2 Argumente: Selector (string, Typescript Type, wie Komponente Klassenname oder Function), Konfigurationsobjekt:
 	static -> Es definiertiert, wann im Lebenszyklus der Komponente die Query ausgewertet wird.
 				True: aufgelöst wenn der View inizialisiert ist.
-			    False: aufgelöst beim jeder change detection , sollte verwendet werden wenn child renderiert dynamically.
+			  False: aufgelöst beim jeder change detection , sollte verwendet werden wenn child renderiert dynamically.
     read   -> wenn selector definiert mehrere Elelemnte von
 			  verschiedenen Typen, dann mit read property können wir einen auswaehlen.
 Use cases:
@@ -775,13 +778,12 @@ platformBrowserDynamic im main.ts ist ein Module, der bootstrap die Anwendung f�
 
 ######################################################################################################################################################################################
 	https://www.tektutorialshub.com/angular/angular-http-error-handling/
-
-
+	https://pkief.medium.com/global-error-handling-in-angular-ea395ce174b1
 	https://blog.angular-university.io/rxjs-error-handling/
 
 ERRORHANDLING:
 Zwei Typen von Errorbehandlungen:
-	1.	HTTP ERRORS: HttpClient faengt Errors ab und packt sie in HttpErrorResponse Objekten, bevor es diese zu der Anwendung weitergibt.
+	1.	HTTP ERRORS: HttpClient faengt Errors ab und packt sie in HttpErrorResponse (beim Observavble und Promise auch) Objekten, bevor es diese zu der Anwendung weitergibt.
 	 A HttpErrorResponse is a response that represents an error or failure, either from an un-successful HTTP status, an error while executing the request, or some other failure which
 		occurred during the parsing of the response.
 	 Any error returned on the `Observable` response stream will be wrapped in an `HttpErrorResponse` to provide additional context about the state of the HTTP layer when the error occurred. The error property
@@ -863,12 +865,15 @@ Zwei Typen von Errorbehandlungen:
 		utility projekt: runtime-error-handler.service.ts amely extendálja a ErrorHandlert és ez rakja ki az a bazi nagy piros hiba popup overlay üzenetet, ez a handleError metódusát
 		az Angular maga hivja meg ha valami gebasz van!!
 
+creating Promise manually: https://www.educba.com/typescript-promise/
 
 ERROR HANDLING WITH PROMISE: mit then und catch functions:
- await this.defaultService.getKonnektor(this.konnektorId).toPromise().then( result => {
+ await this.defaultService.getKonnektor(this.konnektorId).toPromise()
+        .then( result => {
           this.konnektor = result;
           this.loadFormData();
-        }).catch( error => {
+          })
+        .catch( error => {
            const err = error as HttpErrorResponse;
             this.toast.error(err.message);
           }
@@ -898,13 +903,13 @@ Wenn wir an ein Attribut binden wollen, müssen wir den Attribut namen immer in 
 		selector: '[myDirective]'
 	})
 
-	in der Template, das binding die Direktive an das DOM-Element (Host-Element):
+	in der Template, das binding die Direktive class an das DOM-Element (Host-Element):
 
-	<div myDirective>Angular</div> ...Attribut-Schreibweise, nur für Übergabe von string literals
+	<div myDirective>Angular</div> ...Property-Schreibweise (statisch), nur für Übergabe von string literals
 	<div [myDirective]>Lorem ipsum</div> ...Property-Schreibweise, für Übergabe von Ausdrücken
 	<div *myDirective>Foobar</div> ... Strukturdirektive-Schreibweise, für Übergabe von Ausdrücken ...all dise 3 sind identisch
 
-Wertübergabe von Host-Element in die Direktive, es ist das gleiche Property-Binding wie beim Kompoenenten.: (mint mikor a parent comp selector jabol property bindingel
+Wertübergabe von Host-Element in die Direktive, es ist das gleiche Property-Binding wie beim Kompoenenten (@Input).: (mint mikor a parent comp selector jabol property bindingel
 értéket adunk át a child compnak.)
 
 Über dem Host-Element können wir Werte in die Direktive/Komponentenklasse übergeben:
@@ -1310,6 +1315,10 @@ PIPE expr | myPipe | otherPipe Daten im Template transformieren
 		}
 		function userTrackBy(index, user) {	return user.id;}
 
+	3.  OnPush: @Component({
+                changeDetection: ChangeDetectionStrategy.OnPush
+              })
+    https://blog.angular-university.io/onpush-change-detection-how-it-works/
 
 
 

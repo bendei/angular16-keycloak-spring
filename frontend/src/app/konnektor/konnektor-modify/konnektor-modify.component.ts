@@ -64,16 +64,18 @@ export class KonnektorModifyComponent implements OnInit {
 
     console.log("createdTimeISO:", createdTimeISO);
 
-    this.defaultService.updateKonnektor(id, {
-      id, hostName, serialNumber, firmwareVersion, hardwareVersion, active, created: createdISO + "" + createdTimeISO}).toPromise().then(
-      () => {
-        this.toast.success("konnektor updated");
-        this.router.navigate(['/navigation/konnektor-view']);
-      })
-      .catch(() => {
+    try {
+      await this.defaultService.updateKonnektor(id, {
+        id, hostName, serialNumber, firmwareVersion, hardwareVersion, active, created: createdISO + "" + createdTimeISO
+      }).toPromise();
+      console.log("SSS");
+      this.toast.success("konnektor updated");
+      this.router.navigate(['/navigation/konnektor-view']);
+    }
+    catch(error) {
+        console.log("ERRRR");
         this.toast.error("konnektor could not be updated.");
       }
-    );
   }
 
   public onBack(): void {

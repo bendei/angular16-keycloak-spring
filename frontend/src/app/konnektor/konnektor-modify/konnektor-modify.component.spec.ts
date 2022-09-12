@@ -1,5 +1,5 @@
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from "@angular/core/testing";
-import {FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import createSpyObj = jasmine.createSpyObj;
 import {KonnektorModifyComponent} from "./konnektor-modify.component";
 import {DefaultService } from "../../../../target/generated-sources/openapi";
@@ -71,6 +71,7 @@ describe('KonnektorModifyComponent', () => {
     whenInputSet("serialNumber", "213232");
     whenInputSet("firmwareVersion", "21.12");
     whenSaveKonnektor();
+    tick();
     thenToastSuccess();
     flush();
   }));
@@ -89,6 +90,7 @@ describe('KonnektorModifyComponent', () => {
     });
     defaultServiceSpy.updateKonnektor.and.returnValue(errResponse);
     whenSaveKonnektor();
+    tick(); // KELL EZ A KURVA TICK KÜLÖNBEN PROMISE REJECTION NEM MŰX
     expect(toastServiceSpy.error).toHaveBeenCalled();
   }));
 
@@ -100,7 +102,7 @@ describe('KonnektorModifyComponent', () => {
 
   it('time picker showed correctlyx', fakeAsync(() => {
     whenComponentHasStarted();
-    const inputElement = fixture.debugElement.query(By.css('#createdTime'))
+    const inputElement = fixture.debugElement.query(By.css('#createdTime'));
     //console.log(inputElement.nativeNode.value.hour);
     //console.log(inputElement.nativeNode.value.minute);
     expect(inputElement.nativeNode.value.hour).toEqual(toInteger(konnektor.created.substring(11, 13)));

@@ -26,7 +26,8 @@ vagy: Application RUn configból futtatjuk a Application osztályt.
 ### Frontend futtatása:
 1. cd frontend
 2. ng serve
-3. ng test
+3. ng testű
+
 ### OpenAPI ( Swagger ) for defining and documenting REST API
 -- we generate typescript and java fiels from OpenAPI definition file: API first approach. OpenAPI spec is one of the spec formats.
 // https://blog.mimacom.com/using-the-openapi-generator-for-spring-boot/

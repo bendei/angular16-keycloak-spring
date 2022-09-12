@@ -1,0 +1,569 @@
+JAVA
+
+Exceptions:
+
+Throwable - Error
+		  - Exceptions - IOEception
+					   - RuntimeException
+
+		  Exceptions that can occur at compile-time are called checked exceptions since they need to be explicitly checked and handled in code.
+		  Classes that directly inherit Throwable - except RuntimeException and Error - are checked exceptions e.g. IOException, InterruptedException
+		  Pl IOException that needs to be handeled with try block or in its caller.
+
+		  Unchecked exceptions can be thrown "at any time" (i.e. run-time). Therefore, methods don't have to explicitly catch or throw unchecked exceptions.
+		  Classes that inherit RuntimeException are unchecked exceptions e.g. ArithmeticException, NullPointerException
+
+
+Optionalin java 8
+https://www.baeldung.com/java-optional
+https://www.mkyong.com/java8/java-8-optional-in-depth/
+
+class Optional in java.util package. It is used to represent a value is present or absent. It is a wrapper.
+The main advantage of this new construct is that no more too many null checks and NullPointerException.
+Like Collections and arrays, it is also a Container to hold at most one value.
+
+Creating Optional objects:
+
+1 an empty one:
+	Optional<String> empty = Optional.empty();   // method is useful to create an empty Optional object.
+
+2. with value or with null in it:
+	Optional<String> notempty = Optional.ofNullable("bende" / null);	//creating an optional with a
+																		value or with null value
+
+3. with value, if its value is null : exception
+	Option<String> nonull = Optional.of("eeee");
+
+notempty.isPresent() returns true if the given Optional object is non-empty. Otherwise it returns false.
+notempty.ifPresent() performs given action if the given Optional object is non-empty. Otherwise it returns false:
+notempty.ifPresent(optionsvalue -> System.out.println(value));
+//this is used insted of if(notempty !=null) statement , we use Consumer function
+
+notempty.orElse(tring vagy lambda expression) : It takes one parameter which acts as a default value.
+
+//filtering The filter API is used to run an inline test on the wrapped value. It takes a predicate as
+// an argument and returns an Optional object.
+	Integer year = 2016;
+    Optional<Integer> yearOptional = Optional.of(year);
+    boolean is2016 = yearOptional.filter(y -> y == 2016).isPresent();
+    assertTrue(is2016);
+
+Where can we use it: method parameter, method return type, constructor parameter, variable declaration.
+
+public boolean priceIsInRange1(Modem modem) {
+    boolean isInRange = false;
+
+    if (modem != null && modem.getPrice() != null
+      && (modem.getPrice() >= 10
+        && modem.getPrice() <= 15)) {
+
+        isInRange = true;
+    }
+    return isInRange;
+}
+with java 8:
+public boolean priceIsInRange2(Modem modem2) {
+     return Optional.ofNullable(modem2)
+       .map(Modem::getPrice)
+       .filter(p -> p >= 10)
+       .filter(p -> p <= 15)
+       .isPresent();
+ }
+
+ Transforming value with map(); The map call is simply used to transform a value to some other value.
+ .map(Modem::getPrice) we make some computation on the element of the list of the optional
+
+----------------------------------------------------------------------------------------------
+
+LAMBDA Expression:
+		A lambda expression represents an anonymous function. It comprises of a set of parameters, a lambda operator (->) and a function body.
+		Simply put it is a method without method declaration (no method name, access modifier and return value declaration) just the body definition.
+		It allows you to write a method in the same place where you use it. In java lambda experrsion are represented as objects of functional interface type.
+		The following are examples of Java lambda expressions:
+
+		Lambda expressions representieren anonymus Funktionen. Es beinhaltet eine Reihe von Parameters, lambda Operator und Funktionskörper. Einfach ausgedrückt, es ist eine Methode ohne
+		methoddeklaration (keine Methodenname, Zugriffsmodifikator, und Rückgabewert Deklaration) nur den Methodenkörper. Es ermöglicht, dass man die Methode schreibt we es zugleich
+		verwendet wird. Im Java die lamda exprssions  sind  von funktionalen Interface type.
+
+		n -> n % 2 != 0;
+		(char c) -> c == 'y';
+		(x, y) -> x + y;
+		(int a, int b) -> a * a + b * b;
+		() -> 42
+		() -> { return 3.14 };
+
+		|------- expression ----------------------|
+		|										  |
+		|				|-- statement ----------| |
+		|				|						| |
+		|-params-|		|						| |
+		(String s) -> { System.out.println(s); };
+
+		() -> { System.out.println("Hello World!"); };
+
+		Parameters:
+			A lambda expression can receive zero, one or more parameters.
+			The type of the parameters can be explicitly declared or it can be inferred from the context.
+			Parameters are enclosed in parentheses and separated by commas.
+			Empty parentheses are used to represent an empty set of parameters.
+			When there is a single parameter, if its type is inferred, it is not mandatory to use parentheses.
+
+			LE können keine oder mehrere Parameter haben.
+			Die Parametertypen können explizit deklariert werden oder lassen sich aus dem Kontext ableiten/rückschliessen.
+			Die Parameter sind in Klammer eingeschlossen und sinf mit Kommas getrennt.
+			Eine leere Klammer bedeutet eine Abwesenheit von Parameter.
+			Wenn es gibt eine einzige Parameter,derer Type von Kontext abgeleitet ist, dann Klammer muss nicht unbedingt verwendet werden.
+		The Body
+			The body of the lambda expression can contain zero, one or more statements.
+			When there is a single statement curly brackets are not mandatory and the return type of the anonymous function is the same as that of the body expression.
+			When there is more than one statement then these must be enclosed in curly brackets (a code block) and the return type of the anonymous function is the same as
+			the type of the value returned within the code block, or void if nothing is returned.
+
+			Der Körper des LB kann keine oder mehrere Statement haben.
+			Wenn der Körper hat nur ein statemnt, dann französische Klammer sind nicht obligatorisch, der Rückgabetyp ist gleich mit dem des Methodenkörpers.
+			Wenn es gibt mehr als eine statement , dann sie müssen in einem fr. Klammer stehen, und der Rückgabewerttyp des anonymer Funktion ist gleich mit
+			was vom Kodeblock zurückgegeben wird oder void wenn keine zurückgegeben wurde.
+
+			https://www.tutorialspoint.com/java8/java8_functional_interfaces.htm
+			Functional interfaces have a single functionality to exhibit.
+
+		Since a functional interface can only have a single abstract method, the types of the lambda expression parameters must correspond to the parameters in that method,
+		and the type of the lambda body must correspond to the return type of this method. Additionally, any exceptions thrown in the lambda body must be allowed by the throws
+		clause of this method in the functional interface.
+
+		Da die functional Interfaces nur einen einzigen abstracten Method haben können, die Parametertypen des LE müssen mit denen der funktionalen Interfaces übereinstimen, und der
+		Rückgabetyp der LE Körpers muss mit dem des Funk.Interface auch übereinstimmen. Plus, jegliche Exceptionen im LD müssen im Funkt.Interface auch erscheinen(können geworfen werden)
+
+
+		The following are examples of lambda expressions bound to a target type:
+
+			Predicate<Integer> isOdd = n -> n % 2 != 0;
+			BinaryOperator<Integer> sum = (x, y) -> x + y;
+			Callable<Integer> callMe = () -> 42;
+			Block<String> printer -> (String s) -> { System.out.println(s); };
+			Runnable runner = () -> { System.out.println("Hello World!"); };
+		Notice that the type of the lambda expression is determined by the compiler from the context based on the target type.
+
+		Consumer con2 = (s) -> {System.out.println(s);};
+		con2.accept("www");
+
+		DoubleFunction db = (double szam) -> {
+			System.out.println(szam);
+			return 2.0 * szam;
+		};
+		double szamV = (Double)db.apply(33.3);
+		System.out.println(szamV);
+
+Double colon operator is a shorthand to call a mthod on an object.
+			//referencing a method of an object
+			List<Integer> numbers = Arrays.asList(1,2,3,4,5,6,7,8,9);
+			numbers.forEach(System.out::println);
+
+			//referncing a method of an arbitrary object:
+			Computer c1 = new Computer("white");
+			Computer c2 = new Computer("black");
+			List<Computer> lista = Arrays.asList(c1,c2);
+			lista.forEach(Computer::printColor);
+
+			 class Computer {
+				private String color;
+				Computer(String c) {
+					this.color = c;
+				}
+				public String getColor() {
+					return color;
+				}
+				public void setColor(String color) {
+					this.color = color;
+				}
+				private void printColor() {
+					System.out.println(this.color + " színű");
+				}
+
+
+		import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.IntBinaryOperator;
+import java.util.function.IntConsumer;
+import java.util.function.IntFunction;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+public class Proba1 {
+
+	public static void main(String[] args) {
+		List<String> lista = Arrays.asList("pista","tunde","kata");
+
+		//target type of lambda expression ( assigning lambda expression to variables) must be of a functional interface type:
+		//aka. variables type is a functional interface type
+
+		//assigning lambda expressions to variables, wich are of a Predicate Functional interface type
+		System.out.println("..................Predicate.......accpets an object executes a method for boolean..............");
+		Predicate<List<String>> pred = (List<String> l) -> l.isEmpty();	////operation wich accpest argument and outcome a boolean value of a method
+		System.out.println(pred.test(lista));
+
+		//assigning lambda statement to a Consumer functional interface type, this prints out data
+		System.out.println("................Consumer............accepts an object returns no...........");
+		Consumer<List<String>> cons = (List<String> c) -> {	//represent an operation wich accepts a single value and returns notehing
+			c.forEach(System.out::println);
+		};
+		cons.accept(lista);
+
+		//simply accepts an primitive int and prints it out
+		System.out.println("........IntConsumer................accpets an int and returns no...............");
+		IntConsumer intc = (int a) -> System.out.println(a);	//operation that consumes an argument and return nothing
+		intc.accept(33);
+
+		System.out.println(".............Function...............asspets object and calls method(s) on th object and than returns object...........");
+		Function<String,String> fun = (String obj) -> {
+			String ret = "wwwwww"+obj;
+			return ret;};
+		String result1 = fun.apply("dddd");
+		System.out.println(result1);
+
+		System.out.println("..............IntBinaryOperator..........accpets 2 int and return no...............");
+		IntBinaryOperator ibo = (int x, int y) -> x+y;
+		int z = ibo.applyAsInt(11, 42);
+		System.out.println(z);
+
+		System.out.println("..............IntFunction...............accpets an int and returns an object..........");
+		IntFunction<Integer> intf = (int x) ->  {
+			int res = x + 100;
+			return res;
+		};
+		int res1 = intf.apply(66);
+		System.out.println(res1);
+
+
+		Proba1 pp = new Proba1();			//this below is an implementation without real params values: it just shows what the method should do
+		System.out.println("..............lambda expression as method argument.........................");					//in this case
+		String eredmeny = pp.bogyo("bende", (List<String> l) -> l.isEmpty(), lista);
+		System.out.println(eredmeny);
+
+
+		//////////////////////// WORKING WITH STREAMS
+		List<Dish> menu = Arrays.asList(
+				new Dish("pork", false, 800, Dish.Type.MEAT),
+				new Dish("beef", false, 700, Dish.Type.MEAT),
+				new Dish("chicken", false, 400, Dish.Type.MEAT),
+				new Dish("french fries", true, 530, Dish.Type.OTHER),
+				new Dish("rice", true, 350, Dish.Type.OTHER),
+				new Dish("season fruit", true, 120, Dish.Type.OTHER),
+				new Dish("pizza", true, 550, Dish.Type.OTHER),
+				new Dish("prawns", false, 300, Dish.Type.FISH),
+				new Dish("salmon", false, 450, Dish.Type.FISH) );
+		List<Dish> dishes = menu.stream().collect(Collectors.toList());
+
+		//mivel a stream mar eleve Dish tipusokat tartalmaz igy a lambda mar tudja a tipust is
+		System.out.println(".....................menu.stream().filter(d -> d.getCalories() > 500).count();..................");
+		long count = menu.stream().filter(d -> d.getCalories() > 500).count();
+		System.out.println("count:"+count);
+
+		System.out.println(".........menu.stream().filter(d -> d.getCalories() >500).map(Dish::getName).collect(Collectors.toList())..............................");
+		List<String> names = menu.stream().filter(d -> d.getCalories() >500).map(Dish::getName).collect(Collectors.toList());
+		names.stream().forEach(System.out::println);
+
+
+		System.out.println("................ menu.stream().filter(d -> d.getCalories() >500).collect(Collectors.toList()).......................");
+		List<Dish> dishes1 = menu.stream().filter(d -> d.getCalories() >500).collect(Collectors.toList());
+		dishes1.stream().forEach(d -> {
+			System.out.println(d.getCalories());
+			System.out.println(d.getName());
+			System.out.println(d.getType());
+			System.out.println("------------");
+
+		});
+
+		System.out.println("------sorting the elements from a stream by name------");
+		List<Dish> dishessortedByName = menu.stream().sorted((Dish a, Dish b) -> a.getName().compareToIgnoreCase(b.getName())).collect(Collectors.toList());
+		dishessortedByName.forEach(d -> System.out.println(d.getName()));
+
+		System.out.println("------selecting the names of elements from stream whoes are of meat type------");
+		List<String> meatstream = menu.stream().filter(d -> d.getType() == Dish.Type.MEAT).map(d -> d.getName()).collect(Collectors.toList());
+		meatstream.forEach(System.out::println);
+
+
+	}
+
+
+	public <T, R> String bogyo(String prefix, Predicate<List<String>> pred, List<String> lista) {
+		String result = prefix;
+		result += pred.test(lista);
+		return result;
+	}
+
+
+}
+
+
+
+
+
+Creational Design Pattern:
+	it provides a way to create objects while hiding the creation logic, rather than instantiating objects directly using new operator.
+
+	SINGLETON: This pattern involves a single class which is responsible to create an object while making sure that only single object gets created.
+				It is used in other patterns: Abstract Factory, Builder, Facade, Prototype. Implementation: SingleObject class have its constructor
+				as private and have a static instance of itself, provides a static method to get its static instance to outside world.
+
+				Zur Sicherstellung dass nur eine einziges Instanz der Klasse erzeugt wird.Implementierung: Klasse hat seinen Konstruktor als private markiert und
+				hat einen statischen Instanz von sih selbst das durch einen statischen Method zur Vefügung gestellt wird.
+
+				public class SingleObject {
+
+				   //create an object of SingleObject
+				   private static SingleObject instance = new SingleObject();
+
+				   //make the constructor private so that this class cannot be instantiated from outside
+				   private SingleObject(){}
+
+				   //Get the only object available
+				   public static SingleObject getInstance(){
+					  return instance;
+				   }
+				}
+
+		FACTORY: it is used when we have a super class with multiple sub-classes and based on input, we need to return one of the sub-class. The Factory class is
+				is responsible for creating an instance and not the client. (or interface implemented by subclasses)
+
+				// super class or interface (super class)
+				public class Shape {
+					private String ram, rom, rim;
+				   void draw() {}
+				}
+
+				//subclass of the superclass
+				public class Rectangle extends Shape {
+				   @Override
+				   public void draw() {
+					  System.out.println("Inside Rectangle::draw() method.");
+				   }
+				} ....
+
+				public class ShapeFactory {
+					//use getShape method to get object of type shape
+				   public static Shape getShape(String shapeType, String ram, String rom, String rim){
+					  if(shapeType == null){
+						 return null;
+					  }
+					  if(shapeType.equalsIgnoreCase("CIRCLE")){
+						 return new Circle();
+
+					  } else if(shapeType.equalsIgnoreCase("RECTANGLE")){
+						 return new Rectangle();
+					 return null;
+				   }
+				}
+
+		BUILDER: it was introduced to solve some problems of the factory patern. aka. passing too many arguments from client to the factory. We have a shape class
+				that has many required and many optional params. To instanciate it, we would make a constructor with all the required params as args, and than many constructors
+				for the optional params. The more params we have the more variations for possible constructors are. (there can be various combinations of params)
+				Solution: builder provides a constructor with the common required parameters, and giving different setter methods for the optional parameters.
+				Implementation:
+					public class Shape {
+						private String ram, rom; // required params
+
+						private String opt1; // optional params
+
+						private Shape(ShapeBuilder builder) {
+							this.ram = builder.ram;
+							this.rom = builder.rom;
+							this.opt1 = builder.opt1;
+						}
+
+						public static class ShapeBuilder {
+
+							private String ram, rom, rim; // required params
+
+							private String opt1; // optional params
+
+							public ShapeBuilder(String ram, String rom) {
+								this.ram = ram;
+								this.rim = rim;
+							}
+
+							public ShapeBuilder setOpt1(String o) {
+								this.opt1 = o;
+								return this;
+							}
+
+							public Shape build() {
+								return new Shape(this);
+							}
+						}
+					}
+					calling: Shape s = new Shape.ShapeBuilder("ww", "dd").setOpt1("fff").build();
+
+
+	Structural Pattern: creating a class structure using inheritance or composition, so creating large object from samll object.
+
+			FACADE: 	Facade pattern hides the complexities of the system and provides an interface to the client using which the
+						client can access the system. This type of design pattern comes under structural pattern as this pattern adds
+						an interface to existing system to hide its complexities.
+
+						public class Rectangle implements Shape {
+						   @Override
+						   public void draw() {
+							  System.out.println("Rectangle::draw()");
+						   }
+						}
+
+						public class Square implements Shape {
+						   @Override
+						   public void draw() {
+							  System.out.println("Square::draw()");
+						   }
+						}
+
+				Facade class:
+					public class ShapeMaker {
+					   private Shape circle;
+					   private Shape rectangle;
+					   private Shape square;
+
+					   public ShapeMaker() {
+						  circle = new Circle();
+						  rectangle = new Rectangle();
+						  square = new Square();
+					   }
+
+					   public void drawCircle(){
+						  circle.draw();
+					   }
+					   public void drawRectangle(){
+						  rectangle.draw();
+					   }
+
+				Calling: ShapeMaker shapeMaker = new ShapeMaker();
+									shapeMaker.drawCircle();
+									shapeMaker.drawRectangle();
+
+		ADAPTER:	Translater/Mediator between client and adaptee, that are otherwise incompatible - could not communicate. We are converting an interface into
+					another interface that the client expects, that are otherwise incompatible. The Target interface defines the domain specific interface that
+					the Client used, so the client collaborates with objects that implement the Target interface. On the other side of things,
+					the Adaptee is the existing interface that needs adapting in order for our client to interact with it. 	The Adapter adapts the Adaptee
+					to the Target interface - in other words, it translates the request from the client to the adaptee. Ugyanaz mint a facade csak egy lépéssl
+					tovább megy: a facadenél a client használhastná a target metodúsait, de esetleg 5 metodus hivását a facadebem leegyszerúsitük 1 metódus hivásra.
+					Az adapternél a kliens nem tudja a targetet hini, nem kompatilibilesek ezért kap egy middleman-t.
+
+		PROXY:	  it provides a surrogate/placeholder for another object to controll access to it. If we want grant full access to a service for the client, than we create
+				  prodies for them.
+
+	Behavior pattern:	communication patterens between objects.
+
+				TEMPLATE METHOD:  template method is a stub and it deferrs some of the functionalities to the subclasses. It is a final method, that should consists certain steps
+						in fixed order (some methods) and some methods thats implementation differs in the subclassed. It defines a set of default implementation for the subclasses,
+						and a set of functionalitie that are implemented in the actual subclasses.
+
+				public abstract class HouseTemplate {
+
+					//template method, final so subclasses can't override
+					public final void buildHouse(){
+						buildFoundation();
+						buildPillars();
+						buildWalls();
+						buildWindows();
+					}
+
+					//default implementation
+					private void buildWindows() {
+						System.out.println("Building Glass Windows");
+					}
+
+					//methods to be implemented by subclasses
+					public abstract void buildWalls();
+					public abstract void buildPillars();
+
+					private void buildFoundation() {
+						System.out.println("Building foundation with cement,iron rods and sand");
+					}
+				}
+
+				public class WoodenHouse extends HouseTemplate {
+					@Override
+					public void buildWalls() {
+						System.out.println("Building Wooden Walls");
+					}
+
+					@Override
+					public void buildPillars() {
+						System.out.println("Building Pillars with Wood coating");
+					}
+				}
+
+				Calling: HouseTemplate houseType = new WoodenHouse();
+			                           houseType.buildHouse();
+
+		STRATEGY: (or Policy pattern), we have multiple algorithm for specific task and the client decides the actual implementation to use at runtime.
+				Collection.sort(); -> it takes Comparator as argument, wich can be of different implementations.
+
+		ITERATOR: provides a standard way to traverse through a group of objects. Like Collection Iterator. We can have different type of Itertors based on the
+				client needs: Pl. We can have Iterators to traverse through radion channels according music genders.
+
+
+
+--------------------------------------
+
+return type			Rückgabetyp
+inheritance			Vererbung
+property			Eigenchaft
+typing				Typisierung (ertek tipus adása)
+interface 			Interfaces
+elheyez				Komponente/module/Datei anlegen
+					Anwendung aufsetzen
+execution			Ausführung
+statement 			Anweisung
+exceptions			Ausnahme
+throw an exc.		Ausnahme werfen
+exc. catch			Ausnahme abfangen
+typing errors		Typisierungsfehler
+{					geschweifter Klammer
+munkát levenni		uns Arbeit abnehmen
+visszatérő feladatok wiederkehrende Aufgaben
+builing a project	Bauen eines Projekts
+runing tests		Ausführung von Tests
+under the link		über folgendes Link erreichen
+
+
+Errors sind Fehler, die meist durch Fehlfunktionen der JVM ausgelöst werden, zum sofortigen Abbruch der Programmausführung führen und nicht abgefangen werden.
+
+
+
+Átnézni:lambda, optinal, default method, method refrence, functional interface, stream
+
+https://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/
+
+
+
+https://www.tutorialspoint.com/java8/java8_method_references.htm
+Java provides a new feature called method reference in Java 8. Method reference is used to refer method of functional interface. It is compact and easy form of
+lambda expression. Each time when you are using lambda expression to just referring a method, you can replace your lambda expression with method reference
+
+	@FunctionalInterface
+	interface  Modemable {
+
+		int getPrice();
+	}
+
+	class Modem implements Modemable {
+
+	modemek.forEach(Modem::getPrice);
+
+
+Method reference is used to refer method of functional interface. It is compact and easy form of lambda expression. Each time when you are using lambda expression
+ to just referring a method, you can replace your lambda expression with method reference
+
+https://javabydeveloper.com/java-8-double-colon-operator/
+
+https://dzone.com/articles/java-8-lambda-functions-usage-examples
+
+GIT + Eclipse
+	https://www.vogella.com/tutorials/EclipseGit/article.html
+
+
+Ez az igazi leirás:
+	http://wiki.eclipse.org/EGit/User_Guide#Creating_Repositories
+
+
