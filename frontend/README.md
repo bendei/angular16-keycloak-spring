@@ -64,5 +64,11 @@ https://update.angular.io/?l=3&v=12.0-13.0
 ## ng-template with structural etc. komplex példatár:
 https://www.tektutorialshub.com/angular/ng-template-in-angular/
 
+## debugging angular in intellij
+1. Create a run/debug configuration just as in the rise project: Edit configuration -> javascript debug -> name: frontend, url: http://localhost:4200
+2. start angular apliaction with ng serve
+3. select from run configurations: frontend and lcik on the debug icon right to it
+4. breakpoint are live ( F8)
+
 
 
