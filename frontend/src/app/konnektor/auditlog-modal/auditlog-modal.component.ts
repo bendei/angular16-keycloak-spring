@@ -27,6 +27,9 @@ export class AuditlogModalComponent implements OnInit, OnChanges, DoCheck, After
   public messagesTypes: AuditLogMessageDTO[] = [];
   private latestNewIdForAuditlog = -1;
 
+  // just for practice
+  private sorozat: (string | number)[] = [2, 3, 'eee'];
+
   @ViewChild('auditlogsDataTable', {static: false})
   public auditlogsDataTable: DatatableComponent;
 
@@ -36,6 +39,8 @@ export class AuditlogModalComponent implements OnInit, OnChanges, DoCheck, After
   ngOnInit(): void {
     this.messagesTypes = Object.values(AuditLogMessageDTO);
     console.log('-----ngOnInit:' + this.auditlogsDataTable);
+    console.log(this.sorozat);
+
   }
 
   ngDoCheck(): void {
