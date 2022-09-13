@@ -1,0 +1,1 @@
+export let globalom = 'wwww';
