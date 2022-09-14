@@ -12,7 +12,7 @@ import {ToastrModule} from 'ngx-toastr';
 import {defaultToastConfig} from './toast/toast.service';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {konnektorRoutes} from "./konnektor/konnektor.routing";
+import {CdModule} from "./ChangeDetection/cd.module";
 
 @NgModule({
   declarations: [
@@ -25,6 +25,7 @@ import {konnektorRoutes} from "./konnektor/konnektor.routing";
     HttpClientModule,
     NavigationModule,
     AuditlogModule,
+    CdModule,
     NgbModule,
     BrowserAnimationsModule,
     KonnektorViewModule,

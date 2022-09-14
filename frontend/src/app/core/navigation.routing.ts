@@ -2,6 +2,7 @@ import {Routes} from '@angular/router';
 import {KonnektorViewComponent} from '../konnektor/konnektor-view.component';
 import {AuditlogComponent} from '../auditlog/auditlog.component';
 import {TemplateComponent} from './template.component';
+import {CdComponent} from "../ChangeDetection/cd.component";
 
 export const navigationRoutes: Routes = [
   {
@@ -16,6 +17,10 @@ export const navigationRoutes: Routes = [
       {
         path: "auditlog",
         component: AuditlogComponent
+      },
+      {
+        path: "cd",
+        component: CdComponent
       }
     ]
   }

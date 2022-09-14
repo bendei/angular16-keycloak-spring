@@ -20,6 +20,18 @@ An array in TypeScript can contain elements of different data types using a gene
 or:
   let values: Array<string | number> = ['Apple', 2, 'Orange', 3, 4, 'Banana'];
 
+KLONING OBJECTS:
+1. shallow copy, no methods copy
+  The Object.assign() method copies all enumerable own properties from one or more source objects to a target object
+  const target = { a: 1, b: 2 };
+  const source = { b: 4, c: 5 };
+  const returnedTarget = Object.assign(target, source);
+  oder, wenn wir keine target haben nur das Objekt klonen wollen:
+  let ujobj = Object.assign({}, source);
+2. Spread operator (shallow,  no methods copy):
+  const ujobj = {...source};
+3. lodash deep copy
+
 Instanz erstellen (Interface Type):
 1. von interface Typ:
 	const error: Error = {
@@ -34,6 +46,14 @@ ohne Tipisierung / Angabe der Klasse:
 	let ez = {
 		name: "rjkreoirp"
 	};
+
+AHSHATBLE in ts: (nem más mint egy string k
+export declare interface SimpleChanges {
+    [propName: string]: SimpleChange;
+}
+let ht: string[]: SimpleChange;
+
+accessing it:
 
 INTERFACES dienen dazu, die Struktur eines Objekts grundsätzlich zu definieren.
 Optionale Eigenschaften werden durch ein Fragezeichen-Symbol gekennzeichnet.
@@ -62,7 +82,7 @@ die runden Klammern auf der linken Seite sogar weggelassen wer. Der  rechtsseiti
 eingespart werden: Lässt man die Klammern weg, wird das Ergebnis des rechtsseitigen Ausdrucks als Rückgabewert für die Funktion verwendet.
 Wir müssen also kein return-Statement verwenden.
 
-SPREAD OPERATOR
+SPREAD OPERATOR / oder zum klonen : Object.assing(target, source)
 Praktisch verwenden wir den Spread-Operator vor allem, um Objekte und Arrays zu klonen. const copy = { ...myObject, year: 2020 }; ( Gleichheitszeichen) kopieren. »Klonen«
  wir also auf diese Weise ein Objekt, das eine Instanz einer Klasse ist, so werden nur die Eigenschaften kopiert, nicht aber die klasseneigenen Methoden. Die inhaltliche Verbindung
 mit der Klasse geht verloren, und es wird lediglich eine flache Kopie (engl. SHALLOW COPY) erzeugt. Es wird stets nur die obere Ebene eines Objekts ko
@@ -303,12 +323,30 @@ wie ngIf aus dem DOM ausgebaut wird. Dieses gilt für Komponente und Direktive a
 })
 constructor(private logService: logService) ...
 
+  https://www.tektutorialshub.com/angular/angular-component-life-cycle-hooks/#ngdocheck
+
+CHANGE DETECTION: ist das Mechanismus, wodurch Angular das Template mit dem Komponent synchron haelt. d.h. property binding bleibt immer aktualisiert. Woher weisst Angular,
+ob der Wert eines property binding geaendert ist? Es starter das CD jedesmal, wenn ein DOM event, input changes, setTimeout, http resquest gesendet wurde. Im Laufe des CD cycle
+Angular prüft jede property binding Wert mit dem entsprechendem Wert in dem Komponent, dieses kann aber zu Performance probleme führen, dann wenn bestimmte bounded properties
+schwerwigende  Arbeiten brauchen , dann diese verlangsamen die Anwendung. Wenn es Wertaenderung findet auf dem komponent dann aktualisiert es  das DOM und ruft die
+life cycle hooks callback Funktionen auf.
+
+ Nach jedem DOM event das change detection leauft ab und prüft Aenderungen in den Werten für data bindings und rerenderiert das ganze Kompoenent.
+ By default change detection compoenente werden jedesmal neugerendert, wenn ein asynchron Erreignis passiert: click event, HttpRequest wird versendet etc, weil dabei
+ change detection jedesmal ablaeuft.
+ button click -> change detection lauft ab -> Kompoenent wird neu gerendert
 
 https://angular.io/guide/lifecycle-hooks
-Lebenszyklus einer Komponente / Directive:
+Lebenszyklus einer Komponente / Directive (lifecycle hooks sing callback Funktionen, die vom Angular gerufen werden wenn bestimmte Errignisse passieren):
 	1.	Angular instanziert die Komponente, wobei der Konstruktor aufgerufen und ihre Abhaengigkeiten injiziert werden.
-	2.	Change detection startet: Angular prüft und setzt/aktualisiert die input Propertys (@Input) => die Komponente wird inizialisiert.
+
+	2.	Change detection startet: Angular prüft und setzt/aktualisiert die input Propertys (@Input) => die Komponente wird inizialisiert. Wenn child comp's @Input propoerty's Wert
+	    (its default value) ist geaendert durch das parent component, dann  OnChanges wird gerufen beim CD. Beim anderen data bind properties wird dieser nicht gerufen.
+	    Jeder geaenderte! @Input property bekommt ein SimpleCahnge Objekt und SimpleChanges beinhaltet die Instanzen von SimpleChange Objekten.
+	    SimpleChange.
+
 		https://www.tektutorialshub.com/angular/angular-ngonchanges-life-cycle-hook/
+
 	3.	Onchanges: Diese Methode wird aufgerufen, nachdem change detector die data binding geprüft hat, und mindenstens eine geaendert wurde. Als Argument erhält die Methode
 		ein Objekt vom Typ SimpleChange, in dem die veränderten Propertys und ihr aktueller und vorheriger Wert angegeben sind.
 		(wird nicht aufgerufen wenn input property ein array/Object ist, weil change detection verwendet ===
@@ -317,18 +355,33 @@ Lebenszyklus einer Komponente / Directive:
 				Lösungen:
 					1.	Erstellen ein neues objekt mit den Werten des Alten
 					2.	Lagert man die Logik in das Docheck() hinaus.
+
+			ALternative wir können @Input property changes prüfen, wenn wir set / get Metode verwenden, anstatt callback Methode:
+			@Input()
+      set count(count: number) {
+          this._count = count;
+          console.log(count);
+      }
+      get count(): number { return this._count; }
+
 	4.	Oninit: signalisiert, dass die Komponente fertig ist, Initialisierunglogik sollte hier kommen, lauft nur einmal ab.
-	5.	Docheck: wird immer by change detection aufgerufen, funktioniert mit array/Objekt-Typen auch.
+
+	5.	Docheck: wird IMMER by change detection aufgerufen unabhaengig ob eine Property geaendert wurde oder nicht., besonder beim OnPush., funktioniert mit array/Objekt-Typen auch.
+
 	6.  AfterContentInit: Content ist hier ein external content injiziert durch ein parent component.
 		gerufen nur einmal nachdem der content inizialisiert und change det abgelaufen ist.in die Komponente projected ist. (Content Projection!),
 		  You really don't need to worry about 	it if you're not messing around with templates or <ng-content>. Here @ContentChild and
 		  @ContentChildren will be resolved.
+
 	7.	AfterContentChecked: gleich wie oben, aber immer wenn change detection ablauft, Angular aktualisiert properties decorated ,it @ContentChild.
+
 	8.	AfterViewInit: View ist der Template eines Komponents.  nachdem Komponente-View und ihre child views inizialisiert sind. Kann zum extra Initialisierungslogik.
 		 Erst ab dieser Stufe im Lebenszyklus können wir mit @ViewChild() zuverlässig auf Elemente in der View zugreifen. Angular compiles all views to JS files, not html -
 		 the framework manages templates in code and has a rendering engine to interact with the DOM. At this hook @ViewChild and @ViewChildren will be resolved (aktualisiert)
 		 -- child compo
-    9.	AfterViewChecked: laeft nach change detection ab
+
+  9.	AfterViewChecked: laeft nach change IMMER detection ab, weil nach beim jedec CD wird das komponent neugerendert.
+
 	10. Ondestroy: Komponente wird aus dem DOM ausgebaut.(man navigiert weg. oder durch Strukturdirektive wird aus dem DOM ausgebaut )
 
 	Im Generell: Init hooks: wenn view/content ist inizialisiert zum ersten Male. Dieses passiert 1. change detection cycle, gleich nach Instanzierung der Komponente.

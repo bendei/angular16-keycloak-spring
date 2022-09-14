@@ -1,0 +1,13 @@
+PARENT
+
+{{szam}}
+<br/>
+string interpolation with method expression: {{kiir()}}
+
+<br/>
+
+<button title="click to change @Input on child wich detects changes with life cycle callback" (click)="changeSzamNameInputProperty()">button</button>
+
+<button title="click to change @Input on child wich detects changes with set/get " (click)="changeChildInputWithSetter()">button</button>
+
+<cdchild [szam]="szam" [user]="user"  [counterInputPropertySetter]="counterInputPropertySetter" [userSet]="userSet" #child></cdchild>
