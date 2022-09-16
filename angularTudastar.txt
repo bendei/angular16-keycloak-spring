@@ -369,7 +369,7 @@ Lebenszyklus einer Komponente / Directive (lifecycle hooks sing callback Funktio
 	5.	Docheck: wird IMMER by change detection aufgerufen unabhaengig ob eine Property geaendert wurde oder nicht., besonder beim OnPush., funktioniert mit array/Objekt-Typen auch.
 
 	6.  AfterContentInit: Content ist hier ein external content injiziert durch ein parent component.
-		gerufen nur einmal nachdem der content inizialisiert und change det abgelaufen ist.in die Komponente projected ist. (Content Projection!),
+		  gerufen nur einmal nachdem der content inizialisiert und change det abgelaufen ist.in die Komponente projected ist. (Content Projection!),
 		  You really don't need to worry about 	it if you're not messing around with templates or <ng-content>. Here @ContentChild and
 		  @ContentChildren will be resolved.
 
@@ -490,7 +490,9 @@ Observable creation function:
 	-	Die Funktion from() zur Erzeugen Observable from Arrays  kann übrigens nicht nur Arrays entgegennehmen, sondern auch Promises, Iteratoren oder andere Observables.
 	-	Weitere creation functions: timer(), interval()
 
-Operatoren: Datenströme zu transformieren, zusammenzuführen oder zu filtern und daraus neue Datenströme zu erzeugen. Technisch ist ein Operator eine Funktion, die ein Observable
+  https://rxjs.dev/guide/operators
+
+OPERATORS: Datenströme zu transformieren, zusammenzuführen oder zu filtern und daraus neue Datenströme zu erzeugen. Technisch ist ein Operator eine Funktion, die ein Observable
 entgegennimmt, den Datenstrom verarbeitet/verändert und ein neues Observable mit dem geänderten Datenstrom zurückgibt. Damit wir einen Operator auf ein existierendes Observable
 anwenden können, benutzen wir die Methode pipe().
 	- 	map: transformiert die Werte eines Datenstroms, indem eine Funktion auf jedes Element angewendet wird. Wir übergeben eine sogenannte Projektionsfunktion.

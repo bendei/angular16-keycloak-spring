@@ -1,0 +1,593 @@
+https://johnpapa.net/es5-es2015-typescript/
+
+// CSS box model
+https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/The_box_model
+
+
+
+www.javascript.info
+
+As a rule, only the simplest scripts are put into HTML. More complex ones reside in separate files.
+The benefit of a separate file is that the browser will download it and store it in its cache.
+Other pages that reference the same script will take it from the cache instead of downloading it, so the file is actually downloaded only once.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Variables are “dynamically typed”, meaning that there exist data types, but variables are not bound to any of them.
+
+DATA TYPES: string, number(representieren sowohl integer und floating point Nummer), wenn wir gößer als Integer brauchen : BigInt.
+Arbeiten mit numerischen Werten sind "safe", d.h. wenn varialbe hat kein numerischen Wert dann program stribt nicht ab, sondern schreibt NaN
+
+If a variable is declared, but not assigned, then its value is undefined; The meaning of undefined is “value is not assigned”. ->  let szam;
+Und wenn wir auf ein Variable referenzieren, das nicht einmal deklariert ist: console schreibt aus: Uncaught ReferenceError: x is not defined
+
+TYPEOF Oprator liefert den Typ eines Arguments zurück. ( null ist ein Object )
+as operator:  typeof x
+as function typeof(x)
+document.write(typeof x == "number");
+
+DECLARING VARIABLE = let szam: number; -> wir deklarieren nur die type der variable
+DEFINING VARIABLE = szam = 22;  -> wir geben einen Wert auch
+in einem: let szam: number = 22;
+
+multiline:
+  let user = 'John',
+  age = 25,
+  message = 'Hello';
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+conversions:
+
+manual:
+    1. let szam = Number("22");
+    2. let szam: number = 33;
+       let text: string = String(szam);
+
+STRING CONVERSION:  Occurs when we output something. Can be performed with String(value). false -> "false", null -> "null"
+    value = '1' + 2;
+    console.log(value)  // Output "12"
+
+    value = '1' + true;
+    console.log(value)  // Output "1true"
+
+NUMERIC CONVERSION: happens in mathematical functions and expressions automatically:
+    1. let szamma: number = +"22";  //unary operator, simply converts string into number;
+    2. let osszeg: number = 22 + "22"; -> 44 as number
+    3. let szam: number = Number("22"); -> Number("ww2") -> NaN
+
+JS:
+    value = '2' - '1';
+    console.log(value); // Output 1
+
+TS:
+    value = '2' - 1; ->  The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type
+    console.log(value); // Output 1
+  vagy:
+    value = '2' - 1;  ->      The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+  DE!!
+    let szam: any = "22";
+    let osszeg: number = szam -1; -> 21
+
+
+    value = '2' * 1;
+    console.log(value); // Output 2
+
+    value = '2' / 1;
+    console.log(value); // Output 2
+
+ or Number("22"): NaN;
+					undefined -> NaN
+					null -> 0
+					true/false -> 1/0
+					string -> stripped of whitespaces, if string is empty : 0
+
+BOOLEAN CONVERSION: Values that are intuitively “empty”, like 0, an empty string, null, undefined, and NaN, become false. Other values become true.
+
+null == undefined -> true, by comparison arguments get converted to numbers, null and undefined both are 0 value
+null  === undefined -> false
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+OPERATORS:
+	plus operator (+), if any of the operands is a string than all operand get converted to string: 2 + "2" = "22; also string concatenation
+
+	let x = "10";
+	let y = "2";
+	document.write(+y + +x) = 12 and not 210
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+COMPARISONS:
+	When comparing values of different types, JavaScript converts the values to numbers. (logikus mert a  == és a többi matematikai operatorok)
+			alert( '2' > 1 ); // true, string '2' becomes a number 2
+			alert( '01' == 1 ); // true, string '01' becomes a number 1
+			alert( true == 1 ); // true
+			alert( '' == false ); // true
+
+	A strict equality operator === checks the equality without type conversion.
+			alert( 0 === false ); // false, because the types are different
+
+CONDITIONAL OPERATO ?
+let ez = szam > 10 ? "n" : "k";  -> Uncaught ReferenceError: szam is not defined
+de ha.. let = szam; (theat declared but not defined) akkor "k";
+
+NULLISH COALESCING: ??
+	1. The common use case for ?? is to provide a default value for a potentially undefined or null variable: let ez = null vagy undefined; de ha undeclared akkor error jön
+		let user;
+		alert(user ?? "Anonymous"); // Anonymous (user not defined)
+	or ... let user = "John";
+		alert(user ?? "Anonymous"); // John (user defined)
+
+	DE:
+	function call(szam) {
+		document.write(szam);
+		let sz = szam ?? 22;
+		alert(sz);
+	}
+	call(); ha a method nem kap parametert, akkor az arg undefined lesz és ezért lefut a kód
+
+	2. We can also use a sequence of ?? to select the first value from a list that isn’t null/undefined
+		let firstName = null;
+		let lastName = null;
+		let nickName = "Supercoder";
+		// shows the first defined value:
+		alert(firstName ?? lastName ?? nickName ?? "Anonymous"); // Supercoder
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SWITCH: ha nincsen break; akkor condition check nélkül végrehajtja a következőt case-t. ott megáll és ellenőriz ahol van break;
+equality check is always strict. The values must be of the same type to match. !!!!
+
+grouping case:
+	case 3: // (*) grouped two cases
+	case 5:
+    alert('Wrong!');
+    break;
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+JavaScript is a very function-oriented language. It gives us a lot of freedom. A function can be created at any moment, passed as an argument to another function, and then called from
+a totally different place of code later. In JS functions are variables.
+pl:
+	let ez = function ez() {alert("www");}
+	function az(callable) { callable();}	// callable egy js function, amit a az function bodyjában meghivunk
+	az(ez);
+
+function showMessage(text) {
+  if (text === undefined) { // if the parameter is missing
+    text = 'empty message';
+  }
+
+ ..or:
+ // if text is undefined or otherwise falsy, set it to 'empty'
+  text = text || 'empty';
+
+ FUNCTION EXPRESSION: function created inside an expression: it is created only when execution reaches it and only avaliable at that moment
+	let sum = function(a, b) {
+		return a + b;
+	};
+	vagy:
+	    let sum => (a,b) {return a+b}
+
+	..and then we can copy a function to a variable:
+		let func = sayHi;
+	..and calling it:
+		func();
+
+with LAMBDA:
+	let sum = (a + b) => return a + b;
+
+ FUNCTION DECLARATION: normál funkction can be called before declared, cos javascript looks for global function declarations, creates them and than calles them.
+
+ CLUSURE:
+ A closure is a function that has access to its outer function scope even after the outer function has returned. This means a closure can remember and access variables and arguments
+ of its outer function even after the function has finished.
+
+ https://blog.bitsrc.io/a-beginners-guide-to-closures-in-javascript-97d372284dda
+
+
+	function getCounter() {
+	  let counter = 0;
+
+	  return function ez() {  		// getCounter() is a closure;  function returns an inner function, so whenever we call it it runs the inner function !
+									// tehát: a let count = getCounter(), (és nem a normális function expression: let count = getCounter; ) végrehajtja a
+									// outer function-t, ami egy külső function definitiont ad vissza: innentől kezdve a let count variable egy function expression
+									// a function ez()-re.
+		return counter++;
+	  }
+	}
+	let count = getCounter();	// as we call getCounter() it return the inner function ez that we store in the count variable ->
+								   whenever we call count() it will execute the inner ez() function that has access to the counter outer Lexical Environment's variable.
+	console.log(count());  // 0
+	console.log(count());  // 1
+	console.log(count());  // 2
+
+EXECUTION CONTEXT
+An execution context is an abstract environment where the JavaScript code is evaluated and executed. When the global code is executed, it’s executed inside the global execution context,
+and the function code is executed inside the function execution context. There can only be one currently running execution context (Because JavaScript is single threaded language),
+which is managed by a stack data structure known as Execution Stack or Call Stack. The currently running execution context will be always on the top of the stack, and when the
+function which is currently running completes, its execution context is popped off from the stack and the control reaches to the execution context below it in the stack.
+LEXICAL ENVIRONMENT
+Every time the JavaScript engine creates an execution context to execute the function or global code, it also creates a new lexical environment to store the variable defined
+in that function during the execution of that function. LE has 2 components: Environment recortd for holding variables, function arguments etc, and a pointer to the parent LE.
+in the above example the LE for outer function will not removed because it is referenced by the LE of the inner function so function ez has access and increments its variable.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Template-String:
+alert( `Hello, ${name}!` ); // Hello, John!
+alert( `the result is ${1 + 2}` ); // the result is 3
+alert( "the result is ${1 + 2}" ); // the result is ${1 + 2} (double quotes do nothing)
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+TRICKY !!!
+
+A.
+	// 5 sec elteltével kiirja a 0-5 számot gy pillanat alatt !! ( és nem 5 mp késlettetéssel összesen 25 mp alatt)
+	for (let i = 0; i < 5; i++) {
+		setTimeout( () => console.log(i), 5000);
+	}
+	...tehát 5 db timeout-ot inditunk azonos időpontban; ször lefut de a mostani pillanathoz képest mind az 5 "egyidőben" 5 mp múlva.
+	..ha azonban 5000 * i akkor szépen időben delayyel iratja ki őket
+	.. let i = 0; -> block scoped
+
+	..de ha:
+	for (VAR i = 0; i < 5; i++) {
+		setTimeout( () => console.log(i), 5000 * i);
+	}
+	..akkor delayyel kiirja, de minden alkalommal az i értéke 5 !!
+
+	...var is either function or global scoped:
+	if (true) {
+	  var test = true; // use "var" instead of "let"
+	}
+	alert(test); // true, the variable lives after if
+
+B.
+	function sayHi() {
+	  if (true) {
+		var phrase = "Hello";
+	  }
+
+	  alert(phrase); // works
+	}
+
+sayHi();
+alert(phrase); // ReferenceError: phrase is not defined
+
+
+let var const
+for (var i = 0; i < 5; i++) {
+	setTimeout() {
+		console.log(i), i * 1000;
+	}
+}
+
+var and let are both used for variable declaration in javascript but the difference between them is that var is function scoped and let is block scoped.
+
+1.	document.write(x);
+	var x = 11;  -> az értéke undefined lesz, de nem jön error
+
+2.	document.write(x);  -> Uncaught ReferenceError: x is not defined
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+In JavaScript, every running function, code block {...}, and the script as a whole have an internal (hidden) associated object known as the Lexical Environment.
+
+1.	The LEXICAL ENVIRONMENT object consists of two parts:
+2.	Environment Record – an object that stores all local variables as its properties (and some other information like the value of this).
+	A reference to the outer lexical environment, the one associated with the outer code.
+
+Closures
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+OBJECTS:
+
+Creation:
+1.	let user = new Object(); 									// "object constructor" syntax
+	user.name = "ddd";
+	user.call = function() {...}
+	user.call = (a) => alert(a);			// user.call("hello");
+
+
+2.	let user = {												// "object literal" syntax
+		name: "pisti",
+		call: function(p1) {console.log(p1);}
+		vagy..
+		call() {}
+	};
+
+3.	Creating many similar object without class definition 		// "constructor function":
+	function Ember(name) {	// mindig Nagybetűvel kezdődik, innen tudjuk egyből hogy constructor function, ugyanaz mint a Java constructor!!
+		this.name = name;
+		this.ferfi = true;
+		this.say = function(text) {
+			return text;
+		}
+	}
+
+let ember = new Ember("pista");
+
+delete user.name -> deletes the property
+
+COMPUTED PROPERTY: where the name of the property comes from a variable value.
+let fruit = prompt("Which fruit to buy?", "apple");
+
+let bag = {
+  [fruit]: 5, // the name of the property is taken from the variable fruit, we use [] to declare computed property name
+  vagy akár: [fruit + 'gyumolcs"]
+};
+
+ha a user a promptba "macska"-t ir be akkor a ba.macska = 5 lesz a property.
+és megvizsgáljuk hogy van e macska poroperty: let vanMacska = "macska" un bag;
+
+CLONING OBJECTS:
+1.	for (let key in user) {
+		clone[key] = user[key];
+	}
+
+2.	let newobj = {};
+	Object.assign(newobj, srcobj1, srcobj2);
+
+3.	let newobj = {...srcobj};   -- Spread Operator
+----------------------------------------------------------------------------------------------------------------------------------
+FUNCTIONS:
+The typeof operator in JavaScript returns "function" for functions. But, JavaScript functions can best be described as objects. JavaScript functions have both properties and methods.
+
+SELF-INVOKING EXPRESSION is invoked (started) automatically, without being called, but You cannot self-invoke a function declaration.:
+	(function () {
+	  let x = "Hello!!";  // I will invoke myself
+	})();
+----------------------------------------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------------------------------------
+THIS, is unbound, java-val szemben egy function hivatkozhat a this-re aneélkül hogy class része lenne, a this mindig a contexttől függ
+
+    let user = {name: "ww"};
+	let user1 = {name: "eee"};
+
+	function say() {
+		document.write(this.name);
+	}
+
+	user.call = say;
+	user1.call = say;
+
+	user.call();		-> www
+	user1.call();		-> eee
+
+Arrow functions have no this.
+----------------------------------------------------------------------------------------------------------------------------------
+OPTIONAL CHANING: user?.name
+
+Csak akkor van értelme hasznáni, ha a user declared!! (különben breaks code: ReferenceError: user is not defined)
+When user exists (not null , not undefined) work as user.name
+Otherwise returns undefined, but dont break the code, no error comes in console
+
+pl 1. // itt a "www" nem kerul kiiratásra, mert error jön ( consolban)
+	let user;
+	document.write(user.name);
+	document.write("www");
+
+	2. // kiirja hogy undefined és www. de nem breaks a code
+	let user;
+	document.write(user?.name);
+	document.write("www");
+----------------------------------------------------------------------------------------------------------------------------------
+TS érdekes objemtum öröklödés / object literals: https://www.typescriptlang.org/docs/handbook/type-compatibility.html
+
+CLASS:
+	class Ember {
+		szin = "feher";	//ahogyan a Angular-ban itt sem lehet let keyword
+		callMe() {};
+
+		_szam = 11;		// protected property
+
+		get szam() {
+			return this._szam * 2;
+		}
+
+		set szam(sz) {		// readonly property ha ezt elhagyjuk
+			this._szam = sz ?? 0;
+		}
+	}
+
+minden objektnek van egy prototype-ja amiből öröklődik,
+let em = new Ember();
+
+-- ha egy új method-ot adnunk de csak az adott példánynak: em.say = function() {alert("EEE")};
+-- ha a class-hoz, hogy aztán valamennyi példány megkapja: Ember.prototype.say = function() {};
+-- Cat extends Animal: ha a Catnek nincsen saját constructore, akkor a js kreál egy default-ot amiben meghivja a parent construcort.
+	Ha a Cat-nek van saját constructora:
+		constructor(szine, szaga) {
+			super(ha van akkor parameterekkel);	// excplicitly calling parents constructor
+			this.szine ....
+		}
+instanceof: checking the object's type, also traverses the prototype chain
+user?.name ha a user undefined akkor error jön
+
+MIXIN:  mixin (belemixeljuk valamibe)is a class containing methods that can be used by other classes without a need to inherit from it.In other words, a mixin provides methods
+ that implement a certain behavior, but we do not use it alone, we use it to add the behavior to other classes. Merging methods and properties
+ Fontos: mixin-elni csak objektum példányokat tudunk és nem class-okat.
+	let em = {
+		szam = 22;
+		call() {alert("sss");}
+	};
+
+	let ferfi = {
+		hello() {alert("hello");}
+	}
+
+	Object.assign(ferfi, em); // de csak assign nel megy , spread operatorral nem!
+	ferfi.call();
+	ferfi.hello();
+	document.write(ferfi.szam);
+----------------------------------------------------------------------------------------------------------------------------------
+try catch works only with synchronous code, not with: (because code completes after the catch block)
+		setTimeout(function() {
+		  try {
+			noSuchVariable; // try...catch handles the error!
+		  } catch {
+			alert( "error is caught here!" );
+		  }
+		}, 1000);
+error object has properies: name, message, stack;
+Error, SyntaxError, ReferenceError, TypeError
+es error we can throw any object not obliged to extends any of above
+----------------------------------------------------------------------------------------------------------------------------------
+NUMBER:
+let a = 0.1;
+let b = 0.2;
+a+b == 0.3 -> false !! 0.3000001
+let sum = (a+b).toFixed(2);	//toFixed() returns string not number!
+
+The toFixed() method rounds a number to a given number of digits. For working with money, toFixed(2) is perfect.
+itt ki is lehet próbálgatni:  https://www.w3schools.com/js/tryit.asp?filename=tryjs_number_toprecision
+
+document.write(Number(sum) == 0.3); document.write(+sum == 0.3); -> true
+
+ parseInt('100px') -> 100, kiolvassa a számokat és visszaadja mint number
+
+ // user bead egy mezőértéket, aminek numerikusnak kell lennie:
+ let szam = prompt("szam:");
+	alert(isFinite(szam));
+	an empty or a space-only string is treated as 0 in all numeric functions including isFinite -> ha nem ir be semmit akkir is numerikusként létja
+	isFinite('' vagy ' ') -> true
+	isFinite(null) -> true
+	isFinite(undefined) -> false
+----------------------------------------------------------------------------------------------------------------------------------
+STRING: immutable:
+	let ez = "www"; ez[0]="a"; -> nem dob hibát , de nem változik a value
+
+----------------------------------------------------------------------------------------------------------------------------------
+ARRAY (are objects): can store elements of any type, even functions!
+
+as queue: usage scenario: queue of messages shown on the screen FIFO: first in first out
+		   push -> adds an element (multiple) to the end of the array
+		   shift -> remove first element and returns it
+
+as stack: LIFO: last in first out, imagine it as a stack of cards, you add new card onto the top, and removes it also from the very top
+		  push: add (multiple)to the last
+		  pop: remove the last
+		  unshift: add element (multiple) to the beginning
+
+shift/unshift (operates both at the beginning) are slow, cos we before executing them elements must be repositioned (shifted)
+js array are both stack and queue = called general "dqueue"
+
+splice method: for deleting, inserting, exchanging, returning elements in from array
+slice: részsort ad vissza
+
+iterating with function call for each element:
+	["Bilbo", "Gandalf", "Nazgul"].forEach((item, index, array) => {  alert(`${item} is at index ${index} in ${array}`); });
+
+split(','); splits a string into array by comma delimiter
+join(',') ellenkezője, comma közbeiktatásával egy stringé rakja össze a elemeket
+
+Set can not have duplicate elements, if we try to add duplicates it just ignores it
+
+// https://www.w3schools.com/js/js_array_iteration.asp
+tasks = this.tasks.filter( (task) => task.id !== id);  -> igy removunk egy taskot amit a user a feluleten deletre kattintva törölni akar
+
+// creating toggle when clicking pl. on  a component:
+youtube vue.js crash course 2021 56.perc
+this.tasks.map( task => {task.id !== id ? {...task, reminder : !task.reminder}} : task);
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+debounce
+
+----------------------------------------------------------------------------------------------------------------------------------
+PROMISE
+it is an object that links producer with consumer.
+
+	Promise object accepts as constructor argument a function "executor", wich runs immediately and automatically when Promise is created.
+	It conatins 2 callbacks: resolve(value), reject(error), and executor calls one of the callbacvks, depending an un/successful runing the task.
+	promise properties ( depending on the executors task):
+		state: pending/fulfilled/rejecetd
+		result: undefined/value/error
+
+	let promise = new Promise(function(resolve, reject) {
+	  setTimeout(() => resolve("done!"), 1000);
+	});
+
+..and consumer can subscribe to promies:
+	pro.then(
+		result => alert("result: " + result), // 1. argument is a function that runs when promise resolves, and receives result object
+		error => alert("error: " + error),	  // 2. argument is a function that runs when promiserejectes, and receices error object
+	);
+
+..sőt ez is lefut :
+	let pr = new Promise(function(resolve, reject) {
+		//setTimeout(() => resolve("sikerult"), 1555);
+		resolve("sikerult")
+
+	});
+
+	setTimeout(() => {
+	pr.then(
+		function(result) {alert(result);}
+	).finally(() => {alert("finally");});
+	}, 1500);
+
+	setTimeout(() => {
+	pr.then(
+		function(result) {alert(result);}
+	).finally(() => {alert("finally");});
+	}, 5500);
+
+...csak az error-t kapjuk el:
+	pr.then(
+		null,
+		error => alert(error)
+	);
+
+ASYNC function always returns a promise, other values are wraped in promise automatically:
+Pl.:	async function f() {
+		  return 1;  // wraps value 1 into PROMISE
+		  ..or, we can return a Promise too:
+		  return Promise.resolved("1"');
+		}
+
+		f().then(alert); // 1
+
+ AWAIT makes JS wait until promise settles and return a result.
+	async function haha() {
+		let pr = new Promise( (resolve, rejec) => {
+			setTimeout(() => resolve("aaa"), 1555);
+		});
+		let result = await pr;	//js waits until promise settles and return a result
+		return result;
+	}
+	..then subscribing to it: callAsync().then(result => alert(result));
+
+
+	haha().catch(() => alert("huha"));  // vagy a egész promise-t és az await-t try catch-be rakjuk
+
+----------------------------------------------------------------------------------------------------------------------------------
+node static servert telepitkük : npm -g install static-server, majd egy mappába helyezünk minden és ebből a mappából inditjuk a servert: static-server
+
+MODULE: A module is just a .js file. or a  <script type="module"> tag . Modules work only via http, not locally. Ezért a node static servert használom
+Each <script type="module"> egy külön module, amit ha nem export/import akkor akár az ugyanazon az html -en lévő másik <script> ben lévő kód nem ér el,
+mivel a type="module" moduleként definiálta a script taget és annak tartalmát.
+
+	mod.js: export let ez = "uuu";
+
+	 <script type="module">
+		import {ez} from "./mod.js";
+		alert(ez);
+	  </script>
+
+modul elemeit csak egy másik modulból használhatom -> html ben ha <script type="module" helyett csak <script> van, akkor nem műx, this way we declare
+this script as a module.
+
+-	downloading external module scripts <script type="module" src="..."> doesn’t block HTML processing, they load in parallel with other resources.
+-	module scripts wait until the HTML document is fully ready (even if they are tiny and load faster than HTML), and then run.
+-	relative order of scripts is maintained: scripts that go first in the document, execute first.
+-	<script> (ami azonnal lefut mikor hozzá ér a feldolgozás) hamarabb lefut mint a <script type="module">
+Ezek miatt a module ráláta teljes html-re (mivel a module-ok "deferred".
+
+EXPORT DEFAULT: néha egy module-ban csak egy export expression van:
+	export default class Ember {...}	// embermodule.js
+	import Ember from '..'  // nem kell a {}
+
+
+
+
+
+
+

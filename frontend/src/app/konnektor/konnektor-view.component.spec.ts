@@ -3,7 +3,7 @@ import {ComponentFixture, fakeAsync, flush, TestBed, tick} from "@angular/core/t
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import createSpyObj = jasmine.createSpyObj;
 import {DefaultService, KonnektorDTO} from "../../../target/generated-sources/openapi";
-import {of} from "rxjs";
+import {of, throwError} from "rxjs";
 import {click} from "../../test-common/helper";
 import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 import {ToastService} from "../toast/toast.service";
@@ -35,8 +35,11 @@ describe('KonnektorViewComponent', () => {
       ],
       imports: [FormsModule, ReactiveFormsModule, NgxDatatableModule]
     }).compileComponents();
-    defaultServiceSpy.getAllKonnektors.and.returnValue(of(konnektors));
+
+   defaultServiceSpy.getAllKonnektors.and.returnValue(of(konnektors));
     defaultServiceSpy.updateKonnektorHostname.and.returnValue(of(null));
+
+
   });
 
   it('initial loading konnektors successful', fakeAsync(() => {
@@ -45,6 +48,20 @@ describe('KonnektorViewComponent', () => {
     tick();                           // várjuk be a Promise.of() visszaad: simulates the passage of time until all pending asynchronous activities finish
     expect(component.konnektors.length).toBe(2);
   }));
+
+  it('http error comes when loading konnektors', fakeAsync(() => {
+    defaultServiceSpy.getAllKonnektors.and.returnValue(
+      throwError( () => {
+        const error: any = new Error(`This is error number`);
+        error.timestamp = Date.now();
+        return error;
+      })
+    );
+    whenComponentHasStarted();
+    tick(); //Error: 3 timer(s) still in the queue.
+    expect(toastServiceSpy.error).toHaveBeenCalled();
+    })
+  );
 
   it('should display initially loaded konnektors number', fakeAsync(() => {
     givenKonnektors();                // beallitjuk a spy altal visszaadando értékeket

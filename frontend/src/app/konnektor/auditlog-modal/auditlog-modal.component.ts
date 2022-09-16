@@ -97,7 +97,8 @@ export class AuditlogModalComponent implements OnInit, OnChanges, DoCheck, After
             this.toast.success("auditlogs updated");
             //this.router.navigate(['/navigation/konnektor-view']);
           })
-          .catch(() => {
+          .catch((err) => {
+            console.log('------ ' + err);
             this.toast.error("auditlogs could not be updated.");
           });
     }
