@@ -3,11 +3,30 @@ PARENT
 {{szam}}
 <br/>
 string interpolation with method expression: {{kiir()}}
-
 <br/>
 
-<button title="click to change @Input on child wich detects changes with life cycle callback" (click)="changeSzamNameInputProperty()">button</button>
+<button title="click to change @Input on child wich detects changes with life cycle callback" (click)="changeSzamNameInputProperty()">changeSzamNameInputProperty</button>
 
-<button title="click to change @Input on child wich detects changes with set/get " (click)="changeChildInputWithSetter()">button</button>
+<button title="click to change @Input on child wich detects changes with set/get " (click)="changeChildInputWithSetter()">changeChildInputWithSetter</button>
+
+<br/>
+<br/>
+<button (click)="attachCoursorMovoeHandler()">attachCoursorMovoeHandler</button>
+<br/>
+<button (click)="removeCoursorMovoeHandler()">removeCoursorMovoeHandler</button>
+<br/>
+<button title="click and there will be a click eventhandler attached to the rectangle below, while change detection will turned out, click again and change detection will start again"
+   (click)="runOutsideAngularNgZone()">runOutsideAngularNgZone</button>
+<br/>
+<button title="click and there will be a click eventhandler attached to the rectangle below, while change detection will turned out, click again and change detection will start again"
+        (click)="runInsideAngularNgZone()">runInsideAngularNgZone</button>
+<br/>
+<br/>
+
+<div #movingArea style="border: #7C2EDD groove">
+  Move the cursor over this area and the position will be shown in the field below.
+</div>
+<br/>
+<input type="text" name="cursorPosition" id="cursorPosition" placeholder="cursor position"/>
 
 <cdchild [szam]="szam" [user]="user"  [counterInputPropertySetter]="counterInputPropertySetter" [userSet]="userSet" #child></cdchild>

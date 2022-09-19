@@ -170,9 +170,16 @@ Teszteljük a köv. metódust:
 
  B. Ha a backend.unblockPin egy 400 hibával térhet vissza: (card-terminal-info.component.spec.ts )
 	// @ts-ignore*/
-	// itt gyakorlatilag megmondjuk, hogy a spyunkonmeghivjuk a unblockPin metódust, ami 400 error mesaget adjon vissza
+	// itt gyakorlatilag megmondjuk, hogy a spyunkon meghivjuk a unblockPin metódust, ami 400 error mesaget adjon vissza
     backend.unblockPin.and.callFake(() => throwError({status: 400, error: 'card_terminal__remove_from_kvs_failed'}));// Az error propery értéke itt bármi lehet
-
+vagy:
+    defaultServiceSpy.getAllKonnektors.and.returnValue(
+      throwError( () => {
+        const error: any = new Error(`This is error number`);
+        error.timestamp = Date.now();
+        return error;
+      })
+    );
 
 
 

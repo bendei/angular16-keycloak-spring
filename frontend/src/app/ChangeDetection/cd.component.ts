@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, DoCheck, OnChanges, SimpleChanges} from "@angular/core";
+import {AfterViewChecked, Component, DoCheck, ElementRef, NgZone, OnChanges, Renderer2, SimpleChanges, ViewChild} from "@angular/core";
 import {of} from "rxjs";
 
 export interface User {
@@ -12,10 +12,21 @@ export interface User {
 })
 export class CdComponent implements OnChanges, DoCheck, AfterViewChecked {
 
-  text = 'text';
-  szam = 22;
   counterInputPropertySetter = 0;
+  text = 'text';
+  _szam = 22;
+  private unlistener: () => void;
 
+  public get szam(): number {
+    console.log('PARENT -------szam- property: ' + this._szam);
+    return this._szam;
+  }
+  public set szam(sz: number) {
+    this._szam = sz;
+  }
+
+  @ViewChild("movingArea", {static: false})
+  public movingArea: ElementRef;
 
   user : User = {
     name: 'bende',
@@ -26,27 +37,18 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewChecked {
     age: 50
   }
 
-  private myoperators(): void {
-    const sorozat = of([1,2,3,4,5,6]);
-    sorozat.subscribe({
-        next: (v) => console.log('------ ' + v),
-        complete: () =>  console.log('------ completed')
-      }
-    );
-  }
-
-  constructor() {
+  constructor(private renderer2: Renderer2, private ngZone: NgZone) {
     console.log("PARENT ---- constructor");
     this.conversions();
     this.myoperators();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("CdComponent ---- ngOnChanges - for primitive types");
+    console.log("PARENT ---- ngOnChanges - for primitive types");
   }
 
   ngDoCheck(): void {
-    console.log("CdComponent ---- ngDoCheck (gets called after EVERY CD cycle!) - for object types");
+    console.log("PARENT ---- ngDoCheck (gets called after EVERY CD cycle!) - for object types");
   }
 
   public changeSzamNameInputProperty(): void {
@@ -65,15 +67,48 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewChecked {
   }
 
   public kiir() {
-  console.log('------ kiir() ');
+    console.log('PARENT------ kiir() ');
     return "kiir";
+  }
+
+  public attachCoursorMovoeHandler(): void {
+    this.unlistener = this.renderer2.listen(this.movingArea.nativeElement, "mousemove", event => {
+      console.log(`----running outside ngZone-- ${event.clientX}, Mouse Y: ${event.clientY}`);
+    });
+  }
+
+  public removeCoursorMovoeHandler(): void {
+    if (this.unlistener) {
+      this.unlistener();
+    }
+  }
+
+  public runOutsideAngularNgZone(): void {
+    this.removeCoursorMovoeHandler();
+    this.ngZone.runOutsideAngular(() => {
+      this.attachCoursorMovoeHandler();
+    });
+  }
+
+  public runInsideAngularNgZone(): void {
+    this.ngZone.run(() => {
+      this.attachCoursorMovoeHandler();
+    });
   }
 
   private conversions(): void {
     let szam: any = "22";
     let value: number = szam - 11 ;
     console.log(value);
-
  }
+
+  private myoperators(): void {
+    const sorozat = of([1,2,3,4,5,6]);
+    sorozat.subscribe({
+        next: (v) => console.log('------ ' + v),
+        complete: () =>  console.log('------ completed')
+      }
+    );
+  }
 
 }

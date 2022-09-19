@@ -8,14 +8,13 @@ import {User} from "./cd.component";
 })
 export class CdchildComponent implements OnInit, OnChanges, DoCheck, AfterViewChecked {
 
-  @Input()
-  szam: number;
-
-  @Input()
-  user: User;
-
   private _count = 0;
   private _userSet: User;
+  private olduser: User;
+
+  @Input() szam: number;
+
+  @Input() user: User;
 
   @Input()
   set counterInputPropertySetter(counter: number) {
@@ -35,8 +34,6 @@ export class CdchildComponent implements OnInit, OnChanges, DoCheck, AfterViewCh
     return this._userSet;
   }
 
-  private olduser: User;
-
   constructor() {
     console.log("##### CHILD ---constructor");
   }
@@ -50,7 +47,6 @@ export class CdchildComponent implements OnInit, OnChanges, DoCheck, AfterViewCh
         console.log("##### CHILD --ngOnChanges -- propertyName: " + propName + " previousValue: " + changes[propName].previousValue
           + " currentValue: " + changes[propName].currentValue);
       }
-
      /* if (propName == 'user') {
         console.log("--CdchildComponent--ngOnChanges -- propertyName: " + propName + " previousValue: " + changes[propName]?.previousValue?.name
           + " currentValue: " + changes[propName]?.currentValue?.name);
@@ -58,9 +54,7 @@ export class CdchildComponent implements OnInit, OnChanges, DoCheck, AfterViewCh
           console.log("--CdchildComponent--ngOnChanges -- old user.name:" + this.olduser?.name + ", new username: " + this.user.name);
         }
       }*/
-
     }
-
   }
 
   // checking data binding type Object/array

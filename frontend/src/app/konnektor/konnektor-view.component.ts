@@ -3,6 +3,8 @@ import {DefaultService, KonnektorDTO } from '../../../target/generated-sources/o
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import {Observable, of} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'konnektor-view',
@@ -24,6 +26,7 @@ export class KonnektorViewComponent implements OnInit {
   ngOnInit(): void {
     this.loadKonnektors(null, null, null, null, null);
     this.cretaeForm();
+    this.gyakorlat();
   }
 
   public filterForm(): void {
@@ -71,6 +74,11 @@ export class KonnektorViewComponent implements OnInit {
     await this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created).toPromise().then( result => {
       this.konnektors = [...result];
     }).catch( error => {
+
+      for (let pr in (error as HttpErrorResponse)) {
+        console.log(`property name: ${pr}, value: ${error[pr]}`);
+      }
+
       this.toast.error((error as HttpErrorResponse).message);
     }).finally( () => this.loading = false);
   }
@@ -85,4 +93,32 @@ export class KonnektorViewComponent implements OnInit {
     });
   }
 
+
+  private gyakorlat(): void {
+    let obs: Observable<Valami> = of(new Valami("www", "eee"));
+    let obsInter: Observable<Kakukk> = of({payload: "interpayload", nev: "internev"});
+    obs.pipe(
+      map((res) => res.payload)
+    ).subscribe((res) => console.log('----obs-map((res) => res[\'payload\'])- ' + res));
+
+
+  }
+
+
+
+}
+
+class Valami {
+  payload: string;
+  nev: string;
+
+  constructor(p: string, n: string) {
+    this.payload = p;
+    this.nev = n;
+  }
+}
+
+interface Kakukk {
+  payload: string,
+  nev?: string
 }

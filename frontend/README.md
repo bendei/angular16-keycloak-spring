@@ -30,6 +30,9 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## bootstrap like gridsystem/spacing etc.
 https://www.w3schools.com/bootstrap/bootstrap_grid_system.asp
 
+#x bootstrap breakpoint video magyarézat:
+  https://www.youtube.com/watch?v=uAmQfaPnv68
+
 ## ha az icon nem jelenik meg:
 1. npm i bootstrap-icon
 2. @import "~bootstrap-icons/font/bootstrap-icons.css";
@@ -69,6 +72,10 @@ https://www.tektutorialshub.com/angular/ng-template-in-angular/
 2. start angular apliaction with ng serve
 3. select from run configurations: frontend and lcik on the debug icon right to it
 4. breakpoint are live ( F8)
+
+## css selectors:
+  https://www.portiva.nl/portiblog/blogs-cat/3-levels-of-css-selectors-to-select-all-elements
+
 
 
 

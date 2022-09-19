@@ -227,7 +227,17 @@ myMethod(...): void {
 	this.fooEvent.emit(payload);
 }
 Auf dem DOM-Element können wir jetzt mit einem Event Binding das Ereignis abfangen und eine Handler-Methode aufrufen fooEvent.
-<..... (fooEvent)="doitIfFooEventÍfired()"
+<..... (fooEvent)="doitIfFooEventÍfired(); masodikEbentHandlerunk();"
+
+Beschrenkungen:
+    1. Wir können nicht auf Erreignisse lauschen, die ausserhalb des Komponents Template ausgelöst wurden.
+    1.A. Wir können nicht auf Erreignisse hören, die auf host element (selector) ausgelöst wurden. d.h.:
+        wenn wir im parent template haben:
+            <cdchild (click)="klikkedChild()" ...dann könenn wir das eventhandler nur im parent Komponent implementieren, nicht aber im child.
+        also im Normalfall event muss im childs template ausgelöst werden.
+    3. Aber wir können auf Events hören, die auf globalen Elementen ausgelöst wurden: window, document, body: <button (document:click)="handleClick()">Save</button>
+    4. Normal DOM events bubble up, d.h. wenn ein Erreignis ist im child ausgelöst, dann es wird im Parent auch gehört, aber custom Errignisse
+    5. Wir können event listeners nicht dynamisch zum Template hinzufügen.
 
 #######################################################################################################################################################################################
 SERVICE
@@ -749,6 +759,9 @@ gesetzt wird. Die vom Entwickler festgelegten Styles werden abgeändert, sodass 
 
 // https://www.tektutorialshub.com/angular/understanding-viewchild-viewchildren-querylist-in-angular/
 VIEWCHILD (Decorator): (View bezieht sich auf das Template) (Shadow DOM) wird verwendet, um einen Referenz etnweder auf eigenes DOM-Element des Komponents heraus zu bekommen,
+        <div #myDiv...>
+        @ViewChild("myDiv") headerRef: ElementRef;  // és nem id="myDiv" !!
+       oder:
 		zB. @ViewChild("header") headerRef: ElementRef; änderst sich der
 
 	oder wenn der selector ein Typescript Type ist, was eigentlich ein Child-Komponent ist:
@@ -1397,6 +1410,11 @@ PIPE expr | myPipe | otherPipe Daten im Template transformieren
 
 
 
+4 ways to listen to DOM venets in Angular:
+    1.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-1-event-binding-3ec7e9f51a1d
+    2.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-2-hostlistener-1b66d45b3e3d
+    3.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
+    4.  Using RxJS .fromEvent() operator that turns events into observable sequences
 
 
 

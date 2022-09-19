@@ -89,11 +89,13 @@ null  === undefined -> false
 OPERATORS:
 	plus operator (+), if any of the operands is a string than all operand get converted to string: 2 + "2" = "22; also string concatenation
 
+JS (TS ben nem)
 	let x = "10";
 	let y = "2";
 	document.write(+y + +x) = 12 and not 210
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+JS
 COMPARISONS:
 	When comparing values of different types, JavaScript converts the values to numbers. (logikus mert a  == és a többi matematikai operatorok)
 			alert( '2' > 1 ); // true, string '2' becomes a number 2
@@ -386,6 +388,27 @@ CLASS:
 			this._szam = sz ?? 0;
 		}
 	}
+<<<<< objektum példány létrehozása class definitionbol:
+
+	class Valami {
+      payload: string;
+      nev: string;
+
+      constructor(p: string, n: string) {
+        this.payload = p;
+        this.nev = n;
+      }
+    }
+    let obs: Observable<Valami> = of(new Valami("www", "eee"));
+
+<<<<<< objektum példány létrehozása interfaceből:
+    interface Kakukk {
+      payload: string,
+      nev?: string
+    }
+    let obsInter: Observable<Kakukk> = of({payload: "interpayload", nev: "internev"});
+
+<<<<<
 
 minden objektnek van egy prototype-ja amiből öröklődik,
 let em = new Ember();

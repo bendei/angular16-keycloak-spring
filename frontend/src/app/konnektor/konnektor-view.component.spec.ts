@@ -49,19 +49,34 @@ describe('KonnektorViewComponent', () => {
     expect(component.konnektors.length).toBe(2);
   }));
 
-  it('http error comes when loading konnektors', fakeAsync(() => {
-    defaultServiceSpy.getAllKonnektors.and.returnValue(
+  fit('http error comes when loading konnektors', fakeAsync(() => {
+    // ezzel itt az a baj hogy status messgae stb propertyt hiába állitunk be a componentben nem olvasható ki!!
+   /* defaultServiceSpy.getAllKonnektors.and.returnValue(
       throwError( () => {
-        const error: any = new Error(`This is error number`);
-        error.timestamp = Date.now();
+        const error: HttpErrorResponse = new HttpErrorResponse({
+          status: 404,
+          statusText: "huha"
+        });
         return error;
       })
-    );
+    );*/
+
+    defaultServiceSpy.getAllKonnektors.and.callFake(() => throwError({
+      status: 404,
+      message: 'konnektor not found',
+      timestamp: new Date().toISOString()
+    }
+    ));
+
     whenComponentHasStarted();
     tick(); //Error: 3 timer(s) still in the queue.
     expect(toastServiceSpy.error).toHaveBeenCalled();
     })
   );
+
+  it('sends back 404 error', fakeAsync( () => {
+
+  }));
 
   it('should display initially loaded konnektors number', fakeAsync(() => {
     givenKonnektors();                // beallitjuk a spy altal visszaadando értékeket
