@@ -46,3 +46,6 @@ To the basic example I added some 'showcases' extra features:
 2. In the window in the middle "Commits that exists in master but dont exist in origin/master" -> jobb erér click -> squash commits : write a new message
 3. Now check the squased message apperas  in the pane where you can find commits (and #1 #2 commits disappear)
 4. Push
+
+## java version news:
+    https://www.marcobehler.com/guides/a-guide-to-java-versions-and-features

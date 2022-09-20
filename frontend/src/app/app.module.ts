@@ -13,6 +13,7 @@ import {defaultToastConfig} from './toast/toast.service';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {CdModule} from "./ChangeDetection/cd.module";
+import {OnpushModule} from "./onpush/onpush.module";
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import {CdModule} from "./ChangeDetection/cd.module";
     NavigationModule,
     AuditlogModule,
     CdModule,
+    OnpushModule,
     NgbModule,
     BrowserAnimationsModule,
     KonnektorViewModule,

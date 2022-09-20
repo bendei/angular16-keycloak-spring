@@ -18,7 +18,7 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewChecked {
   private unlistener: () => void;
 
   public get szam(): number {
-    console.log('PARENT -------szam- property: ' + this._szam);
+    console.log('PARENT -------szam property lekerdezése: ' + this._szam);
     return this._szam;
   }
   public set szam(sz: number) {

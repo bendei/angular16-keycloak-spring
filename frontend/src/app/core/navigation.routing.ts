@@ -3,6 +3,7 @@ import {KonnektorViewComponent} from '../konnektor/konnektor-view.component';
 import {AuditlogComponent} from '../auditlog/auditlog.component';
 import {TemplateComponent} from './template.component';
 import {CdComponent} from "../ChangeDetection/cd.component";
+import {OnpushparentComponent} from "../onpush/onpushparent.component";
 
 export const navigationRoutes: Routes = [
   {
@@ -21,6 +22,10 @@ export const navigationRoutes: Routes = [
       {
         path: "cd",
         component: CdComponent
+      },
+      {
+        path: "onpush",
+        component: OnpushparentComponent
       }
     ]
   }
