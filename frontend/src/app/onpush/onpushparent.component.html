@@ -1,9 +1,16 @@
 onp parent
 
 parent szam: {{szam}}
+<br/>
+{{expressionMine()}}
 <button (click)="incrementSzamOnParent()" >incrementSzamOnParent</button>
-
+<br/>
+{{user.name}}
+<button (click)="changeUserName()" >change user.name</button>
 
 <hr/>
 
-<childA [ez]="szam"></childA>
+<childA [user]="user"></childA>
+<hr/>
+
+<childB></childB>

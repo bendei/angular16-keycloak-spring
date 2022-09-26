@@ -1,22 +1,27 @@
 import {ChangeDetectionStrategy, Component, DoCheck, OnChanges, SimpleChanges} from "@angular/core";
 import {OnpushService} from "./onpush.service";
 
+
+interface User {
+  name: string,
+  age: number
+}
+
 @Component({
   selector: 'onpush-parent',
   templateUrl: './onpushparent.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class OnpushparentComponent implements DoCheck, OnChanges {
 
-  _szam = 0;
-  get szam() {
-    return this.service.szam; // ha nem a modellel updateljuk a propertyt akkor a CD nem talál változást, mert nem is lesz, mikor a child updateli a service propertijet
-    console.log('----PARENT--GET szam called ');
-    //return this._szam;
+  szam = 0;
+  user: User =  {
+    name: 'pisti',
+    age: 50
   }
-  set szam(s: number) {
-    console.log('----PARENT--SET szam called ');
-    this._szam = s;
+  expressionMine = () => {
+    console.log('----Parent--expressionMine--ausgewertet ');
+    return "expressionMine";
   }
 
   constructor(private service: OnpushService) {
@@ -27,9 +32,17 @@ export class OnpushparentComponent implements DoCheck, OnChanges {
 
   }
 
+  public changeUserName(): void {
+
+    this.user = {
+      name: "Bob",
+      age: 51
+    };
+  }
+
   public incrementSzamOnParent(): void {
     ++this.service.szam;
-   // this.szam = this.service.szam;  // ezt be kell újra állitani, különben hiába fut le a CD, nem lesz uj erték adva a változónak
+    this.szam = this.service.szam;  // ezt be kell újra állitani, különben hiába fut le a CD, nem lesz uj erték adva a változónak
   }
 
   ngOnChanges(changes: SimpleChanges): void {

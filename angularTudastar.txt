@@ -345,6 +345,7 @@ ob der Wert eines property binding geaendert ist?
 
 Es starter das CD jedesmal, wenn
 
+DEFAULT
 (ChangeDetectionStrategy.Default):
     0.  wenn Komponent ist instanziert
     1.  ein DOM event (wofür ein component handler. aka event binding exisitiert),
@@ -354,20 +355,23 @@ Es starter das CD jedesmal, wenn
 Im Laufe des CD cycle Angular prüft jede property binding Wert mit dem entsprechendem Wert in dem Komponent, wertet alle Expressions neu aus, und wenn etwas geaendert hat,
 dann aktualiseiert es in dem DOM. Wenn data aendert sich im einem des child Komponente, dann CD wird von oben nach unten den ganzen Komponent-Baum prüfen, ob ein Model anders ist,
 und wenn ja, dann rerenderiert das view: also wenn das Initial Anderung im child Komponente passiert, dann werden die mögliche parent auch geprüft.
-Mit OnPush wir können CD for Komponente auslassen, die OnPush Strategie verwnden !!
-
 Dieses kann aber zu Performance probleme führen, dann wenn bestimmte bounded properties schwerwigende  Arbeiten brauchen , dann diese verlangsamen die Anwendung.
 Wenn es Wertaenderung findet auf dem komponent dann aktualisiert es  das DOM und ruft die life cycle hooks callback Funktionen auf.
 
-Bim OnPush strategie, werden
+Mit OnPush wir können CD for Komponente auslassen, die OnPush Strategie verwnden, also wir wollen das CD für ein bestimmten Komponent nicht nicht immer sondern nur in bestimmten
+Faellen lauft.!!
+
+Bim ONPUSH strategie, wird CD getriggert werden wenn:
 (OnPush):
     0. NICHT, wenn Komponent instanziert ist
     1.  @Input data has a new reference
-    2.  component oder sein childs triggert an event handler or @HostListener
+    2.  component oder sein childs triggert an event handler or @HostListener (und nicht überall wie zB. ein Komponent,der kein child ist)
     3.  async pipe emittiert new value
     4.  triggering CD manuell
     Aber nicht  beim: setTimeout, setInterval, Promise, RxJS Subscribscion
+    ALSO: mit onpush die betroffene Komponente hat keinen CD, wenn parent oder andere komponente bekommen cd, aber auf sie selbst wird cd ablaufen in den oben genannten faellen.
 
+Wenn OnPush is not working: https://blog.angular-university.io/onpush-change-detection-how-it-works/
 
 https://angular.io/guide/lifecycle-hooks
 Lebenszyklus einer Komponente / Directive (lifecycle hooks sing callback Funktionen, die vom Angular gerufen werden wenn bestimmte Errignisse passieren):
@@ -403,6 +407,7 @@ Lebenszyklus einer Komponente / Directive (lifecycle hooks sing callback Funktio
 	4.	Oninit: signalisiert, dass die Komponente fertig ist, Initialisierunglogik sollte hier kommen, lauft nur einmal ab.
 
 	5.	Docheck: wird IMMER by change detection aufgerufen unabhaengig ob eine Property geaendert wurde oder nicht., besonder beim OnPush., funktioniert mit array/Objekt-Typen auch.
+	    Cd prüft data-binding ausser @Input nach DoCheck()
 
 	6.  AfterContentInit: Content ist hier ein external content injiziert durch ein parent component.
 		  gerufen nur einmal nachdem der content inizialisiert und change det abgelaufen ist.in die Komponente projected ist. (Content Projection!),
@@ -418,7 +423,7 @@ Lebenszyklus einer Komponente / Directive (lifecycle hooks sing callback Funktio
 
   9.	AfterViewChecked: laeft nach change IMMER detection ab, weil nach beim jedec CD wird das komponent neugerendert.
 
-	10. Ondestroy: Komponente wird aus dem DOM ausgebaut.(man navigiert weg. oder durch Strukturdirektive wird aus dem DOM ausgebaut )
+	10. Ondestroy: Komponente wird aus dem DOM ausgebaut.(man navigiert weg. oder durch	Strukturdirektive wird aus dem DOM ausgebaut )
 
 	Im Generell: Init hooks: wenn view/content ist inizialisiert zum ersten Male. Dieses passiert 1. change detection cycle, gleich nach Instanzierung der Komponente.
 				 Checked hooks: Angular prüft ob view/content anders ist.
@@ -427,7 +432,8 @@ Lebenszyklus einer Komponente / Directive (lifecycle hooks sing callback Funktio
 KVS:
 
 1. Opció: nincsen a feature modulnak külön  feature-routing.module.ts fálja:
-Alle feature modules hatten ihr eigenes routing.ts file(zb: card-terminal.routing.ts) , das die RoutenDefinitionen als ein Array (cardTerminalsRoutes) von Routes types exportiert hatte.
+Alle feature modules hatten
+ihr eigenes routing.ts file(zb: card-terminal.routing.ts) , das die RoutenDefinitionen als ein Array (cardTerminalsRoutes) von Routes types exportiert hatte.
 Diese RoutenDefinitionen sind dann im feature Module importiert (nem egy routing modulban!) und mittels  RouterModule.forChild(cardTerminalsRoutes) ein Module mit den Routen konfiguriert zurückgegeben.
 @NgModule({
   imports: [
@@ -572,7 +578,7 @@ PROMISE:	https://javascript.info/promise-basics
 	-	es kann resolved or rejectd, kann nicht abbonniert werden oder manuell unsubscribiert werden.
 	-	Liefert einen einzigen Wert zurück, gleich wenn es erstellt ist.
 	-	immer asynchron.
-	Verbindung:
+	Verwendung:
 		-	Form submission.
 		-	Abfragen von grossen Datenmengen zur single Anzeigen
 
@@ -1047,7 +1053,7 @@ Wir können aus der Direktive-Klasse auf das Host-Element zugreifen( ezért neve
 // wenn wir bestimmte Attribute/Eigenschaften des host dom elements setzten wollen:
 	@HostBinding() class = 'active';
 
-	// Eigenschaft 'title' auf 'Mein Titel' setzen
+	// Eigenschaft <div title="ezaz"... auf 'Mein Titel' setzen
 	@HostBinding() get title() { return 'Mein Titel'; }
 
 	// CSS-Klasse 'active' anwenden

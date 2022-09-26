@@ -79,6 +79,7 @@ https://www.tektutorialshub.com/angular/ng-template-in-angular/
 ## css selectors:
   https://www.portiva.nl/portiblog/blogs-cat/3-levels-of-css-selectors-to-select-all-elements
 
-
+## 4 ways to listen to events , outside ngZone, adding listener dinamically
+  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
 
 
