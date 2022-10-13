@@ -608,6 +608,31 @@ EXPORT DEFAULT: néha egy module-ban csak egy export expression van:
 	export default class Ember {...}	// embermodule.js
 	import Ember from '..'  // nem kell a {}
 
+----------------------------------------------------------------------------------------------------------------------------------
+Interfaces can describe different types in ts.
+
+1.  function type:
+
+    interface MyFunction {
+        (str: string, text: string): boolean;
+    }
+
+    //implementing the function type interface:
+    let search: MyFunction = function(str: string, text: string) {
+        return true;
+    }
+  vagy lambda:
+    const mymethod: MyFunction = (text: string) {return text}
+
+2. array:
+    interface Myarray {
+        [index: number]: string;
+    }
+  implementing:
+  let myarray: Myarray = ["aa"];
+----------------------------------------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------------------------------------
 
 
 

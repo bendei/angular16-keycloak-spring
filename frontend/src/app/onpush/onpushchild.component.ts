@@ -6,7 +6,7 @@ import {User} from "../ChangeDetection/cd.component";
 @Component({
   selector: 'childA',
   templateUrl: './onpushchild.component.html',
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OnpushchildComponent implements DoCheck, OnChanges {
 

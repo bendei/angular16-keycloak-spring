@@ -47,7 +47,7 @@ ohne Tipisierung / Angabe der Klasse:
 		name: "rjkreoirp"
 	};
 
-AHSHATBLE in ts: (nem más mint egy string k
+HAHSHATBLE in ts: (nem más mint egy string k
 export declare interface SimpleChanges {
     [propName: string]: SimpleChange;
 }
@@ -57,12 +57,12 @@ accessing it:
 
 INTERFACES dienen dazu, die Struktur eines Objekts grundsätzlich zu definieren.
 Optionale Eigenschaften werden durch ein Fragezeichen-Symbol gekennzeichnet.
-	export interface User {
+	export interface User { // szintaktikája mint a class-nak!
 		name: string,
 		age?: number
 	}
 instanzieren interface type object (object literal stilusban):
-	const pista: User = {name: 'bende'};
+	const pista: User = {name: 'bende'};    // szemben a objektummal:  pista: User = new ('bende');
 	vagy ha array: let pistikek: User[] = [];
 
 TEMPLATE-SYNTAX _> Angular erweiter html syntax mit folgenden Ausdrücken: interpolation {{componentProperty}}, template strings, safe-navigator-operator (?), property binding,
@@ -189,7 +189,7 @@ wir den zu übergebenden Wert von der Host-Komponente, die wir mit dem  @Input()
   Wir können belibige Properties in einem  DOM Element schreiben.
 
   property schreibweise: [property]="expression"
-  attribute schreibweise: [property]=expression
+  attribute schreibweise: [attr.atributeName]=expression
 
  DOM Property in Komponente auslesen: @Input
 
@@ -347,7 +347,6 @@ Es starter das CD jedesmal, wenn
 
 DEFAULT
 (ChangeDetectionStrategy.Default):
-    0.  wenn Komponent ist instanziert
     1.  ein DOM event (wofür ein component handler. aka event binding exisitiert),
     2.  @Input changes ( auch wenn reference to input object bleibt das gleiche aber seine propertiy sind anders),
     3.  setTimeout, setInterval,
@@ -363,13 +362,12 @@ Faellen lauft.!!
 
 Bim ONPUSH strategie, wird CD getriggert werden wenn:
 (OnPush):
-    0. NICHT, wenn Komponent instanziert ist
     1.  @Input data has a new reference
     2.  component oder sein childs triggert an event handler or @HostListener (und nicht überall wie zB. ein Komponent,der kein child ist)
     3.  async pipe emittiert new value
     4.  triggering CD manuell
     Aber nicht  beim: setTimeout, setInterval, Promise, RxJS Subscribscion
-    ALSO: mit onpush die betroffene Komponente hat keinen CD, wenn parent oder andere komponente bekommen cd, aber auf sie selbst wird cd ablaufen in den oben genannten faellen.
+    ALSO: mit onpush die betroffene Komponente lauft kein CD extra, wenn parent oder andere komponente ein CD Ablauf auslösen, aber auf sie selbst wird cd ablaufen in den oben genannten faellen.
 
 Wenn OnPush is not working: https://blog.angular-university.io/onpush-change-detection-how-it-works/
 
@@ -406,7 +404,8 @@ Lebenszyklus einer Komponente / Directive (lifecycle hooks sing callback Funktio
 
 	4.	Oninit: signalisiert, dass die Komponente fertig ist, Initialisierunglogik sollte hier kommen, lauft nur einmal ab.
 
-	5.	Docheck: wird IMMER by change detection aufgerufen unabhaengig ob eine Property geaendert wurde oder nicht., besonder beim OnPush., funktioniert mit array/Objekt-Typen auch.
+	5.	Docheck: wird IMMER by change detection aufgerufen unabhaengig ob eine Property geaendert wurde oder nicht., besonder beim OnPush.,
+	    funktioniert mit array/Objekt-Typen auch.
 	    Cd prüft data-binding ausser @Input nach DoCheck()
 
 	6.  AfterContentInit: Content ist hier ein external content injiziert durch ein parent component.
@@ -563,6 +562,8 @@ https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-a
 
  The difference between a Promise and an Observable is that the first just emits one value and completes, while the latter opens a stream of events and keep listening until
  we unsubscribe from it. That subscription keeps going even after the Angular component doesn’t exist anymore.
+
+ SUBSCRIPTION: ist ein Objekt, das ein Observable representiert, hat nur einen Method: unsubscribe, womit man das Observable wegwirft.
 
 OBSERVABLE:
 	-	Kann synchron und asynchron Operatrionen ausführen.
@@ -796,7 +797,7 @@ VIEWCHILD (Decorator): (View bezieht sich auf das Template) (Shadow DOM) wird ve
        oder:
 		zB. @ViewChild("header") headerRef: ElementRef; änderst sich der
 
-	oder wenn der selector ein Typescript Type ist, was eigentlich ein Child-Komponent ist:
+	oder wenn der selector ein Typescript Klasse ist, was eigentlich ein Child-Komponent ist:
 	// hier kriegen wir ein Referenz auf die child komponent klasse aus dem host komponent, und so können wir Werte auf dem properties der child komponent setzen.
 		@ViewChild(BookListComponent) child: BookListComponent;
 
@@ -988,6 +989,7 @@ Zwei Typen von Errorbehandlungen:
 creating Promise manually: https://www.educba.com/typescript-promise/
 
 ERROR HANDLING WITH PROMISE: mit then und catch functions:
+
  await this.defaultService.getKonnektor(this.konnektorId).toPromise()
         .then( result => {
           this.konnektor = result;
@@ -1043,7 +1045,8 @@ Die Daten werden mit @Input in der Direktive ausgelsesen.(Wie beim Komponenten)
 	<div myDirective="adat" anotherProperty="adat" ...oder durch ein belibiges Property
 
 Wertübergabe von der Direktive-Klasse in das host element. ( es ist die entgegengesetzte Richtung wie beim [mgClass] oder [ngStyle]),
-Wir können aus der Direktive-Klasse auf das Host-Element zugreifen( ezért nevezzük HostBinding/Listener-nek) :
+Wir können aus der Direktive-Klasse auf das Host-Element zugreifen( ezért nevezzük HostBinding/Listener-nek)
+Wir binden ein property zu dem host Element, wenn proprty aendert Hostbinding wird da host Element updaten:
 	-	@HostBinding
 	-	ElementRef.
 	-	@HostListener (für Komponente auch !)
@@ -1262,10 +1265,12 @@ implements HttpInterceptor -> intercept(req: HttpRequest<any>, next: HttpHandler
 ######################################################################################################################################################################################
 https://www.tektutorialshub.com/angular/valuechanges-in-angular-forms/
 
+DOM event -> Observable
 Angular stellt RxJS  FormEvent Methode zu Verfügung, um ein Observable aus DOM Errignisse zu machen. Zb: Wir haben ein FormControll input und wir wollen auf keyup Erreignisse abbonieren,
 (so server calls starten) damit wir ein autocomplete implementieren.
 
 fromEvent(this.idInput.nativeElement,'keyup').subscribe(res => console.log(res));
+const clicks = fromEvent(document, 'click');    clicks.subscribe...
 
 ######################################################################################################################################################################################
 
@@ -1447,14 +1452,49 @@ PIPE expr | myPipe | otherPipe Daten im Template transformieren
     2.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-2-hostlistener-1b66d45b3e3d
     3.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
     4.  Using RxJS .fromEvent() operator that turns events into observable sequences
+#####################################################################################################################################################################################
+#####################################################################################################################################################################################
+#####################################################################################################################################################################################
+mapping outside the pipe operator:
 
+ this.defaultService.getAllKonnektors().subscribe((konnektors) => {
+      innerkonnektors = konnektors;
+      mapKonnektors= innerkonnektors.map((dto) => {
+             // let mappedKonnektor: KonnektorMapperDTO = {hostNameAndSerial: "www"};
+              return {...dto, hostNameAndSerial: `${dto.hostName} - ${dto.serialNumber}`};
+      });
+      console.log('------ ' + mapKonnektors[0].hostNameAndSerial + ", :" + mapKonnektors[0].hostName);
+    });
 
+mapping inside pipe operator:
+  this.defaultService.getAllKonnektors()
+      .pipe(
+        map( (konnektorArray) =>
+          konnektorArray.map(b => b)    // itt még csak önmagára mappeljük vissza !! :)
+        )
+      )
+      .subscribe( (konnektorsMapped) => {console.log('------ ' + konnektorsMapped[0].hostName);});
+  }
 
-
-
-
-
-
+//átmappelve
+ this.defaultService.getAllKonnektors()
+      .pipe(
+        map( (konnektorArray) =>
+          konnektorArray.map(konn => ({  // itt már kell a ( és a { !!!
+            ...konn,
+            hostNameAndSerial: `${konn.hostName} - ${konn.serialNumber}`,
+            mappedDate: new Date().toISOString()
+          }))
+        )
+      )
+      .subscribe( (konnektorsMapped) => {
+        console.log('------ ' + konnektorsMapped[0].hostNameAndSerial + ", :" + konnektorsMapped[0].hostName + ", mappedDate: " + konnektorsMapped[0].mappedDate);
+      });
+  }
+interface KonnektorMapperDTO extends KonnektorDTO {
+  hostNameAndSerial: string;
+  mappedDate: Date
+}
 
 
 

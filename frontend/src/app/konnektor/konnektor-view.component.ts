@@ -20,17 +20,23 @@ export class KonnektorViewComponent implements OnInit {
   konnektors: KonnektorDTO[] = [];
   isEditMode: string[] = [];
 
+
   constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder, private readonly toast: ToastService) {
   }
 
   ngOnInit(): void {
     this.loadKonnektors(null, null, null, null, null);
     this.cretaeForm();
-    this.gyakorlat();
+    this.loadAndMapKonnektors();
+
+    const pisti: PistiFunction = function(text: string) {return text};
+    const feri: PistiFunction = (text: string) => {return text}
+    console.log('------ ' + pisti("pisti implementing function type interface"));
+    console.log('------ ' + feri("feri implementing function type interface lambda"));
+
   }
 
   public filterForm(): void {
-    const id = this.konnektorFilterForm.get('id')?.value;
     const hostName = this.konnektorFilterForm.get('hostName')?.value;
     const serialNumber = this.konnektorFilterForm.get('serialNumber')?.value;
     const firmwareVersion = this.konnektorFilterForm.get('firmwareVersion')?.value;
@@ -68,19 +74,51 @@ export class KonnektorViewComponent implements OnInit {
     );
   }
 
+  private loadAndMapKonnektors() {
+    console.log('------loadAndMapKonnektors ');
+    let innerkonnektors: KonnektorDTO[] = [];
+    let mapKonnektors: KonnektorMapperDTO[] = [];
+
+    /*this.defaultService.getAllKonnektors().subscribe((konnektors) => {
+      innerkonnektors = konnektors;
+      console.log('------ ' + innerkonnektors.length);
+
+      mapKonnektors= innerkonnektors.map((dto) => {
+       // let mappedKonnektor: KonnektorMapperDTO = {hostNameAndSerial: "www"};
+        return {...dto, hostNameAndSerial: `${dto.hostName} - ${dto.serialNumber}`};
+      });
+      console.log('------ hostNameAndSerial:' + mapKonnektors[0].hostNameAndSerial + ", hostName:" + mapKonnektors[0].hostName);
+    });*/
+
+    this.defaultService.getAllKonnektors()
+      .pipe(
+        map( (konnektorArray) =>
+          konnektorArray.map(konn => ({  // itt már kell a ( és a { !!!
+            ...konn,
+            hostNameAndSerial: `${konn.hostName} - ${konn.serialNumber}`,
+            mappedDate: new Date().toISOString()
+          }))
+        )
+      )
+      .subscribe( (konnektorsMapped) => {
+        console.log('------ ' + konnektorsMapped[0].hostNameAndSerial + ", :" + konnektorsMapped[0].hostName + ", mappedDate: " + konnektorsMapped[0].mappedDate);
+      });
+  }
+
   private async loadKonnektors(hostname: string, serialNumber: string, firmwareVersion: string, hardwareVersion: string, created: string) {
     this.loading = true;
 
-    await this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created).toPromise().then( result => {
-      this.konnektors = [...result];
-    }).catch( error => {
-
+    await this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created).toPromise()
+    .then( result => {
+        this.konnektors = [...result];
+      })
+    .catch( error => {
       for (let pr in (error as HttpErrorResponse)) {
         console.log(`property name: ${pr}, value: ${error[pr]}`);
       }
-
       this.toast.error((error as HttpErrorResponse).message);
-    }).finally( () => this.loading = false);
+    })
+     .finally( () => this.loading = false);
   }
 
   private cretaeForm(): void {
@@ -93,15 +131,12 @@ export class KonnektorViewComponent implements OnInit {
     });
   }
 
-
   private gyakorlat(): void {
     let obs: Observable<Valami> = of(new Valami("www", "eee"));
     let obsInter: Observable<Kakukk> = of({payload: "interpayload", nev: "internev"});
     obs.pipe(
       map((res) => res.payload)
     ).subscribe((res) => console.log('----obs-map((res) => res[\'payload\'])- ' + res));
-
-
   }
 
 
@@ -122,3 +157,17 @@ interface Kakukk {
   payload: string,
   nev?: string
 }
+
+interface KonnektorMapperDTO extends KonnektorDTO {
+  hostNameAndSerial: string;
+  mappedDate: Date
+}
+
+interface PistiFunction {
+  (text: string): string;
+}
+
+interface MyArray {
+  [index: number]: PistiFunction;
+}
+
