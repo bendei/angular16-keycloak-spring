@@ -9,12 +9,12 @@ import {User} from "./cd.component";
 export class CdchildComponent implements OnInit, OnChanges, DoCheck, AfterViewChecked {
 
   private _count = 0;
-  private _userSet: User;
-  private olduser: User;
+  private _userSet!: User;
+  private olduser!: User;
 
-  @Input() szam: number;
+  @Input() szam!: number;
 
-  @Input() user: User;
+  @Input() user!: User;
 
   @Input()
   set counterInputPropertySetter(counter: number) {

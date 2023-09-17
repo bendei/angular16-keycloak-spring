@@ -31,7 +31,7 @@ export class AuditlogModalComponent implements OnInit, OnChanges, DoCheck, After
   private sorozat: (string | number)[] = [2, 3, 'eee'];
 
   @ViewChild('auditlogsDataTable', {static: false})
-  public auditlogsDataTable: DatatableComponent;
+  public auditlogsDataTable!: DatatableComponent;
 
   constructor(public activeModal: NgbActiveModal, private datePipe: DatePipe, private readonly defaultService: DefaultService,
               private readonly toast: ToastService) {}

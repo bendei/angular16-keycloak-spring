@@ -1,4 +1,15 @@
-import {AfterViewChecked, Component, DoCheck, ElementRef, NgZone, OnChanges, Renderer2, SimpleChanges, ViewChild} from "@angular/core";
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  DoCheck,
+  ElementRef, Input,
+  NgZone,
+  OnChanges,
+  Renderer2,
+  SimpleChanges,
+  ViewChild
+} from "@angular/core";
 import {of} from "rxjs";
 
 export interface User {
@@ -10,23 +21,24 @@ export interface User {
   selector: 'cd',
   templateUrl: './cd.component.html'
 })
-export class CdComponent implements OnChanges, DoCheck, AfterViewChecked {
-
+export class CdComponent implements OnChanges, DoCheck, AfterViewInit, AfterViewChecked {
   counterInputPropertySetter = 0;
   text = 'text';
   _szam = 22;
-  private unlistener: () => void;
+
+  private unlistener!: () => void;
 
   public get szam(): number {
-    console.log('PARENT -------szam property lekerdezése: ' + this._szam);
+    console.log('PARENT -------szam getter: ' + this._szam);
     return this._szam;
   }
   public set szam(sz: number) {
+    console.log('PARENT -------szam setter: ');
     this._szam = sz;
   }
 
   @ViewChild("movingArea", {static: false})
-  public movingArea: ElementRef;
+  public movingArea!: ElementRef;
 
   user : User = {
     name: 'bende',
@@ -39,9 +51,18 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewChecked {
 
   constructor(private renderer2: Renderer2, private ngZone: NgZone) {
     console.log("PARENT ---- constructor");
-    this.conversions();
-    this.myoperators();
+
+    // a setTimout is triggerelni a DC-t ezért lefut az egesz DC :)
+    setTimeout( () => {
+      console.log("timeout");
+      //this.conversions();
+      //this.myoperators();
+    }, 2000);
+
+
   }
+
+  // hooks
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log("PARENT ---- ngOnChanges - for primitive types");
@@ -50,6 +71,15 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewChecked {
   ngDoCheck(): void {
     console.log("PARENT ---- ngDoCheck (gets called after EVERY CD cycle!) - for object types");
   }
+
+  ngAfterViewInit(): void {
+    console.log("Parent - ngAfterViewInit - lauft bim ");
+  }
+
+  ngAfterViewChecked(): void {
+    console.log("PARENT ----ngAfterViewChecked (gets called after EVERY CD cycle!)");
+  }
+
 
   public changeSzamNameInputProperty(): void {
     console.log("PARENT ---- button klikked");
@@ -62,9 +92,6 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewChecked {
     this.userSet.age = 111;
   }
 
-  ngAfterViewChecked(): void {
-    console.log("PARENT ----ngAfterViewChecked (gets called after EVERY CD cycle!)");
-  }
 
   public kiir() {
     console.log('PARENT------ kiir() ');
@@ -99,7 +126,7 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewChecked {
   private conversions(): void {
     let szam: any = "22";
     let value: number = szam - 11 ;
-    console.log(value);
+   // console.log(value);
  }
 
   private myoperators(): void {
@@ -110,5 +137,6 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewChecked {
       }
     );
   }
+
 
 }

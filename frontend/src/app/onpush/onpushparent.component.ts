@@ -30,20 +30,13 @@ export class OnpushparentComponent implements DoCheck, OnChanges {
 
   ngDoCheck(): void {
     console.log('---PARENT--- ngDoCheck');
-
   }
 
   public changeUserName(): void {
-
-    this.user = {
-      name: "Bob",
-      age: 51
-    };
   }
 
   public incrementSzamOnParent(): void {
-    ++this.service.szam;
-    this.szam = this.service.szam;  // ezt be kell újra állitani, különben hiába fut le a CD, nem lesz uj erték adva a változónak
+    ++this.szam;
   }
 
   ngOnChanges(changes: SimpleChanges): void {

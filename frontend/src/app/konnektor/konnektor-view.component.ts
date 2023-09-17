@@ -1,10 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO } from '../../../target/generated-sources/openapi';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {Observable, of} from "rxjs";
+import {lastValueFrom, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
+import {KonnektorViewChildComponent} from "./konnektor-view-child.component";
+import {Inputfield} from "../contentprojection/inputfield.component";
 
 @Component({
   selector: 'konnektor-view',
@@ -12,7 +14,6 @@ import {map} from "rxjs/operators";
   styleUrls: ['./konnektor-view.component.css'],
 })
 export class KonnektorViewComponent implements OnInit {
-
   readonly headerHeight = 50;
   readonly rowHeight = 50;
   loading = true;
@@ -20,19 +21,54 @@ export class KonnektorViewComponent implements OnInit {
   konnektors: KonnektorDTO[] = [];
   isEditMode: string[] = [];
 
+  isApu: boolean = false;
+
+  bende: Bende = {
+    nevem: "Pisti",
+    korom: 51,
+    okos: true,
+    getValami(myarg) {
+      return "myarg:" + myarg;
+    }
+  };
+
+  pistike!: Bende;
+
+  bendeClone: Bende;
+  apu: Apu;
+
+  @ViewChild(KonnektorViewChildComponent)
+  private konnektorViewChildComponent!: KonnektorViewChildComponent;
 
   constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder, private readonly toast: ToastService) {
+    this.bendeClone = {...this.bende, nevem: "enenen"};
+    this.apu = {
+      kora: 80,
+      neve: "Apuka",
+      lakik: true,
+      logout(): string {
+        return this.kora + " --- " + this.neve
+      },
+      sorozat: []
+    };
+
+    this.isApu = this.apu instanceof Valami;
   }
 
   ngOnInit(): void {
     this.loadKonnektors(null, null, null, null, null);
     this.cretaeForm();
-    this.loadAndMapKonnektors();
+   // this.loadAndMapKonnektors();
 
     const pisti: PistiFunction = function(text: string) {return text};
     const feri: PistiFunction = (text: string) => {return text}
     console.log('------ ' + pisti("pisti implementing function type interface"));
     console.log('------ ' + feri("feri implementing function type interface lambda"));
+
+
+    // deconstructing object properties
+    const {kora : korom} = this.apu;
+    console.log("deconstructing: " + korom);
 
   }
 
@@ -105,19 +141,21 @@ export class KonnektorViewComponent implements OnInit {
       });
   }
 
-  private async loadKonnektors(hostname: string, serialNumber: string, firmwareVersion: string, hardwareVersion: string, created: string) {
+  // überarbeitet, da toPromise is deprecated
+  private loadKonnektors(hostname: string, serialNumber: string, firmwareVersion: string, hardwareVersion: string, created: string) {
     this.loading = true;
 
-    await this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created).toPromise()
-    .then( result => {
-        this.konnektors = [...result];
+    const $allKonnektors = this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created);
+    lastValueFrom($allKonnektors).then(
+      result => {
+        this.konnektors = result
+      },
+      error => {
+        for (let pr in (error as HttpErrorResponse)) {
+          console.log(`property name: ${pr}, value: ${error[pr]}`);
+        }
+        this.toast.error((error as HttpErrorResponse).message);
       })
-    .catch( error => {
-      for (let pr in (error as HttpErrorResponse)) {
-        console.log(`property name: ${pr}, value: ${error[pr]}`);
-      }
-      this.toast.error((error as HttpErrorResponse).message);
-    })
      .finally( () => this.loading = false);
   }
 
@@ -131,6 +169,8 @@ export class KonnektorViewComponent implements OnInit {
     });
   }
 
+
+
   private gyakorlat(): void {
     let obs: Observable<Valami> = of(new Valami("www", "eee"));
     let obsInter: Observable<Kakukk> = of({payload: "interpayload", nev: "internev"});
@@ -139,18 +179,28 @@ export class KonnektorViewComponent implements OnInit {
     ).subscribe((res) => console.log('----obs-map((res) => res[\'payload\'])- ' + res));
   }
 
+  getMeOut(): string {
+    return "ausdruck";
+  }
 
-
+  public useViewChild() {
+  this.konnektorViewChildComponent.incrementUseViewChild();
+  }
 }
 
-class Valami {
+class Valami implements IValami {
   payload: string;
   nev: string;
 
+  szine?: string;
   constructor(p: string, n: string) {
     this.payload = p;
     this.nev = n;
   }
+}
+
+interface IValami {
+  szine?: string;
 }
 
 interface Kakukk {
@@ -170,4 +220,24 @@ interface PistiFunction {
 interface MyArray {
   [index: number]: PistiFunction;
 }
+
+interface Bende {
+  nevem: string;
+  korom?: number;
+  readonly okos: boolean;
+  getValami(myarg: string): string;
+}
+
+interface Apu {
+  neve: string;
+  kora?: number;
+  readonly lakik: boolean;
+  logout(): string;
+  sorozat?: Sorozat;
+}
+
+interface Sorozat {
+  [index: number]: string
+}
+
 

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,11 +14,14 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {CdModule} from "./ChangeDetection/cd.module";
 import {OnpushModule} from "./onpush/onpush.module";
+import { initializeKeycloak } from './init/keycloak-init.factory';
+import {KeycloakService} from "keycloak-angular";
+import {Inputfield} from "./contentprojection/inputfield.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-
+    Inputfield
   ],
   imports: [
     CommonModule,
@@ -32,11 +35,19 @@ import {OnpushModule} from "./onpush/onpush.module";
     BrowserAnimationsModule,
     KonnektorViewModule,
     ToastrModule.forRoot(defaultToastConfig),
-    RouterModule.forRoot(appRouting),
+    RouterModule.forRoot(appRouting), // mert ez egy main module és akkor itt igy importáljuk és konfiguráunk egy Router modult és nem a forChild()-del
 
   ],
-  providers: [],
+  providers: [
+   /* {
+      provide: APP_INITIALIZER,
+      useFactory: initializeKeycloak,
+      multi: true,
+      deps: [KeycloakService],
+    }*/
+  ],
   exports: [
+    Inputfield
 
   ],
   bootstrap: [AppComponent]

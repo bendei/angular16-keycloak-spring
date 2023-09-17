@@ -15,9 +15,11 @@ import {AuditlogModalComponent} from "./auditlog-modal/auditlog-modal.component"
 import {DemoPipe} from "./auditlog-modal/demopipe";
 import {UsernamelengthpipePipe} from "./auditlog-modal/usernamelengthpipe";
 import {PrintuserpipePipe} from "./auditlog-modal/printuserpipe";
+import {KonnektorViewChildComponent} from "./konnektor-view-child.component";
 
 @NgModule({
-  declarations: [KonnektorViewComponent, KonnektorDropdownComponent, KonnektorRemoveComponent, KonnektorModifyComponent, AuditlogModalComponent, DemoPipe, UsernamelengthpipePipe,
+  declarations: [KonnektorViewComponent, KonnektorViewChildComponent, KonnektorDropdownComponent, KonnektorRemoveComponent, KonnektorModifyComponent,
+    AuditlogModalComponent, DemoPipe, UsernamelengthpipePipe,
   PrintuserpipePipe],
   providers: [ ToastService, FormBuilder],
   imports: [CommonModule, BrowserModule, NgxDatatableModule, FormsModule,

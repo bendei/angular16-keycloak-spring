@@ -159,25 +159,30 @@ export class KonnektorModifyComponent implements OnInit {
         return { year: parseInt(dateParts[0], 10), month: parseInt(dateParts[1], 10), day: parseInt(dateParts[2].substring(0,3), 10) };
       }
     }
+    return null;
   }
 
   // format: 2022-08-14T08:00:50.44
   private ngbDateStructToISO(model: NgbDateStruct): string {
     //const padTime = () => "T06:00:50.43";
 
-    const padMonth = (m: number) => {
+    const padMonth = (m: number) : string=> {
       if (isNumber(m)) {
         if (m.toString().trim().length == 1) {
         return m.toString().trim().padStart(2,"0");
-      } else {
+      } /*else {
         return m;
+      }*/
+
       }
-      }
+      return m.toString();
     };
 
     if (model && isNumber(model.year) && isNumber(model.month) && isNumber(model.day)) {
       return model.year + '-' + padMonth(model.month) + '-' + padMonth(model.day); // + padTime();
     }
+
+    return "";
   }
 
   public twoway(event: any) {

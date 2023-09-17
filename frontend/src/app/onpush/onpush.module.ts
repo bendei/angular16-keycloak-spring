@@ -3,12 +3,12 @@ import {CommonModule} from "@angular/common";
 import {BrowserModule} from "@angular/platform-browser";
 import {OnpushparentComponent} from "./onpushparent.component";
 import {OnpushService} from "./onpush.service";
-import {OnpushchildComponent} from "./onpushchild.component";
-import {Child2Component} from "./child2.component ";
+import {ChildAComponent} from "./childA.component";
+import {ChildBComponent} from "./childB.component ";
 
 @NgModule({
   imports: [CommonModule, BrowserModule],
-  declarations: [OnpushparentComponent, OnpushchildComponent, Child2Component],
+  declarations: [OnpushparentComponent, ChildAComponent, ChildBComponent],
   providers: [OnpushService]
 })
 export class OnpushModule {
