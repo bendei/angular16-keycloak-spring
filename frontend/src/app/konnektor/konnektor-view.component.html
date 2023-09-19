@@ -21,81 +21,85 @@
   write input mező: <input type="text" name="myinput" #myinput>
   <br>
 
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 id="konnektorSize" class="card-title">Konnektor's number: {{konnektors.length}}</h5>
 
-  <div class="card">
-    <div class="card-body">
-      <h5 id="konnektorSize" class="card-title">Konnektor's number: {{konnektors.length}}</h5>
+          <form [formGroup]="konnektorFilterForm" class="form-inline">
+            <label class="mr-sm-2" for="id">Id</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="id" formControlName="id">
+            <label #idLabel></label>
 
-      <form [formGroup]="konnektorFilterForm" class="form-inline">
-        <label class="mr-sm-2" for="id">Id</label>
-        <input type="text" class="form-control mb-2 mr-sm-2" id="id" formControlName="id">
-        <label #idLabel></label>
+            <label class="mr-sm-2" for="hostname">Hostname</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="hostName" formControlName="hostName" placeholder="no whitespaces">
+            <div *ngIf="containsWhitespace()" class="text-danger d-block">Hostname darf keine Leerzeichen enthalten</div>
 
-        <label class="mr-sm-2" for="hostname">Hostname</label>
-        <input type="text" class="form-control mb-2 mr-sm-2" id="hostName" formControlName="hostName" placeholder="no whitespaces">
-        <div *ngIf="containsWhitespace()" class="text-danger d-block">Hostname darf keine Leerzeichen enthalten</div>
+            <label class="mr-sm-2" for="serialNumber">Serial Number</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="serialNumber"  formControlName="serialNumber">
 
-        <label class="mr-sm-2" for="serialNumber">Serial Number</label>
-        <input type="text" class="form-control mb-2 mr-sm-2" id="serialNumber"  formControlName="serialNumber">
+            <label class="mr-sm-2" for="firmwareVersion">Firmware Version</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="firmwareVersion" formControlName="firmwareVersion">
 
-        <label class="mr-sm-2" for="firmwareVersion">Firmware Version</label>
-        <input type="text" class="form-control mb-2 mr-sm-2" id="firmwareVersion" formControlName="firmwareVersion">
+            <button id="filter-button" class="btn btn-primary mb-2 mr-sm-2"  (click)="filterForm()">
+              Search
+            </button>
 
-        <button id="filter-button" class="btn btn-primary mb-2 mr-sm-2"  (click)="filterForm()">
-          Search
-        </button>
+            <button id="clear-button" class="btn btn-primary mb-2 mr-sm-2"  (click)="clearForm()">
+              Clear
+            </button>
+          </form>
 
-        <button id="clear-button" class="btn btn-primary mb-2 mr-sm-2"  (click)="clearForm()">
-          Clear
-        </button>
-      </form>
+        </div>
+      </div>
 
+      <div  class="card mt-3">
+        <div class="card-body">
+        <ngx-datatable #konnektorDataTable id="konnektorDataTable"
+                       [columnMode]="'flex'"
+                       [messages]="{emptyMessage: 'Keine Daten vorhanden'}"
+                       [headerHeight]="headerHeight"
+                       [rowHeight]="rowHeight"
+                       [rows]="konnektors"
+                       [scrollbarV]="true"
+        >
+          <ngx-datatable-column [width]="95" name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+
+          <ngx-datatable-column [width]="200" name="Hostname" prop="hostname" [canAutoResize]="false" [sortable]="true">
+            <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+              <span *ngIf="row.active && !isEditMode[rowIndex]">
+                {{row.hostName}}
+                <b  id="editClicker" (click)="editMode(rowIndex)">M</b>
+              </span>
+              <span *ngIf="isEditMode[rowIndex]">
+                  <input type="text" class="form-control mb-2 mr-sm-2" id=`updateHostName${rowIndex}` [value]="row.hostName" (blur)="onUpdateHostname($event, rowIndex, row)">
+              </span>
+              <span *ngIf="!row.active">
+                {{row.hostName}}
+              </span>
+            </ng-template>
+
+          </ngx-datatable-column>
+
+          <ngx-datatable-column [width]="20" name="Serial Number" prop="serialNumber" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column [width]="170" name="Firmware Version" prop="firmwareVersion" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column [width]="470" name="Hardware Version" prop="hardwareVersion" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column [width]="200" name="Created" prop="created" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column [width]="95" class="pl-4" name="Active" prop="active" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column [width]="95" class="pl-4" name="hostNameAndSerial" prop="hostNameAndSerial" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column [width]="100" class="pl-4">
+            <ng-template ngx-datatable-cell-template let-row="row">
+             <app-konnektor-dropdown [konnektor]="row"></app-konnektor-dropdown>
+            </ng-template>
+
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+      </div>
     </div>
   </div>
 
-  <div  class="card mt-3">
-    <div class="card-body">
-    <ngx-datatable #konnektorDataTable id="konnektorDataTable"
-                   [columnMode]="'flex'"
-                   [messages]="{emptyMessage: 'Keine Daten vorhanden'}"
-                   [headerHeight]="headerHeight"
-                   [rowHeight]="rowHeight"
-                   [rows]="konnektors"
-                   [scrollbarV]="true"
-    >
-      <ngx-datatable-column [width]="95" name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-
-      <ngx-datatable-column [width]="200" name="Hostname" prop="hostname" [canAutoResize]="false" [sortable]="true">
-        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-          <span *ngIf="row.active && !isEditMode[rowIndex]">
-            {{row.hostName}}
-            <b  id="editClicker" (click)="editMode(rowIndex)">M</b>
-          </span>
-          <span *ngIf="isEditMode[rowIndex]">
-              <input type="text" class="form-control mb-2 mr-sm-2" id=`updateHostName${rowIndex}` [value]="row.hostName" (blur)="onUpdateHostname($event, rowIndex, row)">
-          </span>
-          <span *ngIf="!row.active">
-            {{row.hostName}}
-          </span>
-        </ng-template>
-
-      </ngx-datatable-column>
-
-      <ngx-datatable-column [width]="20" name="Serial Number" prop="serialNumber" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-      <ngx-datatable-column [width]="170" name="Firmware Version" prop="firmwareVersion" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-      <ngx-datatable-column [width]="470" name="Hardware Version" prop="hardwareVersion" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-      <ngx-datatable-column [width]="200" name="Created" prop="created" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-      <ngx-datatable-column [width]="95" class="pl-4" name="Active" prop="active" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-      <ngx-datatable-column [width]="95" class="pl-4" name="hostNameAndSerial" prop="hostNameAndSerial" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-      <ngx-datatable-column [width]="100" class="pl-4">
-        <ng-template ngx-datatable-cell-template let-row="row">
-         <app-konnektor-dropdown [konnektor]="row"></app-konnektor-dropdown>
-        </ng-template>
-
-      </ngx-datatable-column>
-    </ngx-datatable>
-  </div>
-  </div>
 </ng-template>
 
 <div *ngIf="!loading; then loaded; else notloaded">
