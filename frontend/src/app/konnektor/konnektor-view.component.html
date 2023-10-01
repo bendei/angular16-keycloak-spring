@@ -4,22 +4,37 @@
 
 <ng-template #loaded>
 
-  <br>
-  <button (click)="konnektorChild.increment()">Methodenaufruf auf dem child componente mit temp ref variable</button>
+  <div  class="card mt-3">
+    <div class="card-body">
+      <h5 class="card-title">Using template reference to call method and property on the child component</h5>
+      <div class="row border-1 border-black">
+        <div class="col-3">
+           <button (click)="konnektorChild.increment()">Methodenaufruf auf dem child componente mit temp ref variable</button>
+        </div>
+        <div class="col-3">
+          <button (click)="useViewChild()">Counter on child vith ViewChild</button>
+        </div>
+        <div class="col">
+          <konnektor-view-child #konnektorChild></konnektor-view-child>
+        </div>
+      </div>
+      </div>
+  </div>
 
-  <br>
-  <button (click)="useViewChild()">Counter on child vith ViewChild</button>
-
-
-  <konnektor-view-child #konnektorChild></konnektor-view-child>
-
-  <br>
-  <br>
-  <br>
-  <!-- using template ref variable-->
-  <button (click)="myinput.value='wwwww'">write myinput mező értékének megváltoztatása</button>
-  write input mező: <input type="text" name="myinput" #myinput>
-  <br>
+  <div  class="card mt-3">
+    <div class="card-body">
+      <h5 class="card-title">Using template reference to write input fields value in the template</h5>
+      <div class="row mt-lg-4">
+        <!-- using template ref variable-->
+        <div class="col-3">
+          <button (click)="myinput.value='wwwww'">write myinput mező értékének megváltoztatása</button>
+        </div>
+        <div class="col-9">
+          write input mező: <input type="text" name="myinput" #myinput>
+        </div>
+      </div>
+     </div>
+  </div>
 
   <div class="row mt-3">
     <div class="col">

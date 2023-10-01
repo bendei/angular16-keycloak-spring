@@ -9,6 +9,7 @@ import {NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 import {TimeStruct} from "../../core/helper";
 import {isNumber} from "lodash";
 import {HttpErrorResponse} from "@angular/common/http";
+import {lastValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-konnektor-modify',
@@ -45,10 +46,13 @@ export class KonnektorModifyComponent implements OnInit {
     this.konnektorId = this.route.snapshot.paramMap.get('id');
 
     if(this.konnektorId) {
-        await this.defaultService.getKonnektor(this.konnektorId).toPromise().then( result => {
-          this.konnektor = result;
-          this.loadFormData();
-        }).catch( error => {
+        const $konnektor =  this.defaultService.getKonnektor(this.konnektorId);
+        await lastValueFrom($konnektor).then(
+          result => {
+            this.konnektor = result;
+            this.loadFormData();
+          },
+          error => {
             this.toast.error((error as HttpErrorResponse).message);
           }
         )
@@ -64,18 +68,18 @@ export class KonnektorModifyComponent implements OnInit {
 
     console.log("createdTimeISO:", createdTimeISO);
 
-    try {
-      await this.defaultService.updateKonnektor(id, {
-        id, hostName, serialNumber, firmwareVersion, hardwareVersion, active, created: createdISO + "" + createdTimeISO
-      }).toPromise();
-      console.log("SSS");
-      this.toast.success("konnektor updated");
-      this.router.navigate(['/navigation/konnektor-view']);
-    }
-    catch(error) {
-        console.log("ERRRR");
+    const $updateKonnektor =  this.defaultService.updateKonnektor(id, {
+      id, hostName, serialNumber, firmwareVersion, hardwareVersion, active, created: createdISO + "" + createdTimeISO
+    });
+    await lastValueFrom($updateKonnektor).then(
+      () => {
+        this.toast.success("konnektor updated");
+      },
+      () => {
+        // this.router.navigate(['/navigation/konnektor-view']);
         this.toast.error("konnektor could not be updated.");
       }
+    );
   }
 
   public onBack(): void {
@@ -83,13 +87,14 @@ export class KonnektorModifyComponent implements OnInit {
   }
 
   async open() {
-    await this.defaultService.getAllAuditLog(this.konnektor.id).toPromise().then( result => {
-        result => console.log("hahahaha:   " + result);
+    const $auditlog =  this.defaultService.getAllAuditLog(this.konnektor.id!);
+    await lastValueFrom($auditlog).then(
+      result => {
         const modalRef = this.modalService.open(AuditlogModalComponent,  { size: 'xl' });
         modalRef.componentInstance.auditlogs = result;
-      }
-    ).catch( error => {
-      this.toast.error((error as HttpErrorResponse).message);
+      },
+      error => {
+        this.toast.error((error as HttpErrorResponse).message);
     });
 
   }
@@ -117,13 +122,13 @@ export class KonnektorModifyComponent implements OnInit {
         firmwareVersion: this.konnektor.firmwareVersion,
         hardwareVersion: this.konnektor.hardwareVersion,
         created: this.konnektor.created,
-        createdTime: KonnektorModifyComponent.isoToTime(this.konnektor.created),
+        createdTime: KonnektorModifyComponent.isoToTime(this.konnektor.created!),
         active: this.konnektor.active,
         validUntil: this.konnektor.validUntil
       });
     }
 
-    const date: NgbDateStruct = KonnektorModifyComponent.isoToNgbDateStruct(this.konnektor.created);
+    const date: NgbDateStruct | null = KonnektorModifyComponent.isoToNgbDateStruct(this.konnektor.created!);
     //this.konnektorForm.get('created')?.setValue(this.calender.getToday());
     this.konnektorForm.get('created')?.setValue(date);
   }
@@ -152,7 +157,7 @@ export class KonnektorModifyComponent implements OnInit {
     return "T00:00:00.44";
   }
 
-  private static isoToNgbDateStruct(isoString: string): NgbDateStruct {
+  private static isoToNgbDateStruct(isoString: string): NgbDateStruct | null {
     if(isoString) {
       const dateParts = isoString.trim().split('-');
       if (dateParts.length == 3) {

@@ -6,7 +6,6 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {lastValueFrom, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
 import {KonnektorViewChildComponent} from "./konnektor-view-child.component";
-import {Inputfield} from "../contentprojection/inputfield.component";
 
 @Component({
   selector: 'konnektor-view',
@@ -16,6 +15,7 @@ import {Inputfield} from "../contentprojection/inputfield.component";
 export class KonnektorViewComponent implements OnInit {
   readonly headerHeight = 50;
   readonly rowHeight = 50;
+
   loading = true;
   konnektorFilterForm!: FormGroup;
   konnektors: KonnektorDTO[] = [];
@@ -56,9 +56,8 @@ export class KonnektorViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadKonnektors(null, null, null, null, null);
+    this.loadKonnektors();
     this.cretaeForm();
-   // this.loadAndMapKonnektors();
 
     const pisti: PistiFunction = function(text: string) {return text};
     const feri: PistiFunction = (text: string) => {return text}
@@ -83,10 +82,12 @@ export class KonnektorViewComponent implements OnInit {
 
   public clearForm(): void {
     this.konnektorFilterForm.reset();
+
+    console.log("hostName: " + this.konnektorFilterForm.get('hostName')?.value);
   }
 
   public containsWhitespace(): boolean {
-    return (this.konnektorFilterForm.get("hostName").value?.indexOf(' ')) > 0;
+    return (this.konnektorFilterForm.get("hostName")?.value.indexOf(' ')) > 0;
   }
 
   public editMode(index: string) {
@@ -142,12 +143,13 @@ export class KonnektorViewComponent implements OnInit {
   }
 
   // überarbeitet, da toPromise is deprecated
-  private loadKonnektors(hostname: string, serialNumber: string, firmwareVersion: string, hardwareVersion: string, created: string) {
+  private loadKonnektors(hostname?: string, serialNumber?: string, firmwareVersion?: string, hardwareVersion?: string, created?: string) {
     this.loading = true;
 
     const $allKonnektors = this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created);
     lastValueFrom($allKonnektors).then(
       result => {
+        console.log(result);
         this.konnektors = result
       },
       error => {
@@ -168,8 +170,6 @@ export class KonnektorViewComponent implements OnInit {
       hardwareVersion: ['']
     });
   }
-
-
 
   private gyakorlat(): void {
     let obs: Observable<Valami> = of(new Valami("www", "eee"));

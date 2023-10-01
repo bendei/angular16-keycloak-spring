@@ -81,5 +81,5 @@
 <div [style.font-size.px]="fontSizePx">Resizable Text</div>
 
 <div *ngFor="let log of auditlogs"> <!--ha az uditlog változik vagy ujat adunk hozzá akkor a pipe bemebete is változik es lefut a transform maskülönben nem-->
-  {{log.user | printuser}}
+  {{log.user! | printuser}}
 </div>

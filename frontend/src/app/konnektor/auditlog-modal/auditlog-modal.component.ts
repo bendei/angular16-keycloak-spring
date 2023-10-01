@@ -6,6 +6,7 @@ import {DatePipe} from "@angular/common";
 import {ToastService} from "../../toast/toast.service";
 import {createCurrentDateTimeISOString} from "../../core/helper";
 import {DatatableComponent} from "@swimlane/ngx-datatable";
+import {lastValueFrom} from "rxjs";
 
 const PAD_TIME = "T01:00:00.59";
 
@@ -119,8 +120,10 @@ export class AuditlogModalComponent implements OnInit, OnChanges, DoCheck, After
 
   public removeAuditlog(log: AuditLogDTO): void {
     // persisted log
-    if (log.id >= 0) {
-      this.defaultService.deleteAuditlog(log.id.toString()).subscribe(() => {
+    if (log.id! >= 0) {
+      const $deleteAuditLog = this.defaultService.deleteAuditlog(log.id?.toString()!);
+      lastValueFrom($deleteAuditLog).then(
+        () => {
           this.toast.success("auditlogs deleted");
           //this.router.navigate(['/navigation/konnektor-view']);
         },
@@ -157,8 +160,8 @@ export class AuditlogModalComponent implements OnInit, OnChanges, DoCheck, After
     }
   }
 
-  public convertISODateToString(date: string): string {
-    return this.datePipe.transform(date,'yyyy-MM-dd');
+  public convertISODateToString(date: string): string | null {
+    return this.datePipe.transform(date ?? '','yyyy-MM-dd');
   }
 
   ngAfterViewChecked(): void {
