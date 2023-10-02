@@ -1,4 +1,5 @@
 /backend/target/
+/frontend/target/
 /node/
 /frontend/bin/
 /frontend/node/

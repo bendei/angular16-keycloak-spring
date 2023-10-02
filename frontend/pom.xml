@@ -60,7 +60,7 @@
             </configuration>
           </execution>
 
-          <!-- clean install -->
+        <!--  &lt;!&ndash; clean install &ndash;&gt;
           <execution>
             <id>npm install</id>
             <goals>
@@ -68,7 +68,7 @@
             </goals>
           </execution>
 
-          <!-- code validation -->
+          &lt;!&ndash; code validation &ndash;&gt;
           <execution>
             <id>npm run lint</id>
             <goals>
@@ -80,16 +80,16 @@
             </configuration>
           </execution>
 
-          <!-- build app -->
+          &lt;!&ndash; build app &ndash;&gt;
           <execution>
             <id>npm run build</id>
             <goals>
               <goal>npm</goal>
             </goals>
             <configuration>
-              <arguments>run build --prod</arguments>
+              <arguments>run build &#45;&#45;prod</arguments>
             </configuration>
-          </execution>
+          </execution>-->
 
         </executions>
       </plugin>

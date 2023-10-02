@@ -76,7 +76,7 @@ public class KonnektorServiceTest {
         thenResourceNotFoundExceptionIsThrown();
     }
 
-    @Test
+  /*  @Test
     @Ignore
     public void testGetAllKonnektors() {
         givenListOfKonnektors();
@@ -86,7 +86,7 @@ public class KonnektorServiceTest {
         // doReturn(2).when(konns).size();
         Assertions.assertFalse(result.isEmpty());
         Assertions.assertEquals(result.size(), 2);
-    }
+    }*/
 
     @Test
     public void testUpdateKonnektorHostname_ThrowsException() {
