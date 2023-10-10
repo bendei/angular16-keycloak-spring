@@ -16,11 +16,11 @@ import {DemoPipe} from "./auditlog-modal/demopipe";
 import {UsernamelengthpipePipe} from "./auditlog-modal/usernamelengthpipe";
 import {PrintuserpipePipe} from "./auditlog-modal/printuserpipe";
 import {KonnektorViewChildComponent} from "./konnektor-view-child.component";
+import {PureDatePipe} from "../pipes/pureDatePipe";
 
 @NgModule({
   declarations: [KonnektorViewComponent, KonnektorViewChildComponent, KonnektorDropdownComponent, KonnektorRemoveComponent, KonnektorModifyComponent,
-    AuditlogModalComponent, DemoPipe, UsernamelengthpipePipe,
-  PrintuserpipePipe],
+    AuditlogModalComponent, DemoPipe, UsernamelengthpipePipe, PrintuserpipePipe, PureDatePipe],
   providers: [ ToastService, FormBuilder],
   imports: [CommonModule, BrowserModule, NgxDatatableModule, FormsModule,
     ReactiveFormsModule, NgbModule,

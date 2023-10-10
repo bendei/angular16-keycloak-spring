@@ -6,11 +6,13 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {lastValueFrom, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
 import {KonnektorViewChildComponent} from "./konnektor-view-child.component";
+import {PureDatePipe} from "../pipes/pureDatePipe";
 
 @Component({
   selector: 'konnektor-view',
   templateUrl: './konnektor-view.component.html',
   styleUrls: ['./konnektor-view.component.css'],
+
 })
 export class KonnektorViewComponent implements OnInit {
   readonly headerHeight = 50;
@@ -20,6 +22,9 @@ export class KonnektorViewComponent implements OnInit {
   konnektorFilterForm!: FormGroup;
   konnektors: KonnektorDTO[] = [];
   isEditMode: string[] = [];
+
+  // for pipe
+  maiDatum: Date = new Date();
 
   isApu: boolean = false;
 

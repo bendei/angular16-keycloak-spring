@@ -9,6 +9,7 @@
 
 # dependencies
 /node_modules
+/frontend/target/generated-sources/openapi/api.module.ts
 
 # profiling files
 chrome-profiler-events*.json
