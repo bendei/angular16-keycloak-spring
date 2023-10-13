@@ -1,5 +1,12 @@
-auditlog
-<i class="fa fa-user fa-5x"></i>
+
+
+<div style="visibility: visible"  class="fontuserItalic" auditlog="ezazatadottertek" [objectForDirective]="objectForDirective" (click)="clicked()" (mousemove)="mouseMove()"
+     (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">Auditlog</div>
+{{nevem}}
+
+<button (click)="changeObjectTypeInput()">objekt tipusu értéket adunk át a auditlog directivának</button>
+{{objectForDirective.age}}
+
 
 <div class="container">
   <div class="fontuser">

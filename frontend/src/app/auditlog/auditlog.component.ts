@@ -1,20 +1,63 @@
-import {Component, ElementRef, HostBinding } from '@angular/core';
-import {fromEvent} from "rxjs";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  HostBinding,
+} from '@angular/core';
+import {AuditlogDirective} from "./auditlog.directive";
 
 @Component({
   selector: 'app-auditlog',
   templateUrl: `./auditlog.component.html`,
-  styleUrls: ['./auditlog.component.css']
+  styleUrls: ['./auditlog.component.css'],
+  imports: [AuditlogDirective],
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuditlogComponent {
+export class AuditlogComponent  {
 
-  @HostBinding() el!: ElementRef;
+  _nevem = 'pista';
+  objectForDirective: ObjectForDirective = {age: 51};
 
-  constructot() {
-    const fe = fromEvent(this.el.nativeElement, 'click');
+  @HostBinding('style') style = "background-color: grey";
+  //@HostListener('click') onClicked() { alert("clicked"); };
 
-    fe.subscribe(x => console.log('------ ' + x));
+  get nevem(): string {
+    console.log("CD updated the nevem string interpolation value");
+    return this._nevem;
   }
 
+
+  constructor(private cd: ChangeDetectorRef) {
+  }
+
+
+
+  clicked() {
+
+  }
+
+  mouseMove() {
+
+  }
+
+  mouseEnter() {
+    this.cd.detach();
+  }
+
+  mouseLeave() {
+    this.cd.reattach()
+  }
+
+  changeObjectTypeInput() {
+    const clonedObject = {...this.objectForDirective};
+    clonedObject.age = ++clonedObject.age;
+    this.objectForDirective = clonedObject;
+  }
+
+}
+
+export interface ObjectForDirective {
+  age: number;
 }
 
