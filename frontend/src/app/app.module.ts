@@ -14,8 +14,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {CdModule} from "./ChangeDetection/cd.module";
 import {OnpushModule} from "./onpush/onpush.module";
-import { initializeKeycloak } from './init/keycloak-init.factory';
-import {KeycloakService} from "keycloak-angular";
+//import { initializeKeycloak } from './init/keycloak-init.factory';
+//import {KeycloakService} from "keycloak-angular";
 import {Inputfield} from "./contentprojection/inputfield.component";
 
 @NgModule({

@@ -43,11 +43,15 @@ export class DefaultService {
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
 
-    constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+    constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string|string[], @Optional() configuration: Configuration) {
         if (configuration) {
             this.configuration = configuration;
         }
         if (typeof this.configuration.basePath !== 'string') {
+            if (Array.isArray(basePath) && basePath.length > 0) {
+                basePath = basePath[0];
+            }
+
             if (typeof basePath !== 'string') {
                 basePath = this.basePath;
             }
@@ -57,6 +61,7 @@ export class DefaultService {
     }
 
 
+    // @ts-ignore
     private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
         if (typeof value === "object" && value instanceof Date === false) {
             httpParams = this.addToHttpParamsRecursive(httpParams, value);
@@ -76,8 +81,7 @@ export class DefaultService {
                 (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
             } else if (value instanceof Date) {
                 if (key != null) {
-                    httpParams = httpParams.append(key,
-                        (value as Date).toISOString().substr(0, 10));
+                    httpParams = httpParams.append(key, (value as Date).toISOString().substring(0, 10));
                 } else {
                    throw Error("key may not be null if value is Date");
                 }
@@ -141,9 +145,10 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/auditlogs`,
-            auditLogDTO,
+        let localVarPath = `/auditlogs`;
+        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
             {
+                body: auditLogDTO,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -202,9 +207,10 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/konnektors`,
-            konnektorDTO,
+        let localVarPath = `/konnektors`;
+        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
             {
+                body: konnektorDTO,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -254,7 +260,8 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/auditlogs/${encodeURIComponent(String(auditlogId))}`,
+        let localVarPath = `/auditlogs/${this.configuration.encodeParam({name: "auditlogId", value: auditlogId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<any>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
@@ -305,7 +312,8 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/konnektors/${encodeURIComponent(String(konnektorId))}`,
+        let localVarPath = `/konnektors/${this.configuration.encodeParam({name: "konnektorId", value: konnektorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<any>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
@@ -356,7 +364,8 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.get<Array<AuditLogDTO>>(`${this.configuration.basePath}/auditlogs/konnektor/${encodeURIComponent(String(konnektorId))}`,
+        let localVarPath = `/auditlogs/konnektor/${this.configuration.encodeParam({name: "konnektorId", value: konnektorId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: undefined})}`;
+        return this.httpClient.request<Array<AuditLogDTO>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
@@ -431,7 +440,8 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.get<Array<KonnektorDTO>>(`${this.configuration.basePath}/konnektors`,
+        let localVarPath = `/konnektors`;
+        return this.httpClient.request<Array<KonnektorDTO>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 params: localVarQueryParameters,
                 responseType: <any>responseType_,
@@ -483,7 +493,8 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.get<Array<AuditLogDTO>>(`${this.configuration.basePath}/auditlogs/${encodeURIComponent(String(auditlogId))}`,
+        let localVarPath = `/auditlogs/${this.configuration.encodeParam({name: "auditlogId", value: auditlogId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<Array<AuditLogDTO>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
@@ -534,7 +545,8 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.get<KonnektorDTO>(`${this.configuration.basePath}/konnektors/${encodeURIComponent(String(konnektorId))}`,
+        let localVarPath = `/konnektors/${this.configuration.encodeParam({name: "konnektorId", value: konnektorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<KonnektorDTO>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
@@ -598,9 +610,10 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/auditlogs/${encodeURIComponent(String(auditlogId))}`,
-            auditLogDTO,
+        let localVarPath = `/auditlogs/${this.configuration.encodeParam({name: "auditlogId", value: auditlogId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<any>('put', `${this.configuration.basePath}${localVarPath}`,
             {
+                body: auditLogDTO,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -663,9 +676,10 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/konnektors/${encodeURIComponent(String(konnektorId))}`,
-            konnektorDTO,
+        let localVarPath = `/konnektors/${this.configuration.encodeParam({name: "konnektorId", value: konnektorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<any>('put', `${this.configuration.basePath}${localVarPath}`,
             {
+                body: konnektorDTO,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -728,9 +742,10 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/konnektors/${encodeURIComponent(String(konnektorId))}`,
-            konnektorHostnameDTO,
+        let localVarPath = `/konnektors/${this.configuration.encodeParam({name: "konnektorId", value: konnektorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<any>('patch', `${this.configuration.basePath}${localVarPath}`,
             {
+                body: konnektorHostnameDTO,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -789,9 +804,10 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/auditlogs`,
-            auditLogDTO,
+        let localVarPath = `/auditlogs`;
+        return this.httpClient.request<any>('put', `${this.configuration.basePath}${localVarPath}`,
             {
+                body: auditLogDTO,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

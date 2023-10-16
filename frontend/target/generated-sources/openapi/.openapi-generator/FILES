@@ -19,4 +19,5 @@ model/konnektorDTO.ts
 model/konnektorHostnameDTO.ts
 model/models.ts
 model/updateKonnektorRequestDTO.ts
+param.ts
 variables.ts

@@ -17,4 +17,7 @@ export interface CreateAuditLogRequestDTO {
     userAction: AuditLogMessageDTO;
     konnektor?: number;
 }
+export namespace CreateAuditLogRequestDTO {
+}
+
 

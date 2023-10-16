@@ -2,7 +2,7 @@ package com.bende.support;
 
 import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 

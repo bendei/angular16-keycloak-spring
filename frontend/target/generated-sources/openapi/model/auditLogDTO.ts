@@ -19,4 +19,7 @@ export interface AuditLogDTO {
     userAction?: AuditLogMessageDTO;
     timestamp?: string;
 }
+export namespace AuditLogDTO {
+}
+
 
