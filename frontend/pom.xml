@@ -60,8 +60,8 @@
             </configuration>
           </execution>
 
-        <!--  &lt;!&ndash; clean install &ndash;&gt;
-          <execution>
+          <!-- clean install -->
+   <!--       <execution>
             <id>npm install</id>
             <goals>
               <goal>npm</goal>
@@ -79,9 +79,9 @@
               <arguments>run lint</arguments>
             </configuration>
           </execution>
-
-          &lt;!&ndash; build app &ndash;&gt;
-          <execution>
+-->
+          <!-- build app -->
+         <!-- <execution>
             <id>npm run build</id>
             <goals>
               <goal>npm</goal>

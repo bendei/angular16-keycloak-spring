@@ -76,7 +76,7 @@ public class KonnektorServiceTest {
         thenResourceNotFoundExceptionIsThrown();
     }
 
-  /*  @Test
+/*    @Test
     @Ignore
     public void testGetAllKonnektors() {
         givenListOfKonnektors();

@@ -1,11 +1,12 @@
 # Java (Spring Boot) and Angular basic showcase
 THis project conatains 3 module: a parent one, a backend and frontend.
-We build here a fat jar, that contains the backend and the frontend.
+We build here a Spring fat jar, that contains the backend and the frontend.
 We can start frontend and backend separately too.
 
 ### Frontend:
 Angular app uses port 4200, java backend 8081.
-The heavy lifting is done by the plugin https://github.com/eirslett/frontend-maven-plugin. This plugin download node, install the libraries and build the project.
+The heavy lifting is done by the plugin https://github.com/eirslett/frontend-maven-plugin. This plugin downloads and installs node, install the libraries and build the project by running npm install.
+C:\Users\36309\.m2\repository\com\github\eirslett\node\20.5.1\node-20.5.1-win-x64.exe
 (com.github.eirslett mint a kvs projectben)
 The result is a jar file that contains the Angular application compiled.
 
@@ -16,6 +17,8 @@ B. vagy csak a forntend/backend külön
 This is a quick starter for projects using Spring Boot as backend and Angular as frontend.
 
 ### Backend
+Wir haben das Frontend Module in das Backend module importiert, wir haben maven-dependency-plugin verwendet, welches den Frontend-Inhalt auspakt und kopiert es im /classes/static Verzeichnis von Backend.
+Pacjaking von Backend was als war File, und wir haben es in einer der Wildfly Servers eingespielt.
 Az (backend) app futtatása:
 1. mvn clean; mvn package
 2. cd bacend/target
