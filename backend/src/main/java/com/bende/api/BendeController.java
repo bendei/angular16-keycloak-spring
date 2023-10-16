@@ -1,5 +1,6 @@
 package com.bende.api;
 
+import com.bende.persistence.model.Konnektor;
 import com.bende.persistence.repos.KonnektorRepository;
 import com.bende.service.AuditlogService;
 import com.bende.service.KonnektorService;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("http://localhost:4200")
@@ -32,6 +35,21 @@ public class BendeController {
         //List<AuditLogDTO> lista = auditlogService.findById(Long.parseLong(auditlogId)).stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
+
+    @GetMapping("/konnektors/{konnektorId}")
+    public ResponseEntity<Konnektor> getKonnektorById(@PathVariable("konnektorId") Long id) {
+
+        Optional<Konnektor> konnektor = konnektorRepository.findById(id);
+
+        if ( konnektor.isPresent()) {
+            return new ResponseEntity<Konnektor>(konnektor.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+
+    }
+
 
    /* @Override
     @ApiOperation("auditlogs to a given konnektor")

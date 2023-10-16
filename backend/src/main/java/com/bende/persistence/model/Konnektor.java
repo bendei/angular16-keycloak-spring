@@ -55,9 +55,9 @@ public class Konnektor {
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime validUntil;
 
-    @OneToMany(mappedBy="konnektor", fetch = FetchType.EAGER)
+    /*@OneToMany(mappedBy="konnektor", fetch = FetchType.EAGER)
     @JsonManagedReference
-    private Set<AuditLog> auditlogs;
+    private Set<AuditLog> auditlogs;*/
 
 
     public String getHostname() {
@@ -100,13 +100,13 @@ public class Konnektor {
         this.active = active;
     }
 
-    public Set<AuditLog> getAuditlogs() {
+  /*  public Set<AuditLog> getAuditlogs() {
         return auditlogs;
     }
 
     public void setAuditlogs(final Set<AuditLog> auditlogs) {
         this.auditlogs = auditlogs;
-    }
+    }*/
 
     public LocalDateTime getCreated() {
         return created;
