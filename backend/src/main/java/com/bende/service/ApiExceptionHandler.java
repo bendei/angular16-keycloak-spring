@@ -2,7 +2,6 @@ package com.bende.service;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-import com.bende.api.model.ApiError;
 import java.time.LocalDateTime;
 import com.bende.excpetions.ResourceNotFoundException;
 import java.util.HashMap;

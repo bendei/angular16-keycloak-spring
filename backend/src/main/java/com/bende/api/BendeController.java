@@ -1,30 +1,17 @@
 package com.bende.api;
 
-import com.bende.api.model.AuditLogDTO;
-import com.bende.api.model.AuditLogMessageDTO;
-import com.bende.api.model.KonnektorDTO;
-import com.bende.api.model.KonnektorHostnameDTO;
-import com.bende.excpetions.ResourceNotFoundException;
-import com.bende.persistence.model.AuditLog;
-import com.bende.persistence.model.Konnektor;
-import com.bende.persistence.model.UserActionType;
 import com.bende.persistence.repos.KonnektorRepository;
 import com.bende.service.AuditlogService;
 import com.bende.service.KonnektorService;
-import io.swagger.annotations.ApiOperation;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
 
 @RestController
-public class BendeController implements KonnektorsApi, AuditlogsApi {
+@CrossOrigin("http://localhost:4200")
+@RequestMapping("/api")
+public class BendeController {
 
     @Autowired
     KonnektorService konnektorService;
@@ -32,18 +19,21 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
     @Autowired
     KonnektorRepository konnektorRepository;
 
-    @Autowired
-    AuditlogService auditlogService;
+//    @Autowired
+//    AuditlogService auditlogService;
 
-    @Override
-    @ApiOperation("the auditlogs API")
-    @CrossOrigin("http://localhost:4200")
-    public ResponseEntity<List<AuditLogDTO>> getAuditLogs(final String auditlogId) {
-        List<AuditLogDTO> lista = auditlogService.findById(Long.parseLong(auditlogId)).stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
-        return new ResponseEntity<>(lista, HttpStatus.OK);
+
+    @GetMapping("/auditlogs/{auditlogId}")
+    public ResponseEntity<String> getAuditLogs(@PathVariable("auditlogId") String id) {
+
+
+
+
+        //List<AuditLogDTO> lista = auditlogService.findById(Long.parseLong(auditlogId)).stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
-    @Override
+   /* @Override
     @ApiOperation("auditlogs to a given konnektor")
     @CrossOrigin("http://localhost:4200")
     public ResponseEntity<List<AuditLogDTO>> getAllAuditLog(final Integer konnektorId) {
@@ -62,9 +52,9 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
 
             konnektor.ifPresent( konn -> dtos.forEach(dto -> createNewAuditLog(dto, konnektor.get())));
 
-            /*  if (konnektor.isPresent()) {
+            *//*  if (konnektor.isPresent()) {
                 dtos.forEach(dto -> createNewAuditLog(dto, konnektor.get()));
-            }*/
+            }*//*
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -234,5 +224,5 @@ public class BendeController implements KonnektorsApi, AuditlogsApi {
 
         return dto;
     }
-
+*/
 }

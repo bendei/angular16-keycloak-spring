@@ -55,7 +55,8 @@ public class AuditlogServiceImpl implements AuditlogService {
 
     @Override
     public List<AuditLog> findAuditLogsByKonnektorId(final Long id) {
-        return repo.findAuditLogsByKonnektorId(id);
+        //return repo.findAuditLogsByKonnektorId(id);
+        return null;
     }
 
 }
