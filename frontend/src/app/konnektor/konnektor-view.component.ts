@@ -121,17 +121,6 @@ export class KonnektorViewComponent implements OnInit {
     let innerkonnektors: KonnektorDTO[] = [];
     let mapKonnektors: KonnektorMapperDTO[] = [];
 
-    /*this.defaultService.getAllKonnektors().subscribe((konnektors) => {
-      innerkonnektors = konnektors;
-      console.log('------ ' + innerkonnektors.length);
-
-      mapKonnektors= innerkonnektors.map((dto) => {
-       // let mappedKonnektor: KonnektorMapperDTO = {hostNameAndSerial: "www"};
-        return {...dto, hostNameAndSerial: `${dto.hostName} - ${dto.serialNumber}`};
-      });
-      console.log('------ hostNameAndSerial:' + mapKonnektors[0].hostNameAndSerial + ", hostName:" + mapKonnektors[0].hostName);
-    });*/
-
     this.defaultService.getAllKonnektors()
       .pipe(
         map( (konnektorArray) =>

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.List;
 
 @RestController
 @CrossOrigin("http://localhost:4200")
@@ -36,16 +37,32 @@ public class BendeController {
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
+    // http://localhost:8081/api/konnektors/1
     @GetMapping("/konnektors/{konnektorId}")
-    public ResponseEntity<Konnektor> getKonnektorById(@PathVariable("konnektorId") Long id) {
-
-        Optional<Konnektor> konnektor = konnektorRepository.findById(id);
+    public ResponseEntity<Konnektor> getKonnektorById(@PathVariable("konnektorId") Long id) {// without controller advice exception handling
+      /*  Optional<Konnektor> konnektor = konnektorRepository.findById(id);
 
         if ( konnektor.isPresent()) {
             return new ResponseEntity<Konnektor>(konnektor.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }*/
+
+        Konnektor konnektor = konnektorService.getKonnektor(id);
+        return new ResponseEntity<>(konnektor, HttpStatus.OK);
+    }
+
+    // http://localhost:8081/api/konnektors
+    @GetMapping("/konnektors")
+    public ResponseEntity<List<Konnektor>> getKonnektors() {
+
+        List<Konnektor> konnektors = konnektorService.findAllActiveKonnektors();
+        if (!konnektors.isEmpty()) {
+            return new ResponseEntity<>(konnektors, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
 
 
     }

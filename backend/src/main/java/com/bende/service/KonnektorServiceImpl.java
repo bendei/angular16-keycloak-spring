@@ -17,7 +17,7 @@ public class KonnektorServiceImpl implements KonnektorService {
 
     @Override
     public Konnektor getKonnektor(final Long id) {
-        return konnektorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden"));
+        return konnektorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id:" + id + "  nicht gefunden"));
     }
 
     @Override
@@ -33,7 +33,7 @@ public class KonnektorServiceImpl implements KonnektorService {
     @Override
     public void deleteKonnektor(final Long id) {
        if (konnektorRepository.findById(id).isEmpty()) {
-           throw new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden");
+           throw new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden, es kann nicht gelöscht werden.");
        }
        konnektorRepository.deleteById(id);
     }
@@ -50,13 +50,13 @@ public class KonnektorServiceImpl implements KonnektorService {
 
     @Override
     public void updateKonnektor(Konnektor konnektor) throws ResourceNotFoundException{
-       konnektorRepository.findById(konnektor.getId()).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden"));
+       konnektorRepository.findById(konnektor.getId()).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden, es kann nicht geupdated werden."));
        konnektorRepository.save(konnektor);
     }
 
     @Override
     public void updateKonnektorHostname(final Long id, final String hostname) {
-        Konnektor konn = konnektorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden"));
+        Konnektor konn = konnektorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden, Hostname kann nicht geupdated werden."));
         konn.setHostname(hostname);
         konnektorRepository.save(konn);
     }

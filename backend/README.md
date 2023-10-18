@@ -54,6 +54,8 @@ https://ashishontech.xyz/jackson-json-infinite-recursion-problem/
 ---------------------------------------------------------------------------------------------------------
 ## ERROR HANDLING 
 
+https://springframework.guru/exception-handling-in-spring-boot-rest-api/
+
 https://www.toptal.com/java/spring-boot-rest-api-error-handling
 
 ---------------------------------------------------------------------------------------------------------

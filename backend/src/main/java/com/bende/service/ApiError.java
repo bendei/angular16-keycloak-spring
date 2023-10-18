@@ -1,6 +1,9 @@
 package com.bende.service;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -11,7 +14,8 @@ public class ApiError   {
     private String status;
 
     @JsonProperty("timestamp")
-    private String timestamp;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private LocalDateTime timestamp;
 
     @JsonProperty("message")
     private String message;
@@ -35,7 +39,7 @@ public class ApiError   {
         this.status = status;
     }
 
-    public ApiError timestamp(String timestamp) {
+    public ApiError timestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
         return this;
     }
@@ -46,11 +50,11 @@ public class ApiError   {
      */
 
     @Schema(name = "timestamp", required = false)
-    public String getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
