@@ -27,19 +27,12 @@ public class BendeController {
 //    AuditlogService auditlogService;
 
 
-    @GetMapping("/auditlogs/{auditlogId}")
-    public ResponseEntity<String> getAuditLogs(@PathVariable("auditlogId") String id) {
 
-
-
-
-        //List<AuditLogDTO> lista = auditlogService.findById(Long.parseLong(auditlogId)).stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
-        return new ResponseEntity<>(id, HttpStatus.OK);
-    }
 
     // http://localhost:8081/api/konnektors/1
     @GetMapping("/konnektors/{konnektorId}")
-    public ResponseEntity<Konnektor> getKonnektorById(@PathVariable("konnektorId") Long id) {// without controller advice exception handling
+    public ResponseEntity<Konnektor> getKonnektorById(@PathVariable("konnektorId") Long id) {
+      // without controller advice exception handling
       /*  Optional<Konnektor> konnektor = konnektorRepository.findById(id);
 
         if ( konnektor.isPresent()) {

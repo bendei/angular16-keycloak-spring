@@ -1,7 +1,7 @@
 import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {KonnektorViewModule} from './konnektor/konnektor-view.module';
 import {RouterModule} from '@angular/router';
 import {NavigationModule} from './core/navigation.module';
@@ -17,6 +17,7 @@ import {OnpushModule} from "./onpush/onpush.module";
 //import { initializeKeycloak } from './init/keycloak-init.factory';
 //import {KeycloakService} from "keycloak-angular";
 import {Inputfield} from "./contentprojection/inputfield.component";
+import {HttpErrorInterceptor} from "./interceptors/HttpErrorInterceptor";
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import {Inputfield} from "./contentprojection/inputfield.component";
 
   ],
   providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
    /* {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,

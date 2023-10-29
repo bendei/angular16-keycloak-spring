@@ -36,6 +36,13 @@ lásd: https://www.baeldung.com/h2-embedded-db-data-storage
 ## lentebb kitűnő spring data jpa tutorialok vannak ezen az oldalon, mint transactionok, @query, pagination, 
 https://www.baeldung.com/persistence-with-spring-series
 
+## transations:
+https://www.baeldung.com/transaction-configuration-with-jpa-and-spring
+
+## Leirja hogy lehet Queryket öszzeállitani:
+https://docs.spring.io/spring-data/data-jpa/docs/current/reference/html/#repositories.core-concepts
+
+
 ## application.properties setting for auto/not auto db schema creation:
 https://www.baeldung.com/spring-boot-data-sql-and-schema-sql
 

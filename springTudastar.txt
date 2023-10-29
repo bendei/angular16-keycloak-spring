@@ -1,7 +1,7 @@
 kell még: spring jwt rest authentication, JPA spring boottal
 
 
-Spring Boot Rest Service:
+## Spring Boot Rest Service:
 
 1.	Make sure, you maven dependency section has spring-boot-starter-web dependency.
 2.	starting point Application.java has the friendly public static void main method. Where we actually start a Spring Boot Application:

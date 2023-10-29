@@ -2,11 +2,9 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO } from '../../../target/generated-sources/openapi';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
-import {HttpErrorResponse} from "@angular/common/http";
 import {lastValueFrom, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
 import {KonnektorViewChildComponent} from "./konnektor-view-child.component";
-import {PureDatePipe} from "../pipes/pureDatePipe";
 
 @Component({
   selector: 'konnektor-view',
@@ -109,11 +107,11 @@ export class KonnektorViewComponent implements OnInit {
       () => {
         this.filterForm();
         this.toast.success("konnektor hostname updated")
-      })
-      .catch(() => {
-        this.toast.error("konnektor hostname could not be updated.");
       }
-    );
+      /*.catch(() => {
+        this.toast.error("konnektor hostname could not be updated.");
+      }*/
+      );
   }
 
   private loadAndMapKonnektors() {
@@ -146,12 +144,13 @@ export class KonnektorViewComponent implements OnInit {
         console.log(result);
         this.konnektors = result
       },
-      error => {
+      /*error => {
         for (let pr in (error as HttpErrorResponse)) {
           console.log(`property name: ${pr}, value: ${error[pr]}`);
         }
         this.toast.error((error as HttpErrorResponse).message);
-      })
+      })*/
+    )
      .finally( () => this.loading = false);
   }
 
