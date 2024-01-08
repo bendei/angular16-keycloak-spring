@@ -1,3 +1,8 @@
+# GIT: istvan_bende@yahoo.com/bendep72
+    Repository:  https://github.com/bendei/angular16-keycloak-spring.git
+    Ennek van 4 branchesje: master, keycloak_frontend, angular16_keycloak-openAPI-Spring, angular16-openAPI-Spring
+a commitok itt nezhetők vissza: https://github.com/bendei/angular16-keycloak-spring/network
+
 # Java (Spring Boot) and Angular basic showcase
 THis project conatains 3 module: a parent one, a backend and frontend.
 We build here a Spring fat jar, that contains the backend and the frontend.
