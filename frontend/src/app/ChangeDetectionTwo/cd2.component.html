@@ -1,0 +1,10 @@
+cd 2
+
+
+<div (click)="incrementProperty()">click on this div element will incerement a property on the component, wich will trigger CD</div>
+
+<cd1child1 [parentCounter]="counter">
+  <header>content projection header, counter from parent: {{counter}}</header>
+  <footer>content projection footer, counter from parent, but it will be referenced via ContentChild in child and extra-incremented: {{counter}}</footer>
+</cd1child1>
+

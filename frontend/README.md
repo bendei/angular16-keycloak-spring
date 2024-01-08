@@ -82,4 +82,9 @@ https://www.tektutorialshub.com/angular/ng-template-in-angular/
 ## 4 ways to listen to events , outside ngZone, adding listener dinamically
   https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
 
+## keycloak with frontend:
+https://shdhumale.wordpress.com/2023/01/18/keycloak-integration-with-angular-project/
+
+
+
 

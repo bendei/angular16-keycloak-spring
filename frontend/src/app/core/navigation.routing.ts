@@ -4,8 +4,8 @@ import {AuditlogComponent} from '../auditlog/auditlog.component';
 import {TemplateComponent} from './template.component';
 import {CdComponent} from "../ChangeDetection/cd.component";
 import {OnpushparentComponent} from "../onpush/onpushparent.component";
-import {navigationGuard} from "./navigation.guard";
 import {NavigationErrorComponent} from "./navigationerror.component";
+import {Cd2Component} from "../ChangeDetectionTwo/cd2.component";
 
 export const navigationRoutes: Routes = [
   {
@@ -25,6 +25,10 @@ export const navigationRoutes: Routes = [
       {
         path: "cd",
         component: CdComponent
+      },
+      {
+        path: "cd2",
+        component: Cd2Component
       },
       {
         path: "onpush",

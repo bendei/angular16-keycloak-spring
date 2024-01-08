@@ -13,11 +13,28 @@ import {defaultToastConfig} from './toast/toast.service';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {CdModule} from "./ChangeDetection/cd.module";
+import {Cd2Module} from "./ChangeDetectionTwo/cd2.module";
 import {OnpushModule} from "./onpush/onpush.module";
 //import { initializeKeycloak } from './init/keycloak-init.factory';
 //import {KeycloakService} from "keycloak-angular";
 import {Inputfield} from "./contentprojection/inputfield.component";
 import {HttpErrorInterceptor} from "./interceptors/HttpErrorInterceptor";
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+
+function initializeKeycloak(keycloak: KeycloakService) {
+  return () =>
+    keycloak.init({
+      config: {
+        url: 'http://localhost:8080',
+        realm: 'myrealm',
+        clientId: 'myclient',
+      },
+      initOptions: {
+        onLoad: 'login-required',  // allowed values 'login-required', 'check-sso';
+        flow: "standard"          // allowed values 'standard', 'implicit', 'hybrid';
+      },
+    });
+}
 
 @NgModule({
   declarations: [
@@ -28,9 +45,11 @@ import {HttpErrorInterceptor} from "./interceptors/HttpErrorInterceptor";
     CommonModule,
     BrowserModule,
     HttpClientModule,
+    KeycloakAngularModule,
     NavigationModule,
     AuditlogModule,
     CdModule,
+    Cd2Module,
     OnpushModule,
     NgbModule,
     BrowserAnimationsModule,
@@ -40,13 +59,13 @@ import {HttpErrorInterceptor} from "./interceptors/HttpErrorInterceptor";
 
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},
    /* {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,
       multi: true,
-      deps: [KeycloakService],
-    }*/
+      deps: [KeycloakService]
+     }*/
   ],
   exports: [
     Inputfield
