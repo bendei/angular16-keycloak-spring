@@ -1,14 +1,13 @@
 /// <reference types="@angular/localize" />
 
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import {bootstrapApplication} from "@angular/platform-browser";
+import {AppComponent} from "./app/app.component";
+import {HttpClientModule} from "@angular/common/http";
+import {importProvidersFrom} from "@angular/core";
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+bootstrapApplication(AppComponent, {
+  providers: [
+    importProvidersFrom(HttpClientModule) // importing providers from modules usually
 
-if (environment.production) {
-  enableProdMode();
-}
-
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+  ]
+});

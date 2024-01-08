@@ -36,7 +36,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     });
 }
 
-@NgModule({
+/*@NgModule({
   declarations: [
     AppComponent,
     Inputfield
@@ -60,17 +60,17 @@ function initializeKeycloak(keycloak: KeycloakService) {
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},
-   /* {
+   /!* {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,
       multi: true,
       deps: [KeycloakService]
-     }*/
+     }*!/
   ],
   exports: [
     Inputfield
 
   ],
   bootstrap: [AppComponent]
-})
+})*/
 export class AppModule { }

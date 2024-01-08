@@ -1,14 +1,17 @@
 import {Component, isDevMode, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { environment } from '../environments/environment';
+import {RouterModule} from '@angular/router';
 
 import { mymodulenevem, myfunction } from './myjsmoduleone';
 
 @Component({
+  standalone: true,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [HttpClient]
+  providers: [HttpClient],
+  imports: [RouterModule]
 })
 export class AppComponent implements OnInit {
 
