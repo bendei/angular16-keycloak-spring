@@ -1,10 +1,13 @@
-cd 2
 
 
-<div (click)="incrementProperty()">click on this div element will incerement a property on the component, wich will trigger CD</div>
 
-<cd1child1 [parentCounter]="counter">
+<div (click)="incrementProperty()">click on this div element will incerement a property on the component wich is an @Input on the child1, wich will trigger CD even if child is OnPush</div>
+<br>
+<div (click)="donotincrementProperty()">click on this div element will not change @Input property on the child1, so it will not trigger CD if child is OnPush</div>
+
+<cd2child1 [parentCounter]="counter">
   <header>content projection header, counter from parent: {{counter}}</header>
   <footer>content projection footer, counter from parent, but it will be referenced via ContentChild in child and extra-incremented: {{counter}}</footer>
-</cd1child1>
+</cd2child1>
+
 

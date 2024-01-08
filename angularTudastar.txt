@@ -887,6 +887,16 @@ B.	Es gibt keine Beziehung zwischen den komponenten:
 ######################################################################################################################################################################################
 
 BOOTSTRAPPING ANGULAR:
+
+Angular takes the following steps to load our first view.
+
+	1.	Loads Index.html
+	2.	Loads Angular & Third-party libraries & Application, angular findet findet diese in dem package.json
+	3.	Executes application entry point (main.ts), die genaue Stelle findetangular im angular.json
+	4.	Load & execute Root Module (app.module.ts)
+	5.	Executes the Root Component (app.component.ts)
+	6.	Displayes the template (app.component.html)
+
 	Wir bauen die Anwendung  entweder mit ng serve (speichert die kompilierte Anwendung nicht auf der Festplatte, sondern speichert es in der Memory und startet dann der Server)
 	oder mit ng build. Der kompiler erstellt folgende script-Dateien:
 		-	runtime.js: Webpack runtime files (module loader)
@@ -1393,11 +1403,13 @@ STRUKTURDIREKTIVE *ngIf="expression" DOM-Baum manipulieren, indem Elemente hinzu
 ELEMENTREFERENZ #myId Direktzugri auf DOM-Elemente oder ihre Direktiven
 PIPE expr | myPipe | otherPipe Daten im Template transformieren
 
+#####################################################################################################################################################################################
+PERFORMANCE TUNING:
 
   Data binding: string interpolation, property binding, event binding, attribute binding, class and style binding, 2-way binding.
   Nach jedem DOM event das change detection leauft ab und prüft Aenderungen in den Werten für data bindings und rerenderiert das ganze Kompoenent.
 
-  performance tuning:
+
   Ausgangssituation:
 	By default change detection compoenente werden jedesmal neugerendert, wenn ein asynchron Erreignis passiert: click event, HttpRequest wird versendet etc, weil dabei
 	change detection jedesmal ablaeuft.
@@ -1410,6 +1422,7 @@ PIPE expr | myPipe | otherPipe Daten im Template transformieren
 		2	Überarbeiten page loading
 		3	UX design Überarbeiten
 		4.	trackBy for ngFor
+		5.  improving page load: lazy loading
 
   1 A. https://angular.io/guide/pipes
 		https://christianlydemann.com/the-complete-guide-to-angular-performance-tuning/

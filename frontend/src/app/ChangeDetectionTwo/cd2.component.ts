@@ -3,6 +3,7 @@ import {
   AfterContentInit,
   AfterViewChecked,
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   DoCheck,
   OnChanges,
@@ -13,7 +14,8 @@ import {
 
 @Component({
   selector: 'cd2',
-  templateUrl: './cd2.component.html'
+  templateUrl: './cd2.component.html',
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, AfterViewInit, AfterViewChecked, AfterContentInit, AfterContentChecked{
 
@@ -27,6 +29,10 @@ export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, Afte
     ++this.counter;
   }
 
+  donotincrementProperty(): void {
+    // do nothing
+  }
+
   ngOnChanges() {
     console.log("Cd2Component:ngOnChanges");
   }
@@ -36,7 +42,7 @@ export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, Afte
   }
 
   ngDoCheck() {
-    console.log("Cd2Component:DoCheck");
+    console.log("CHANGE DETECTION TGRIGGERED -- Cd2Component:DoCheck");
   }
 
   ngAfterContentInit() {

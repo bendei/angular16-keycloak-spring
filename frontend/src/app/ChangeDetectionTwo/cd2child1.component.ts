@@ -3,25 +3,46 @@ import {
   AfterContentInit,
   AfterViewChecked,
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
+  ContentChild,
   DoCheck,
+  ElementRef,
+  Input,
   OnChanges,
   OnDestroy,
-  OnInit, Input, ContentChild, ElementRef, Renderer2
+  OnInit,
+  Renderer2
 } from "@angular/core";
 
 
 @Component({
-  selector: 'cd1child1',
-  templateUrl: 'cd2child1.component.html'
+  selector: 'cd2child1',
+  templateUrl: 'cd2child1.component.html',
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class Cd2child1Component implements OnChanges, DoCheck, OnDestroy, OnInit, AfterViewInit, AfterViewChecked, AfterContentInit, AfterContentChecked {
+
+  private _nevem: string = "bende";
+
+  get nemem(): string {
+    return this._nevem;
+  }
+
+  heavyCalculation(): string {
+    console.log("heavyCalculation");
+    return "heavy calculated";
+  }
 
   @Input() parentCounter: number;
   @ContentChild("footer") projectedContent: ElementRef;
 
   constructor(public renderer: Renderer2) {
     console.log("   Cd2child1Component:Contructed");
+  }
+
+  doNothing(): void {
+
   }
 
   ngOnChanges() {
@@ -33,7 +54,7 @@ export class Cd2child1Component implements OnChanges, DoCheck, OnDestroy, OnInit
   }
 
   ngDoCheck() {
-    console.log("   Cd2child1Component:DoCheck");
+    console.log("   CHANGE DETECTION TGRIGGERED - Cd2child1Component:DoCheck");
   }
 
   ngAfterContentInit() {
