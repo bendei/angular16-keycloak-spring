@@ -1,19 +1,22 @@
 import {AfterViewChecked, Component, DoCheck, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal, NgbDatepicker, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AuditLogDTO, AuditLogMessageDTO, DefaultService} from "../../../../target/generated-sources/openapi";
 import {mapToString} from '../../core/AuditLogMessageMapper';
 import {DatePipe} from "@angular/common";
 import {ToastService} from "../../toast/toast.service";
 import {createCurrentDateTimeISOString} from "../../core/helper";
-import {DatatableComponent} from "@swimlane/ngx-datatable";
+import {DatatableComponent, NgxDatatableModule} from "@swimlane/ngx-datatable";
 import {lastValueFrom} from "rxjs";
+import {PrintuserpipePipe} from "./printuserpipe";
 
 const PAD_TIME = "T01:00:00.59";
 
 @Component({
+  standalone: true,
   selector: 'app-modal-content',
   templateUrl: './auditlog-modal.component.html',
-  providers: [DatePipe]
+  providers: [DatePipe],
+  imports: [NgxDatatableModule, DatePipe, NgbDatepicker, PrintuserpipePipe, NgbModule]
 })
 export class AuditlogModalComponent implements OnInit, OnChanges, DoCheck, AfterViewChecked {
 

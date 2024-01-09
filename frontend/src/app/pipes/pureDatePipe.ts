@@ -1,6 +1,7 @@
 import {PipeTransform, Pipe} from "@angular/core";
 
 @Pipe({
+  standalone: true,
   name: "puredatepipe",
   pure: true
 })

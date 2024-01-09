@@ -14,26 +14,12 @@ export const navigationRoutes: Routes = [
     //canActivate: [navigationGuard],
 
     children: [
-      {
-      path: 'konnektor-view',
-      component: KonnektorViewComponent,
-      },
-      {
-        path: "auditlog",
-        component: AuditlogComponent
-      },
-      {
-        path: "cd",
-        component: CdComponent
-      },
+
       {
         path: "cd2",
         component: Cd2Component
-      },
-      {
-        path: "onpush",
-        component: OnpushparentComponent
       }
+
     ]
   },
   {

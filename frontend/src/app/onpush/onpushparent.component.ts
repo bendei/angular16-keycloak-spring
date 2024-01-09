@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, DoCheck, OnChanges, SimpleChanges} from "@angular/core";
 import {OnpushService} from "./onpush.service";
 import {interval} from "rxjs";
+import {ChildBComponent} from "./childB.component ";
 
 
 interface User {
@@ -9,9 +10,11 @@ interface User {
 }
 
 @Component({
+  standalone: true,
   selector: 'onpush-parent',
   templateUrl: './onpushparent.component.html',
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
+  imports: [ChildBComponent]
 })
 export class OnpushparentComponent implements DoCheck, OnChanges {
 

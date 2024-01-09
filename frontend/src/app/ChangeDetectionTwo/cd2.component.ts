@@ -10,19 +10,22 @@ import {
   OnDestroy,
   OnInit
 } from "@angular/core";
-
+import {Cd2child11Component} from "./cd2child11.component";
+import {Cd2child1Component} from "./cd2child1.component";
 
 @Component({
+  standalone: true,
   selector: 'cd2',
   templateUrl: './cd2.component.html',
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
+  imports: [Cd2child1Component, Cd2child11Component]
 })
 export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, AfterViewInit, AfterViewChecked, AfterContentInit, AfterContentChecked{
 
   counter: number = 0;
 
   constructor() {
-    console.log("Cd2Component:Contructed");
+    console.log("--------- Cd2Component:Contructed");
   }
 
   incrementProperty(): void {

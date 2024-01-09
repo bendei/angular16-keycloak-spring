@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DefaultService, KonnektorDTO} from "../../../../target/generated-sources/openapi";
 import {ToastService} from "../../toast/toast.service";
-import {NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbDatepicker, NgbDateStruct, NgbModal, NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {AuditlogModalComponent} from "../auditlog-modal/auditlog-modal.component";
 import {NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 import {TimeStruct} from "../../core/helper";
@@ -12,8 +12,10 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {lastValueFrom} from "rxjs";
 
 @Component({
+  standalone: true,
   selector: 'app-konnektor-modify',
-  templateUrl: './konnektor-modify.component.html'
+  templateUrl: './konnektor-modify.component.html',
+  imports: [NgbDatepicker, NgbModule, ReactiveFormsModule]
 })
 export class KonnektorModifyComponent implements OnInit {
 

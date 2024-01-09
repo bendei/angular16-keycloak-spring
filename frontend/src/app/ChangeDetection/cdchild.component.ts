@@ -3,6 +3,7 @@ import {User} from "./cd.component";
 
 
 @Component({
+  standalone: true,
   selector: "cdchild",
   templateUrl: "./cdchild.component.html"
 })

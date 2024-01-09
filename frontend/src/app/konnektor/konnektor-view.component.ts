@@ -1,15 +1,27 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO } from '../../../target/generated-sources/openapi';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
 import {lastValueFrom, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
 import {KonnektorViewChildComponent} from "./konnektor-view-child.component";
+import {PureDatePipe} from "../pipes/pureDatePipe";
+import {CommonModule} from "@angular/common";
+import {NgxDatatableModule} from "@swimlane/ngx-datatable";
+import {KonnektorDropdownComponent} from "./konnektor-dropdown/konnektor-dropdown.component";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {KonnektorRemoveComponent} from "./konnektor-remove/konnektor-remove.component";
+import {RouterModule} from "@angular/router";
 
 @Component({
+  standalone: true,
   selector: 'konnektor-view',
   templateUrl: './konnektor-view.component.html',
   styleUrls: ['./konnektor-view.component.css'],
+  imports: [PureDatePipe, KonnektorViewChildComponent,
+    CommonModule, FormsModule, ReactiveFormsModule, NgxDatatableModule, KonnektorDropdownComponent, NgbModule, KonnektorRemoveComponent, RouterModule
+  ],
+  providers: [FormBuilder]
 
 })
 export class KonnektorViewComponent implements OnInit {

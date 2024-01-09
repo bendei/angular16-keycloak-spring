@@ -2,6 +2,7 @@ import { Pipe } from '@angular/core';
 
 
 @Pipe({
+  standalone: true,
   name: 'demo'
 })
 export class DemoPipe {

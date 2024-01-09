@@ -10,7 +10,7 @@ import {CdchildComponent} from "./cdchild.component";
     CommonModule,
     BrowserModule
   ],
-  declarations: [CdComponent, CdchildComponent]
+  //declarations: [CdComponent, CdchildComponent]
   }
 )
 export class CdModule {

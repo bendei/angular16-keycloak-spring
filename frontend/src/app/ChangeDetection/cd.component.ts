@@ -11,6 +11,7 @@ import {
   ViewChild
 } from "@angular/core";
 import {of} from "rxjs";
+import {CdchildComponent} from "./cdchild.component";
 
 export interface User {
   name: string;
@@ -18,8 +19,10 @@ export interface User {
 }
 
 @Component({
+  standalone: true,
   selector: 'cd',
-  templateUrl: './cd.component.html'
+  templateUrl: './cd.component.html',
+  imports: [CdchildComponent]
 })
 export class CdComponent implements OnChanges, DoCheck, AfterViewInit, AfterViewChecked {
   counterInputPropertySetter = 0;

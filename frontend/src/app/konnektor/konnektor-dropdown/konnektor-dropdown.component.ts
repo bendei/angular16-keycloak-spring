@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import {KonnektorDTO} from "../../../../target/generated-sources/openapi";
 
 @Component({
+  standalone: true,
   selector: 'app-konnektor-dropdown',
   templateUrl: './konnektor-dropdown.component.html'
 })

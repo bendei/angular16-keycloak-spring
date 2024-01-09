@@ -17,6 +17,7 @@ import {
 
 
 @Component({
+  standalone: true,
   selector: 'cd2child1',
   templateUrl: 'cd2child1.component.html',
   changeDetection: ChangeDetectionStrategy.Default

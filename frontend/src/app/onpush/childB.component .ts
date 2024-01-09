@@ -5,6 +5,7 @@ import {DefaultService, KonnektorDTO} from "../../../target/generated-sources/op
 import {map} from "rxjs/operators";
 
 @Component({
+  standalone: true,
   selector: 'childB',
   templateUrl: './childB.component.html',
  // changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,6 +1,7 @@
 import { Pipe } from '@angular/core';
 
 @Pipe({
+  standalone: true,
   name: 'usernamelength',
   pure: true
 })
