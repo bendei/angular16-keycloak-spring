@@ -7,19 +7,33 @@ import {OnpushparentComponent} from "../onpush/onpushparent.component";
 import {NavigationErrorComponent} from "./navigationerror.component";
 import {Cd2Component} from "../ChangeDetectionTwo/cd2.component";
 
-export const navigationRoutes: Routes = [
+export const NAVIGATION_ROUTES: Routes = [
   {
     path: 'navigation',
     component: TemplateComponent,
     //canActivate: [navigationGuard],
 
     children: [
-
+      {
+        path: 'konnektor-view',
+        component: KonnektorViewComponent,
+      },
+      {
+        path: "auditlog",
+        component: AuditlogComponent
+      },
+      {
+        path: "cd",
+        component: CdComponent
+      },
       {
         path: "cd2",
         component: Cd2Component
+      },
+      {
+        path: "onpush",
+        component: OnpushparentComponent
       }
-
     ]
   },
   {

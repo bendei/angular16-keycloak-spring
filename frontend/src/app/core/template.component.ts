@@ -3,7 +3,6 @@ import {RouterLinkWithHref, RouterOutlet} from "@angular/router";
 import {FooterComponent} from "./footer.component";
 import {NavigationComponent} from "./navigation.component";
 
-
 @Component({
   standalone: true,
   selector: 'app-template',
