@@ -9,7 +9,7 @@ import {Cd2Component} from "../ChangeDetectionTwo/cd2.component";
 
 export const NAVIGATION_ROUTES: Routes = [
   {
-    path: 'navigation',
+    path: '',
     component: TemplateComponent,
     //canActivate: [navigationGuard],
 

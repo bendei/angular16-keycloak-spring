@@ -11,39 +11,7 @@ import {NavigationErrorComponent} from "./core/navigationerror.component";
 
 export const APP_ROUTES: Routes = [
   /* default routing */
-  {
-    path: 'navigation',
-    component: TemplateComponent,
-    //canActivate: [navigationGuard],
 
-    children: [
-      {
-        path: 'konnektor-view',
-        component: KonnektorViewComponent,
-      },
-      {
-        path: "auditlog",
-        component: AuditlogComponent
-      },
-      {
-        path: "cd",
-        component: CdComponent
-      },
-      {
-        path: "cd2",
-        component: Cd2Component
-      },
-      {
-        path: "onpush",
-        component: OnpushparentComponent
-      }
-    ]
-  },
-  {
-    path: 'navigationerror',
-    component: NavigationErrorComponent
-
-  },
   {path: '', component: WelcomeComponent}, // accessing with outer route
   {path: '**', component: TemplateComponent}
 ];
