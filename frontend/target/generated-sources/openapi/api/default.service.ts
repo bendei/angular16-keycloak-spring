@@ -18,9 +18,6 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-// @ts-ignore
-import { ApiError } from '../model/apiError';
-// @ts-ignore
 import { AuditLogDTO } from '../model/auditLogDTO';
 // @ts-ignore
 import { KonnektorDTO } from '../model/konnektorDTO';
@@ -31,8 +28,6 @@ import {environment} from "../../../../src/environments/environment";
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
-
-
 
 @Injectable({
   providedIn: 'root'

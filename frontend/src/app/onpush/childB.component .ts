@@ -8,6 +8,7 @@ import {map} from "rxjs/operators";
   standalone: true,
   selector: 'childB',
   templateUrl: './childB.component.html',
+  providers: [DefaultService]
  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChildBComponent implements DoCheck, OnChanges {

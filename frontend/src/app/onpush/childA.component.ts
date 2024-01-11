@@ -13,8 +13,10 @@ import {User} from "../ChangeDetection/cd.component";
 
 
 @Component({
+  standalone: true,
   selector: 'childA',
   templateUrl: './childA.component.html',
+  providers: [OnpushService]
   //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChildAComponent implements DoCheck, OnChanges, AfterViewInit, AfterViewChecked {

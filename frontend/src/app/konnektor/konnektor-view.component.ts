@@ -55,7 +55,9 @@ export class KonnektorViewComponent implements OnInit {
   @ViewChild(KonnektorViewChildComponent)
   private konnektorViewChildComponent!: KonnektorViewChildComponent;
 
-  constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder, private readonly toast: ToastService) {
+  constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder,
+  //            private readonly toast: ToastService
+  ) {
     this.bendeClone = {...this.bende, nevem: "enenen"};
     this.apu = {
       kora: 80,
@@ -118,7 +120,7 @@ export class KonnektorViewComponent implements OnInit {
     this.defaultService.updateKonnektorHostname(String(reqDto.id), reqDto).toPromise().then(
       () => {
         this.filterForm();
-        this.toast.success("konnektor hostname updated")
+       // this.toast.success("konnektor hostname updated")
       }
       /*.catch(() => {
         this.toast.error("konnektor hostname could not be updated.");

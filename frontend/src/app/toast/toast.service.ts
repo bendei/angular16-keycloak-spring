@@ -21,7 +21,7 @@ export const globalToastConfig: Partial<GlobalConfig> = {
   autoDismiss: false
 };
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ToastService {
   private toastsToBeCleared: ActiveToast<any>[];
 
