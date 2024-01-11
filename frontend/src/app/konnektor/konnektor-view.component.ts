@@ -21,7 +21,7 @@ import {RouterModule} from "@angular/router";
   imports: [PureDatePipe, KonnektorViewChildComponent,
     CommonModule, FormsModule, ReactiveFormsModule, NgxDatatableModule, KonnektorDropdownComponent, NgbModule, KonnektorRemoveComponent, RouterModule
   ],
-  providers: [FormBuilder]
+  providers: [FormBuilder, ToastService]
 
 })
 export class KonnektorViewComponent implements OnInit {
