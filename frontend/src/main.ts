@@ -15,17 +15,17 @@ bootstrapApplication(AppComponent, {
     // we add routes to the bootstrapApplication configuration
     provideRouter([
         {
-        path: 'navigation',
+        path: 'navigationerror',
+        component: NavigationErrorComponent
+
+      },
+        { path: 'navigation',
           loadChildren: () => import('./app/core/navigation.routing').then(r => r.NAVIGATION_ROUTES)
           // lazy loading  navigation child routes
           // we set loadChildren property to a dynamic function, we import the file dynamically,
             // when the file/with Routes inside is loaded, we have can load/pull in our routes definitions
         },
-        {
-          path: 'navigationerror',
-          component: NavigationErrorComponent
 
-        },
         {path: '',    // lazy loading single standalone component
           loadComponent: ()=> import('./app/core/welcome.component').then(e => e.WelcomeComponent)
         }, // accessing with outer route

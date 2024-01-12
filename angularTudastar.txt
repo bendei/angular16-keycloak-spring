@@ -333,6 +333,13 @@ wie ngIf aus dem DOM ausgebaut wird. Dieses gilt für Komponente und Direktive a
 })
 constructor(private logService: logService) ...
 
+STANDALONE Koomponente:
+- standalone: true, im Konfigurations Objekt angeben.
+- SD werden in keinem Module im declaration property deklariert. Traditional komp gehört einem Module und kann nur da verwendet werden, SD hingegen kann überall spielen.
+- SD importiert alle seine Importierte Teile in eigenem import: [] Property, und wird dazu keine NgModule mehr gebraucht: SD ist sein eigenes Module auch.
+- child SD wird vom parent SD in seinem import: [] importiert, und nicht in declaration mehr angegeben. Also SD gehört keinem Module mehr.
+- SD kann bootsrapped werden, mit bootsrapAppplication( BootsrappableSD, ...) in main.ts
+
   https://www.tektutorialshub.com/angular/angular-component-life-cycle-hooks/#ngdocheck
 
 CHANGE DETECTION:
@@ -427,6 +434,14 @@ Lebenszyklus einer Komponente / Directive (lifecycle hooks sing callback Funktio
 	Im Generell: Init hooks: wenn view/content ist inizialisiert zum ersten Male. Dieses passiert 1. change detection cycle, gleich nach Instanzierung der Komponente.
 				 Checked hooks: Angular prüft ob view/content anders ist.
 
+STANDALONE COMPONENTS:
+	with flag: standalone: true
+	we can use import property to import other modules, pipes, components into SC:
+		import: []
+	thus, wir brauchen keine NgModules mehr für unsere SC ( sowie standalone Direktive/Pipes)
+	Wir brauchen keinen root module mehr um die appl. zu bootstrappen.
+
+
 #######################################################################################################################################################################################
 KVS:
 
@@ -468,34 +483,39 @@ export class AppRoutingModule {
 
 ..igy ez egy lazy loaded modul lett
 
----------------------------------
+#######################################################################################################################################################################################
+ROUTING
 
 Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade, um einzelne Zustände zu identifizieren.
 
 	Schritte um Router zu verwenden:
 	- Routen konfigurieren: Pfad - Komponente: diese Zuordnung ist die Routendefinition, es ist ein Object : { path: 'mypath', component: MyComponent }. Diese RoDefinitionen werden
-		in einem array von Typ Routes festgelegt = routesArray.
+		in einem array von Typ Routes festgelegt = routesArray, sie werden in einem separaten Datei definiert.
 
-	!!! Im feature-module werden also Routes Definitionen in einem Array definiert und diese mittels import Metadata mit RouterModule.forChild(routes) ein Router
-	Module konfiguriert und importiert.
-	Im app-level router Module wird dann die feature-level Router Module importiert: hier erstellen wir wiederum ein array of Route Types, wo path: book ist und anstatt component:
-	loadChildren: () => import("./book/book-routing.module").then(a => a.BookRoutingModule) steht.  Mit diesem Route Array konfigurieren wir wiederum ein RouterModule , aber mit forRoot:
-	imports: [RouterModule.forRoot(routes)]
 
-	- Routing module einbauen:
-		In simplen Fall: diese routesArray wird im dem routing-module (was ein herkömmlicher Angular Module ist) importiert:
+	- forRoot(): outing module einbauen:
+		In simplen Fall: diese routesArray wird in dem root-Module importiert:
 			@NgModule({
 				imports: [RouterModule.forRoot(routes)] -> im main routing-module. Als Rückgabewert erhalten wir wiederum ein Modul, das mit unseren Routen initialisiert wurde.
-				Und vwerwenden RouterModule.forChild(array) in feature router modules.
+				mit forRoot erstellen wir ein RoutingService Objekt. (es darf nur einen einzigen davon geben), und Pfaddefinitionen, aka Routes werden mit Routing Service registriert.
+
 			})
-		..und dises routing-module wird im "import " der AppModule widerum importiert.
 
-		geht es um lazy loaded module: routing module für der jeweiligen feature-Module wird im Routing-Definition Objekt mit loadChildren.. property importiert.
-		also RoutenDefinition : {path: '..', anstelle von 'component' loadChildren: () => import("./nyomonkovetes/shared/nyomonkovetes-routing.module").then(i => i.NyomonkovetesRoutingModule)},}
+	- forChild(): Für die Navigation wird ein separater Rouer-definition Datei erstellt, und in dem navigations-feature module mit RouterModule.forChild() importiert. 	Und vwerwenden
+	  RouterModule.forChild(array) in feature router modules, forChild erstellt aber keinen RoutingService Objekt, sondern werden die Routes (Pfad-component
+	  Definitionen mit dem Routingservice registriert, die mit forRoot erstellt wurden.)
 
-	in dem zugehörigen Feature Modules werden einzelne Routendef ts Dateien definiert.Auf dem RouterModule rufen wir die Methode forRoot() auf und übergeben als
-		Argument das Array mit den Routendefinitionen. Als Rückgabewert erhalten wir wiederum ein Modul, das mit unseren Routen initialisiert wurde.
-		[RouterModule.forRoot(routes)],
+	- lazyLoading: geht es um lazy loaded module: routing module für der jeweiligen feature-Module wird im Routing-Definition Objekt mit loadChildren.. property importiert.
+      also RoutenDefinition : {path: '..', anstelle von 'component' loadChildren: () => import("./nyomonkovetes/shared/nyomonkovetes-routing.module").then(i => i.NyomonkovetesRoutingModule)},}
+	  erstellen wir wiederum ein array of Route Types, wo path: book ist und anstatt component:
+
+
+	Mit standalone:
+		Anstelle RouteDefinitionen mit forRoot() in rott/feature Module zu registrieren:
+		in main.ts verwenden wir provideRouter(APP_ROUTES) Function, um die Router zu registrieren.
+
+
+
 	- Komponente anzeigen: <router-outlet name="main"> ist ein Platzhalter das vom Router dynamisch durch geladene Komponente ersetzt wird, zeigt geroutete Komponente an, und mit dem
 		name attribute können wir mehrere router-outlet in der Anwendung verwenden.
 		was eine Single-Page-Applikation ausmacht: Die Anwendung wird einmalig geladen, und beim Wechsel der Route wird nur jeweils die zu ladende Komponente ausgetauscht und der
@@ -503,8 +523,37 @@ Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade
 		Beim Klick auf einen normalen Link wird die gesamte Seite neu geladen. Die Anwendung wird also beendet, und dieselbe Anwendung wird unter der neuen Adresse neu geladen und gestartet.
 		Das Attribut darf 'href' also für Links auf interne Angular-Routen nicht verwendet werden, nur für externe.
 
-ROUTENPARAMETER:  ':id',{ path:'mypath/component: MyComponent } => <a routerLink="/myPath/42">Link auf 42</a> , Zum Auslesen von Parametern bietet der Router die Klasse
-ActivatedRouteSnapshot, die Auskunft über die gerade aktivierte Route und den  Zustand des Routers gibt.
+	ROUTENPARAMETER:  ':id',{ path:'mypath/component: MyComponent } => <a routerLink="/myPath/42">Link auf 42</a> , Zum Auslesen von Parametern bietet der Router die Klasse
+	ActivatedRouteSnapshot, die Auskunft über die gerade aktivierte Route und den  Zustand des Routers gibt.
+
+Routing with standalone components:
+main.ts:
+bootstrapApplication(AppComponent, {
+  providers: [
+    importProvidersFrom(HttpClientModule), // importing providers from modules usually
+
+    // we add routes to the bootstrapApplication configuration
+    provideRouter([
+        {
+        path: 'navigation',
+          loadChildren: () => import('./app/core/navigation.routing').then(r => r.NAVIGATION_ROUTES)
+											  // lazy loading  navigation child routes
+											  // we set loadChildren property to a dynamic function, we import the file dynamically,
+											  // when the file/with Routes inside is loaded, we have can load/pull in our routes definitions
+        },
+        {
+          path: 'navigationerror',
+          component: NavigationErrorComponent  // loading component eagerly
+
+        },
+        {path: '',    						   // lazy loading single standalone component
+          loadComponent: ()=> import('./app/core/welcome.component').then(e => e.WelcomeComponent)
+        }, 									   // accessing with outer route
+        {path: '**', component: TemplateComponent}
+      ],
+      withDebugTracing(),
+      // withPreloading(PreloadAllModules)
+    ),
 
 #######################################################################################################################################################################################
 REACTIVE PROGRAMMIERUNG: Reactive Extensions für JavaScript (RxJS): Datenströme verarbeiten, zusammenführen, transformieren und filtern – das ist die Grundidee der reaktiven
