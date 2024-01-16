@@ -52,6 +52,8 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewInit, AfterView
   constructor(private renderer2: Renderer2, private ngZone: NgZone) {
     console.log("PARENT ---- constructor");
 
+
+
     // a setTimout is triggerelni a DC-t ezért lefut az egesz DC :)
     setTimeout( () => {
       console.log("timeout");
@@ -59,7 +61,7 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewInit, AfterView
       //this.myoperators();
     }, 2000);
 
-
+    throw new Error("ezt kapd el GlobalErrorHandler");
   }
 
   // hooks

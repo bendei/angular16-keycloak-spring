@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {APP_INITIALIZER, ErrorHandler, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
@@ -20,6 +20,7 @@ import {OnpushModule} from "./onpush/onpush.module";
 import {Inputfield} from "./contentprojection/inputfield.component";
 import {HttpErrorInterceptor} from "./interceptors/HttpErrorInterceptor";
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import {GlobalErrorHandlerService} from "./core/global-error-handler.service";
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -60,6 +61,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},
+    {provide: ErrorHandler, useClass: GlobalErrorHandlerService}
    /* {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,
