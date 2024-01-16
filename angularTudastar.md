@@ -10,6 +10,17 @@ modules in TS:
 Generics:
   https://www.tutorialsteacher.com/typescript/typescript-generic
 
+Checking angular version: ng version
+
+Checking typescript version: tsc --version ( updating to lates version: https://marketsplash.com/tutorials/typescript/how-to-check-typescript-version/)
+Miután npm install -g typescript@latest --save  , globálisan a npm-el installáltam a legújab (5.3.3) ts verziót a gépemre. De a package json-ban 5.1.1 verzió volt megadva. Ezt kézzel felülírtam 5.3.3-ra de pirossal aláhúzta ->
+futtassam a npm install-t itt a Intellij ben és akkor updateli magát és eltűnik a piros is.
+Aztán ng serve ezt a hibát irta ki: Error: Failed to initialize Angular compilation - The Angular Compiler requires TypeScript >=4.9.3 and <5.2.0 but 5.3.3 was found instead.
+-> visszadowngradeltem a tsc-t 5.2.2 -re
+
+
+Checking node version: npm version
+
 Arrays:
   1. Using square brackets. This method is similar to how you would declare arrays in JavaScript.
      let fruits: string[] = ['Apple', 'Orange', 'Banana'];
