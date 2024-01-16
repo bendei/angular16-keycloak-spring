@@ -12,6 +12,7 @@ export const NAVIGATION_ROUTES: Routes = [
     path: '',
     component: TemplateComponent,
     //canActivate: [navigationGuard],
+    //providers: [MyCommonService]
 
     children: [
       {

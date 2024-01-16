@@ -12,6 +12,8 @@ import {
 } from "@angular/core";
 import {Cd2child11Component} from "./cd2child11.component";
 import {Cd2child1Component} from "./cd2child1.component";
+import {Observable, of} from "rxjs";
+import {GlobalErrorHandler} from "../core/global-error-handler.service";
 
 @Component({
   standalone: true,
@@ -26,6 +28,13 @@ export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, Afte
 
   constructor() {
     console.log("--------- Cd2Component:Contructed");
+
+    let myObservable: Observable<string> = of("pisti");
+    myObservable.subscribe( (value) => {
+      console.log("myobservable: " + value);
+    });
+
+    throw new Error("hiba");
   }
 
   incrementProperty(): void {

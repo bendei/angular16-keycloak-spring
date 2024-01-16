@@ -1,4 +1,7 @@
-fchange detecTypescript
+
+
+## How to migrate CoreModule to Standalone APIs
+https://angularexperts.io/blog/angular-core-module-standalone-migration
 
 
 modules in TS:
@@ -241,6 +244,7 @@ Beschrenkungen:
 
 #######################################################################################################################################################################################
 SERVICE
+######################################################################################################################################################################################
 
 https://www.tektutorialshub.com/angular/angular-services/
 
@@ -272,6 +276,8 @@ constructor(@Inject(MY_TOKEN) token: string) {
 
 #######################################################################################################################################################################################
 Module
+######################################################################################################################################################################################
+
 Module sind die gröbsten Bausteine einer Angular-Anwendung. Eine Anwendung besteht aus Modulen, in logische Gruppen und stellen die Teile nach außen zur Verfügung Module können
 außerdem Provider in der Anwendung registrieren, die dann im Injector zur Verfügung  stehen. Ein Modul mit all seinen Teilen sollte immer in einem eigenen Ordner organisiert werden.
 Bestandteile eines Modules sollten einer einzigen Module gehören,  oder in shared Module unterbringen. Verschidene Funktionalitaeten sollten eigen Feature-Modules haben,
@@ -312,7 +318,10 @@ ausgedrückt. Guards werden immer als Eigenschaft einer Route notiert. Die zugeh
  Mit diesem Snapshot können wir Informationen zur angefragten Route erhalten, z. B. Routenparameter auslesen. Guard wird als Service implementiert.
 
 #######################################################################################################################################################################################
-Komponente
+KOMPONENTE
+######################################################################################################################################################################################
+
+standalone-components-v1.pdf
 
 Eine Komponente besteht aus einer TypeScript-Klasse, die mit einem Template verknüpft wird. Die Klasse wird immer mit dem Decorator @Component() eingeleitet,
  Template-URL: Das Template liegt in einer eigenständigen HTMLDatei, die in der Komponente referenziert wird (templateUrl).Inline Template: Das Template wird als (mehrzeiliger)
@@ -336,7 +345,7 @@ constructor(private logService: logService) ...
 STANDALONE Koomponente:
 - standalone: true, im Konfigurations Objekt angeben.
 - SD werden in keinem Module im declaration property deklariert. Traditional komp gehört einem Module und kann nur da verwendet werden, SD hingegen kann überall spielen.
-- SD importiert alle seine Importierte Teile in eigenem import: [] Property, und wird dazu keine NgModule mehr gebraucht: SD ist sein eigenes Module auch.
+- SD importiert alle seine Importierte Teile (Komponente, Directive, Pipes NgModules) in eigenem import: [] Property, und wird dazu keine NgModule mehr gebraucht: SD ist sein eigenes Module auch.
 - child SD wird vom parent SD in seinem import: [] importiert, und nicht in declaration mehr angegeben. Also SD gehört keinem Module mehr.
 - SD kann bootsrapped werden, mit bootsrapAppplication( BootsrappableSD, ...) in main.ts
 
@@ -444,6 +453,7 @@ STANDALONE COMPONENTS:
 
 #######################################################################################################################################################################################
 KVS:
+######################################################################################################################################################################################
 
 1. Opció: nincsen a feature modulnak külön  feature-routing.module.ts fálja:
 Alle feature modules hatten
@@ -485,6 +495,7 @@ export class AppRoutingModule {
 
 #######################################################################################################################################################################################
 ROUTING
+######################################################################################################################################################################################
 
 Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade, um einzelne Zustände zu identifizieren.
 
@@ -526,13 +537,18 @@ Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade
 	ROUTENPARAMETER:  ':id',{ path:'mypath/component: MyComponent } => <a routerLink="/myPath/42">Link auf 42</a> , Zum Auslesen von Parametern bietet der Router die Klasse
 	ActivatedRouteSnapshot, die Auskunft über die gerade aktivierte Route und den  Zustand des Routers gibt.
 
-Routing with standalone components:
-main.ts:
-bootstrapApplication(AppComponent, {
+Routing with SD standalone components:
+standalone-componetns-v1.pdf
+
+Da keine Module mehr verwendet werden, wir werden kine RouterModule mit Routes Array Konfigurieren und diese in Modules laden. Anstetten Routes werden in main.ts konfiguriert: 
+
+in main.ts:
+  bootstrapApplication(AppComponent, {	// standalone component, was bootstrapped wird
   providers: [
     importProvidersFrom(HttpClientModule), // importing providers from modules usually
 
     // we add routes to the bootstrapApplication configuration
+    // wir können child rourtes oder auch einzelne Komponente auch lazy loaden
     provideRouter([
         {
         path: 'navigation',
@@ -555,10 +571,30 @@ bootstrapApplication(AppComponent, {
       // withPreloading(PreloadAllModules)
     ),
 
+Geminsames Service für eine Gruppe von Komponente:
+Environmental Injectors: mit Modules, alle lazy modules hatten ihre eigene Injectors, mit SD alle Route können eigene Injector haben. Also ein gemeinsames Injector und damit ein 
+gemeinsames Service für alle children Komponente. D.h. wir können alle Routes mit providers array versehen, und so bekommen diese ( auch non-lezy routes auch, nicht wie beim Modules
+eigene Injectors=> gemeinsames Services) ein eigenes Injector. Jetzt sind alle environmental injectors: root injectors auch.
+
+    export const NAVIGATION_ROUTES: Routes = [
+        {
+        path: '',
+        component: TemplateComponent,
+        //canActivate: [navigationGuard],
+        //providers: [MyCommonService]
+        
+            children: [
+              {
+Wir sollten aber meistens providedIn: root verwenden, weil diese ermöglicht lazy loading jetzt schon.
+
 #######################################################################################################################################################################################
-REACTIVE PROGRAMMIERUNG: Reactive Extensions für JavaScript (RxJS): Datenströme verarbeiten, zusammenführen, transformieren und filtern – das ist die Grundidee der reaktiven
+REACTIVE PROGRAMMIERUNG
+######################################################################################################################################################################################
+
+: Reactive Extensions für JavaScript (RxJS): Datenströme verarbeiten, zusammenführen, transformieren und filtern – das ist die Grundidee der reaktiven
  Programmierung.  Alles als ein Datenstrom auffassen lässt: nicht nur Ereignisse, sondern auch Variablen, statische Werte, Nutzereingaben, Objekte wie Book.
 
+Producer und Subscriber:
 	Datenstrom: Wir erstellen eine JavaScript-Funktion mit dem Namen producer() (weil es Werte produziert) . Als Argument erhält diese Funktion  ein Objekt, das drei Eigenschaften
 mit Callback-Funktionen besitzt: next, error und complete. Dieses Objekt nennen wir SUBSCRIBER. const mySubscriber = {next: value => console.log('') .....
 Wir haben eine Funktion entwickelt, die Befehle ausführt und  ein Objekt entgegennimmt, das drei Callback-Funktionen enthält.
@@ -615,6 +651,7 @@ https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-a
  SUBSCRIPTION: ist ein Objekt, das ein Observable representiert, hat nur einen Method: unsubscribe, womit man das Observable wegwirft.
 
 OBSERVABLE:
+    -   Öffnet ein Strom von Events und lauscht darauf fortwährend.
 	-	Kann synchron und asynchron Operatrionen ausführen.
 	-	Wenn Instanziert es macht nichts, bis darauf abbonniert wird.
 	-	Man kann cancel/unsubscribe von ihm, oder cancelt sich selbst wenn ein error erfolgt.
@@ -624,7 +661,9 @@ OBSERVABLE:
 	Verwendung:
 		-	wenn Daten aendern sich haeufig: chat, streaming, notifications.
 		-	oder wenn der User sehr oft Aenderungen macht: collapsing menus, form fields Aenderungen: valueChanges und statusChanges.
+
 PROMISE:	https://javascript.info/promise-basics
+    -   Emmitiert einen Wert und dann schlieest sich (resolves) oder hat ein error (rejects). States: pending, fulfilled, rejected
 	-	es kann resolved or rejectd, kann nicht abbonniert werden oder manuell unsubscribiert werden.
 	-	Liefert einen einzigen Wert zurück, gleich wenn es erstellt ist.
 	-	immer asynchron.
@@ -674,7 +713,9 @@ switchMap:  Während 1. Observable liefert Werte zurück, 2. Observable startet 
 
 https://blog.angular-university.io/rxjs-higher-order-mapping/
 
-DEBOUNCE
+DEBOUNCE:
+man möchte bermeiden, das ein erigniss zu often ausgelöst wird, zB wenn User schnell nacheinander Button kilckt, oder in input filed tippt er schnell, und damit wird bei jedem Buchstaben 
+ein http request versendet. Dagegen wir verwende debouceTime Pipe um request zu verzögern.
 we can debounce using RxJS operator debounceTime() on a form control's valueChanges observable:
 
  ngOnInit() {
@@ -684,13 +725,142 @@ we can debounce using RxJS operator debounceTime() on a form control's valueChan
 Unsubscribing from Observables:
 https://medium.com/@gesteira2046/goodbye-to-unsubscribe-in-angular-components-8817e1b21db2
 
+PROMISE:
+https://javascript.info/promise-basics
+    let promise = new Promise(function(resolve, reject) {
+    setTimeout(() => resolve("done!"), 1000);
+    });
+    
+            syntax von then():
+                promise.then(
+                function(result) { },
+                function(error) { }
+                );
+
+    // Consuming Funktion kann mit then() registriert werden.
+    // resolve runs the first function in .then
+    promise.then(
+        result => alert(result), // shows "done!" after 1 second
+        error => alert(error) // doesn't run
+    );
+    // sind wir nur in errors interessiert: catch()
+    // finally( () => {})
+
+
+#######################################################################################################################################################################################
+ERRORHANDLING:
+#######################################################################################################################################################################################
+
+Zwei Typen von Errorbehandlungen:
+1.	Fehlerbehandlung in asynkron Code:
+    HTTP ERRORS: 
+    HttpClient faengt Errors ab und packt sie in HttpErrorResponse (beim Observavble und Promise auch) Objekten, bevor es diese zu der Anwendung weitergibt.
+    A HttpErrorResponse is a response that represents an error or failure, either from an un-successful HTTP status, an error while executing the request, or some other failure which
+    occurred during the parsing of the response.
+    Any error returned on the `Observable` response stream will be wrapped in an `HttpErrorResponse` to provide additional context about the state of the HTTP layer when the error occurred. The error property
+    will contain either a wrapped Error object or the error response returned from the server.
+
+		Zwei Unterkategorien des http errors:
+			a: Backend server generiert ein error und sendet das response mit Status Code zurück. Angular stellt error und error repsonse Propertys auf der HttpErrorResponse ein.
+			b: Client-side Error, wenn request erstellt ist, und zb Network failure ist oder ein Exception passiert in einem RxJS Operator und dabei wird ebenfalls ein HttpErrorResponse
+				vom HttpModule zurückgeschickt.
+
+		utility projekt: http-error.service.ts
+
+		Strategien zur Abfangen Errors:
+
+		-  Mit der catchError Operator (empfaent ein Observable und returns auch ein Observable!), worin man es gleich behandelt oder
+			mit throwError weiterwirft. Ein Observale liefert keine Daten mehr wenn error erflogt, aber wir können nochmals auf das Observable abbonieren: retryWhen, delayWhen
+
+				https$.pipe(
+					catchError(
+						A.: err => of([])
+						B.: err => throwError(err)
+						)
+				)
+				.subscribe(
+					res => console.log('HTTP response', res),
+					err => console.log('HTTP Error', err),
+					() => console.log('HTTP request completed.')
+				);
+
+		-	Errors in der komponenten innerhald bder subscribe Methode behandelt:
+			let observer = {
+						  next: (response: any) => console.log("next:", response),
+						  error: (err: any) => this.errorObject = err // verpackt in HttpErrorResponse
+							 }
+			this.restDS.get404StatusCode().subscribe( observer );
+
+
+			this.http.get<repos[]>(this.baseURL + 'usersY/' + userName + '/repos')
+				  .pipe(
+					catchError( err => {
+					  console.log('error caught in service')
+					  console.error(err);
+
+					  //Handle the error here
+					  // 1. "Catch and replace strategy": we return a fallback value; error subscriber callback method will never be called, and Observable completes!!!
+							of([])
+
+					  // 2. rethrowing error, error callback can handle it again later in the chain:
+							console.log('Handling error locally and rethrowing it...', err);
+							return throwError(err);
+
+					// we can use finalize operator, das immer durchgeführt wird.
+					finalize(() => console.log("first finalize() block executed")),
+			 		})
+				  )
+
+			// wenngleich error in service abgfenagen und teilweise behandelt wird, kann sein dass die error im service mit trhowError Funktion weitergeworfen sollte, damit man
+			in der Komponenten ein alert popup oder was aehnliches dem User anzeigt.
+
+		-	in den Komponenten, mit error callback von dem subscribe Methode, drawback we can not return a falback value if error comes:
+			  (error => {
+					  if (isClientError(error)) {
+						...doSomething...
+					  }
+					})
+
+		-  allgemein (globally)  in Interceptoren: dieses ist die beste Lösung, andernfalls sollten wir in Komponenten/Services repetitive code schreiben, besser alles in Interceptor
+			auslagern. HttpInterceptor ist ein Service die erstellen und registrieren global in dem root Module. Dieses faengt alle eingehende und ausgehende Requests.
+			Generelle Errors werden mit Interceptor behandelt, für API spezifische Errors werden entweder in der Service's catchError() Operator abgefangen und weitergeworfen,
+			oder(und) in der Komponenten in der Observers error Property callback handler.
+
+	2.	FEHLERBEHANDLUNG IN SYNKRON CODE:
+    - Mit try/catch Block: nicht ausreichend in Applikationen, wo Ein Exception überall passieren kann.
+    - GLobal Fehlerbehandlung in ANgular: 
+       Standardmaessig Angular verwendet ErrorHandler Service und ruft handleError() Methode für jede unbehandelte Errors auf,
+		die dann zum Browser Console ausgeschrieben werden. 
+        Errorhandling Strategien für Client side errors: Wir extendieren die ErrorHandler Klasse als Service, und überschreiben (overrride) handleError() Methode,loggiert zum Server back
+        und leitet zu einer error page weiter. Wir verwenden global error h. für alle unbehandelte Errors
+		(ansonsten sollte man mit try catch auf die	error seite leiten).
+		utility projekt: runtime-error-handler.service.ts amely extendálja a ErrorHandlert és ez rakja ki az a bazi nagy piros hiba popup overlay üzenetet, ez a handleError metódusát
+		az Angular maga hivja meg ha valami gebasz van!!
+
+creating Promise manually: https://www.educba.com/typescript-promise/
+
+        ERROR HANDLING WITH PROMISE: mit then und catch functions:
+        
+        await this.defaultService.getKonnektor(this.konnektorId).toPromise()
+        .then( result => {
+        this.konnektor = result;
+        this.loadFormData();
+        })
+        .catch( error => {
+        const err = error as HttpErrorResponse;
+        this.toast.error(err.message);
+        }
+        )
+
 #######################################################################################################################################################################################
 
 CLI: Sie unterstützt uns beim Anlegen von Komponenten, Services und Modulen, stellt einen Entwicklungswebserver bereit, startet die automatischen Softwaretests.
 
 #######################################################################################################################################################################################
+REACTIVE FORMS
+######################################################################################################################################################################################
 
-REACTIVE FORMS: Die Grundidee der Reactive Forms ist, dass das komplette Modell des Formulars in der Komponentenklasse angesiedelt wird. Das bedeutet, dass nicht mehr nur die reinen
+Die Grundidee der Reactive Forms ist, dass das komplette Modell des Formulars in der Komponentenklasse angesiedelt wird. Das bedeutet, dass nicht mehr nur die reinen
 Eingabedaten in einem Objekt in der Klasse gespeichert sind, sondern alle logischen FormControls mit ihren Zuständen, Validierungsregeln und Werten. jedes unserer Formularfelder wird
 durch ein FormControl repräsentiert. Eine Menge von FormControls in einem Objekt zusammenfassen: einer FormGroup. Das FormArray besitzt Methoden: mit push() können wir weitere Controls
  am Ende anfügen; zm Entfernen removeAt() bzw. Einfügen insert(). Template mit dem Model verknüpfen: formControlName="lastname". FormBuilder: Klasse, die das Kreieren von FormControll,
@@ -721,6 +891,9 @@ FormControll hat ein errors Eigenschaft
  <span class="invalid"  *ngIf="bookForm.get('title')?.errors" translate>{{bookForm.get('title')?.errors.title.message}}</span>
 
 #######################################################################################################################################################################################
+PROJECT STRUCUTRE
+######################################################################################################################################################################################
+
 NODE.JS ist eine Laufzeitumgebung  für JavaScript. Karma, ESLint, JSHint, TypeScript-Compiler und Angular CLI sie wurden in JavaScript geschrieben und werden mit Node.js ausgeführt.
 
 NPM: Pakete verwalten, können JavaScript, CSS, HTML und mehr beinhalten.
@@ -762,6 +935,9 @@ File Struktur:
 	enviroment folder: Konfigurationsdateien für Entwicklung / Produktion Umgebungen.
 
 #######################################################################################################################################################################################
+PIPEES
+######################################################################################################################################################################################
+
 PIPES werden genutzt, um Daten für die Anzeige zu transformieren. Hinter einer Pipe steckt eine Funktion, die den Eingabewert nach einer bestimmten Vorschrift verarbeitet und das
  tranformierte Ergebnis zurückgibt. Klasse implementiert export class RISAzonositoConverterPipe implements PipeTransform interface mit tramsform() Methode.
 
@@ -787,14 +963,14 @@ Anzahl Argumente entgegen und liefert den transformierten Wert zurück. Man soll
 allerdings unmöglich, die Methodensignatur genau anzugeben: Rest-Syntax -> transform(value: unknown, ...args: unknown[]): unknown
 
 
-#######################################################################################################################################################################################
-
-
 ######################################################################################################################################################################################
 Wir müssen die Applikation stets in allen benötigten Sprachen kompilieren. Soll die Anwendung z. B. zehn Sprachen »sprechen«, so müssen wir mit dem vorhandenen Tooling jeweils
 zehn einzelne Anwendungen kompilieren und bereitstellen. Zur dynamischer Sprachwechsel in der Anwendung habe ich ngx-translate package verwendet.
 
 ######################################################################################################################################################################################
+DIRECTIVES, CONTENT PROJECTION, VIEWCHILD, CONTENTCHILD, RENDERED2
+#######################################################################################################################################################################################
+
 CONTENT PROJECTION: zwischen den Selektor Elementen (Host Elementen) der Template können wir beliebige html Inhalt angeben. Dieses nennen wir "Content" die aber im normalfall nicht
  angezeigt wird. Wir können aber den Inhalt zugreifen und an eine child Komponente-Template übergeben -> content projection / tranclusion, indem wir die <ng-content> Platzhalter verwenden.
  (ez arra jo ha a child componensnek nem akarunk @Input talé adatot átadni)
@@ -896,37 +1072,47 @@ CONTENTCHILD: (Content bezieht sich auf das projected Content)  ein Referenz auf
 	auf ein Klasse-Property, dessen Argument ist ein template Variable von ElementRef Typ. Hat auch static und read  Optionen.
 
 ######################################################################################################################################################################################
-
 KOMMUNIKATION ZWISCHEN KOMPONENTEN UND DATENAUSTAUSCH/ÜBERGABE
+#######################################################################################################################################################################################
+
+
+https://www.tektutorialshub.com/angular/angular-component-communication-sharing-data/
 
 A. Komponente haben paretn-child Beziehung:
-	1.	Von Eltern zu Kind-Komponente: property-binding -> Verwendung von @Input Dekorator
-	2.	Vom Kind zu Eltern: @Output Dekorator
-	3.	Verwendung von lokalen Variable (TemplateRef) um auf die Kind-Komponente zugreifen:
-		<child #childTemplateRef></child> in der Parent-Komponente , in der Child_Komponente selector
-		und mit Interpolation auf der Proerty der ChildKomponente zugreifen {{childTemplateRef.propertyInDerChildKomponente}} (mit change detection sogar)
+	Von Eltern zu Kind-Komponente:
+		-  Property-binding -> Verwendung von @Input Dekorator.
+		-  Lauschen auf Inpur Aenderungen: child kann mit onChanges() oder mit set methode auf dem input Property
+		   benachrichtigt werden, wenn das @Input Wert aendert sich.
 
-	4. 'Parent interacts with child via local variable' ... child component hat ein function: methodOne() und wir wollen es im parent template verwenden:
+	Vom Kind zu Eltern:
+		-  Parent lauscht auf Ereignisse vom Kind.   In child wir dekorieren mit @Output Dekorator ein Property, der ein Typ von EventEmitter<payload> ist.
+			@Output() myevent: EventEmitter<Payload> = new EventEmitter();
+			Dann im child wir lösen das Ereigniss aus: myevent.emit(this.payload);
+			Parent fängt dieses Erigniss im template ein: ... (myevent)= "myeventHandler($event)"
 
-		@Component({
-		  selector: 'app-root',
-		  template: `
-				<h1>{{title}}!</h1>
-				<p> current count is {{child.count}} </p>
-				<child-component #child></child-component>`   -- Now you can use the local variable elsewhere in the template to refer to the child component methods and properties
-				LOCAL VARIABLE
-				<button (click)="child.increment()">Increment</button>
-				<button (click)="child.decrement()">decrement</button>
-		  styleUrls: ['./app.component.css']
-		})
-		export class AppComponent {
-		  title = 'Parent interacts with child via local variable';
-		}
+		-	Verwendung von lokalen Variable (TemplateRef) um auf die Kind-Komponente zugreifen:
+			<child #childTemplateRef></child> in der Parent-Komponente , in der Child_Komponente selector
+			und mit Interpolation auf der Proerty der ChildKomponente zugreifen {{childTemplateRef.propertyInDerChildKomponente}} (mit change detection sogar)
 
-		!! De ez csak a templaten belül műx, ha arra van szükség, hogy a parent component classból érjük el a child component metódusait/propertijeit akkor @ViewChild kell
+		   'Parent interacts with child via local variable' ... child component hat ein function: methodOne() und wir wollen es im parent template verwenden:
+			!! De ez csak a templaten belül műx, ha arra van szükség, hogy a parent component classból érjük el a child component metódusait/propertijeit akkor @ViewChild kell
 
+			@Component({
+			  selector: 'app-root',
+			  template: `
+					<h1>{{title}}!</h1>
+					<p> current count is {{child.count}} </p>
+					<child-component #child></child-component>`   -- Now you can use the local variable elsewhere in the template to refer to the child component methods and properties
+					LOCAL VARIABLE
+					<button (click)="child.increment()">Increment</button>
+					<button (click)="child.decrement()">decrement</button>
+			  styleUrls: ['./app.component.css']
+			})
+			export class AppComponent {
+			  title = 'Parent interacts with child via local variable';
+			}
 
-	4.	Mit @ViewChild bekommen wir ein Referenz aus  dem Parent-Komponent heraus auf die Child-Komponent und so haben wir Zugriff auf seine Properties.
+		-	Mit @ViewChild bekommen wir ein Referenz aus  dem Parent-Komponent heraus auf die Child-Komponent und so haben wir Zugriff auf seine Properties.
 
 B.	Es gibt keine Beziehung zwischen den komponenten:
 	1.	mit Services: Datenaustausch zwischen sogar mehreren Komponeten.
@@ -934,8 +1120,8 @@ B.	Es gibt keine Beziehung zwischen den komponenten:
 		wir dann daran abbonieren. https://www.tektutorialshub.com/angular/angular-component-communication-sharing-data/#listens-to-child-event
 
 ######################################################################################################################################################################################
-
 BOOTSTRAPPING ANGULAR:
+#######################################################################################################################################################################################
 
 Angular takes the following steps to load our first view.
 
@@ -961,111 +1147,14 @@ platformBrowserDynamic im main.ts ist ein Module, der bootstrap die Anwendung f�
 	https://pkief.medium.com/global-error-handling-in-angular-ea395ce174b1
 	https://blog.angular-university.io/rxjs-error-handling/
 
-ERRORHANDLING:
-Zwei Typen von Errorbehandlungen:
-	1.	HTTP ERRORS: HttpClient faengt Errors ab und packt sie in HttpErrorResponse (beim Observavble und Promise auch) Objekten, bevor es diese zu der Anwendung weitergibt.
-	 A HttpErrorResponse is a response that represents an error or failure, either from an un-successful HTTP status, an error while executing the request, or some other failure which
-		occurred during the parsing of the response.
-	 Any error returned on the `Observable` response stream will be wrapped in an `HttpErrorResponse` to provide additional context about the state of the HTTP layer when the error occurred. The error property
-	 will contain either a wrapped Error object or the error response returned from the server.
-
-		Zwei Unterkategorien des http errors:
-			a: Backend server generiert ein error und sendet das response mit Status Code zurück. Angular stellt error und error repsonse Propertys auf der HttpErrorResponse ein.
-			b: Client-side Error, wenn request erstellt ist, und zb Network failure ist oder ein Exception passiert in einem RxJS Operator und dabei wird ebenfalls ein HttpErrorResponse
-				vom HttpModule zurückgeschickt.
-
-		utility projekt: http-error.service.ts
-
-		Strategien zur Abfangen Errors:
-
-		-  Mit der catchError Operator (empfaent ein Observable und returns auch ein Observable!), worin man es gleich behandelt oder
-			mit throwError weiterwirft. Ein Observale liefert keine Daten mehr wenn error erflogt.
-
-				https$.pipe(
-					catchError(
-						A.: err => of([])
-						B.: err => throwError(err)
-						)
-				)
-				.subscribe(
-					res => console.log('HTTP response', res),
-					err => console.log('HTTP Error', err),
-					() => console.log('HTTP request completed.')
-				);
-
-			Errors in der komponenten behandelt:
-			let observer = {
-						  next: (response: any) => console.log("next:", response),
-						  error: (err: any) => this.errorObject = err // verpackt in HttpErrorResponse
-							 }
-
-			this.restDS.get404StatusCode().subscribe( observer );
-
-
-			this.http.get<repos[]>(this.baseURL + 'usersY/' + userName + '/repos')
-				  .pipe(
-					catchError( err => {
-					  console.log('error caught in service')
-					  console.error(err);
-
-					  //Handle the error here
-					  // 1. "Catch and replace strategy": we return a fallback value; error subscriber callback method will never be called, and Observable completes!!!
-							of([])
-
-					  // 2. rethrowing error, error callback can handle it again later in the chain:
-							console.log('Handling error locally and rethrowing it...', err);
-							return throwError(err);
-
-					// we can use finalize operator, das immer durchgeführt wird.
-					finalize(() => console.log("first finalize() block executed")),
-			 		})
-				  )
-
-			Wenn ein error kommt dann ist das Observable closed, aber wir können nochmals auf das Observable abbonieren: retryWhen, delayWhen
-
-			// wenngleich error in service abgfenagen und teilweise behandelt wird, kann sein dass die error im service mit trhowError Funktion weitergeworfen sollte, damit man
-			in der Komponenten ein alert popup oder was aehnliches dem User anzeigt.
-
-		-	in den Komponenten, mit error callback von dem subscribe Methode, drawback we can not return a falback value if error comes:
-			  (error => {
-					  if (isClientError(error)) {
-						...doSomething...
-					  }
-					})
-
-		-  allgemein (globally)  in Interceptoren: dieses ist die beste Lösung, andernfalls sollten wir in Komponenten/Services repetitive code schreiben, besser alles in Interceptor
-			auslagern. HttpInterceptor ist ein Service die erstellen und registrieren global in dem root Module. Dieses faengt alle eingehende und ausgehende Requests.
-			Generelle Errors werden mit Interceptor behandelt, für API spezifische Errors werden entweder in der Service's CatchError Operator abgefangen und weitergeworfen,
-			oder(und) in der Komponenten in der Observers error Property callback handler.
-
-	2.	CLIENT ERRORS: Alles adnere Errors sind Client Errors: standardmaessig Angular verwendet ErrorHandler Klasse und ruft handleError() Methode für jede unbehandelte Errors auf,
-		die dann zum Browser Console ausgeschrieben werden. Errorhandling Strategien für Client side errors: Erstellen global error handler als Service, das ErrorHandler implementiert
-		und im handleError() loggiert zum Server back und leitet zu einer error page weiter. Wir verwenden global error h. für alle unbehandelte Errors
-		(ansonsten sollte man mit try catch auf die	error seite leiten).
-		utility projekt: runtime-error-handler.service.ts amely extendálja a ErrorHandlert és ez rakja ki az a bazi nagy piros hiba popup overlay üzenetet, ez a handleError metódusát
-		az Angular maga hivja meg ha valami gebasz van!!
-
-creating Promise manually: https://www.educba.com/typescript-promise/
-
-ERROR HANDLING WITH PROMISE: mit then und catch functions:
-
- await this.defaultService.getKonnektor(this.konnektorId).toPromise()
-        .then( result => {
-          this.konnektor = result;
-          this.loadFormData();
-          })
-        .catch( error => {
-           const err = error as HttpErrorResponse;
-            this.toast.error(err.message);
-          }
-        )
-
 ######################################################################################################################################################################################
 
 Dieses verursacht template parse error: 	<div *ngIf="selected" *ngFor="let item of items">{{item.name}}
 										stattdessen: <ng-container *ngIf="selected"><div *ngFor="let item of items">{{item.name}}
 
 ######################################################################################################################################################################################
+DIRECTIVES
+#######################################################################################################################################################################################
 
 DIREKTIVEN sind Klassen, die einem DOM-Element eine zusätzliche Logik zuordnen. Zur Verdrahtung besitzt jede Direktive einen Selektor, mit dem sie an konkrete DOM-Elemente gebunden
  wird, z. B. durch einen spezifischen Elementnamen oder ein Attribut eines Elements. Beinhaltet ein Template ein Element, das zu diesem Selektor passt, wird die Direktive angewendet
@@ -1164,11 +1253,14 @@ Class-Attribute setzen:
  [ngClass]="map": setzt man mehrere CSS-Klassen mit einem map Objekt, Direktive
 
 ######################################################################################################################################################################################
+DEPENDENCY INJECTION
+#######################################################################################################################################################################################
 
 https://www.tektutorialshub.com/angular/angular-dependency-injection/
 https://www.tektutorialshub.com/angular/how-dependency-injection-resolution-works-in-angular/
 
 Angular DI Framework:
+
 	CONSUMER: der. die Abhängigkeit deklariert.
 
 	DEPENDENCY: das Service, das wir als Abhängigkeit verwenden.
@@ -1176,7 +1268,7 @@ Angular DI Framework:
 	PROVIDER: Bauanleitung nennt man Provider.mit diesen registrieren wir Dependencies (Klasse, Funktion, Werte), Providers sind durch TOKEN registriert, es beschreibt
 			wie ein Object für den Token erstellt wird.	(Bauplan , Token = Identifizierung eines Bauplans, dieses ist der Kontruktorparameter)
 
-			Damit DI über Konstrukor funktioniert,  muss angular wissen welche Klassen zur Verfügung stehen. Es soll ein Bauanletiung geben, wonach DI ein Instanz erzeugt, diese
+			Damit DI über Konstrukor funktioniert,  muss angular wissen welche Klassen zur Verfügung stehen. Es soll ein Bauanletiung geben, wonach DI ein Instanz erzeugt.
 
 			Configuring Providers mit Konfigurationsobjekte {provide, useClass/useValue}:
 
@@ -1185,30 +1277,32 @@ Angular DI Framework:
 					Klassenname auch erfolgen.
 				- provider: class, value, factory.
 
-				[ProductService] ist Kurzform für: providers :[{ provide: ProductService, useClass: ProductService }] wobei provide is der Token
-						   (Injector verwendet es um ein Provider in der providers array zu finden).
+                KURZFORM:
+				[ProductService] ist Kurzform für: providers in component Annotaion Metadata provider Properrty: [{provide: 'productService", useClass: ProductService}]
+				Und im constructor: constructor(private productService: ProductService)
 
-				provide: (=Konstruktor-Parameter), dieses identifiziert den Provider, den das Injector verwendet
-					Typen von Tokens:  class type, string , InjectionToken.
-					- type: MyServiceKlasse
-					- string Token:
+				Provider Objekt (in array):[{
+					provide: ProductService, 	// DI Token = Injection token, identifiesa dependency, can by type/string, Injection token
+								- type: MyServiceKlasse
+								- string Token:
 										{provide:'PRODUCT_SERVICE', useClass: ProductService },
 										{provide:'USE_FAKE', useValue: true },
 										{provide:'APIURL', useValue: 'http://SomeEndPoint.com/api' },
 									Verwendung:  constructor(@Inject('PRODUCTSERVICE') private prdService:ProductService
-				- InjectionToken: zum Vermeiden dass 2 Entwickler die gleiche Token verwendet.
-*
-			provider:
-			-	Class Provider : useClass = wenn Abhängigkeit ein Klasse ist.
-			-	Value Provider: useValue = wenn es ein einfacher Wert ist.
-				zB: providers :[ {provide:'USE_FAKE', useValue: true}] ->  constructor(  @Inject('USE_FAKE') public useFake: string
-				sogar Funktion kann auch angegeben werden.
-			-	Factory Provider: useFactory -> den Rückgabewert einer Funktion, zB. anhängig von einem Wert sollen wir entweder servce1 oder srvice2 Verwenden.
-			-	Aliased Class Provider: useExisting -> Verwendung von einen alten Provider anstelle eines neuen.
+								- InjectionToken: zum Vermeiden dass 2 Entwickler die gleiche Token verwendet.
+									useClass: ProductService }
+					provider:
+							-	Class Provider : useClass = wenn Abhängigkeit ein Klasse ist.
+							-	Value Provider: useValue = wenn es ein einfacher Wert ist.
+								zB: providers :[ {provide:'USE_FAKE', useValue: true}] ->  constructor(  @Inject('USE_FAKE') public useFake: string
+								sogar Funktion kann auch angegeben werden.
+							-	Factory Provider: useFactory -> den Rückgabewert einer Funktion, zB. anhängig von einem Wert sollen wir entweder servce1 oder srvice2 Verwenden.
+							-	Aliased Class Provider: useExisting -> Verwendung von einen alten Provider anstelle eines neuen.
+					})
 
-	INJECTOR: instanziert eine Abhängigkeit und injiziert sie in das Service/Komponent.
+			injector: hat das provider, instanziert eine Abhängigkeit und injiziert sie in das Service/Komponent.
 			  Injector verwendet das Token, den wir als Konstruktor-Parameter deklarieren, um ein Provider zu  indentifizieren, was eigentlich eine Verkopplung von Token zu einer
-			  Abhängigkeit ist. Das Injector muss aber wissen, welche Klasse instanziert werden muss für diese Abhängigkeit.
+			  Klassbaulplan/String ist. Das Injector muss aber wissen, welche Klasse instanziert werden muss für diese Abhängigkeit.
 
 
 https://www.tektutorialshub.com/angular/how-dependency-injection-resolution-works-in-angular/
@@ -1278,6 +1372,8 @@ Konstruktor-Parameter Dekoratoren.
 Wenn ein Komponent hat providers metadata: [mySerivce], dann jeder Instanz der Komponent hat sein eigenes Service Instanz. (Service instanz nur mit @Injectable(empty) )
 
 ######################################################################################################################################################################################
+ANGULAR CLI
+#######################################################################################################################################################################################
 
 Angular CLI: aufgerufen mit "ng" keyword, installiert mit npm install -g @angular/cli@latest
 Wenn man diese Kommandos im root Verzeichnis durchführt.
@@ -1454,6 +1550,7 @@ PIPE expr | myPipe | otherPipe Daten im Template transformieren
 
 #####################################################################################################################################################################################
 PERFORMANCE TUNING:
+#######################################################################################################################################################################################
 
   Data binding: string interpolation, property binding, event binding, attribute binding, class and style binding, 2-way binding.
   Nach jedem DOM event das change detection leauft ab und prüft Aenderungen in den Werten für data bindings und rerenderiert das ganze Kompoenent.
@@ -1506,8 +1603,6 @@ PERFORMANCE TUNING:
                 changeDetection: ChangeDetectionStrategy.OnPush
               })
     https://blog.angular-university.io/onpush-change-detection-how-it-works/
-
-
 
 4 ways to listen to DOM venets in Angular:
     1.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-1-event-binding-3ec7e9f51a1d

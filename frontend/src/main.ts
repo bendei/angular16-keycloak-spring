@@ -7,10 +7,12 @@ import {importProvidersFrom} from "@angular/core";
 import {provideRouter, PreloadAllModules, withDebugTracing, withPreloading} from "@angular/router";
 import {TemplateComponent} from "./app/core/template.component";
 import {NavigationErrorComponent} from "./app/core/navigationerror.component";
+import {GlobalErrorHandler} from "./app/core/global-error-handler.service";
+import {FakeService} from "./app/core/fake.service";
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(HttpClientModule), // importing providers from modules usually
+    importProvidersFrom(HttpClientModule, FakeService), // importing providers from modules usually
 
     // we add routes to the bootstrapApplication configuration
     provideRouter([
@@ -31,9 +33,8 @@ bootstrapApplication(AppComponent, {
         }, // accessing with outer route
         {path: '**', component: TemplateComponent}
       ],
-      withDebugTracing(),
-      // withPreloading(PreloadAllModules)
+      //withDebugTracing(),
+       //withPreloading(PreloadAllModules),
     ),
-    //provideRouter(navigationRoutes)
   ]
 });
