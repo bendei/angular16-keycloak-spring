@@ -40,7 +40,5 @@ export const NAVIGATION_ROUTES: Routes = [
   {
     path: 'navigationerror',
     component: NavigationErrorComponent
-
   }
-
 ];

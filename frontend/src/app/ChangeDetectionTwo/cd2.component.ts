@@ -34,6 +34,7 @@ export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, Afte
       console.log("myobservable: " + value);
     });
 
+    // just to show how ErrorHandler works
     throw new Error("hiba");
   }
 

@@ -16,8 +16,7 @@ Checking typescript version: tsc --version ( updating to lates version: https://
 Miután npm install -g typescript@latest --save  , globálisan a npm-el installáltam a legújab (5.3.3) ts verziót a gépemre. De a package json-ban 5.1.1 verzió volt megadva. Ezt kézzel felülírtam 5.3.3-ra de pirossal aláhúzta ->
 futtassam a npm install-t itt a Intellij ben és akkor updateli magát és eltűnik a piros is.
 Aztán ng serve ezt a hibát irta ki: Error: Failed to initialize Angular compilation - The Angular Compiler requires TypeScript >=4.9.3 and <5.2.0 but 5.3.3 was found instead.
--> visszadowngradeltem a tsc-t 5.2.2 -re
-
+-> visszadowngradeltem a tsc-t 5.1.3 -re: npm install -g typescript@5.1.3
 
 Checking node version: npm version
 
@@ -531,10 +530,11 @@ Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade
       also RoutenDefinition : {path: '..', anstelle von 'component' loadChildren: () => import("./nyomonkovetes/shared/nyomonkovetes-routing.module").then(i => i.NyomonkovetesRoutingModule)},}
 	  erstellen wir wiederum ein array of Route Types, wo path: book ist und anstatt component:
 
-
 	Mit standalone:
-		Anstelle RouteDefinitionen mit forRoot() in rott/feature Module zu registrieren:
-		in main.ts verwenden wir provideRouter(APP_ROUTES) Function, um die Router zu registrieren.
+		Anstelle RouteDefinitionen mit forRoot() in root/feature Module zu registrieren:
+		in app.routing.ts definieren wir eine Array von Routes ( mit möglicher loadChildren/loadComponent für lazy loading), die man in app.config.ts mit provideRouter(APP_ROUTES) Function 
+        verwenden, um die Router zu registrieren. Diese app.config.ts wird dann im main.ts als paramter im bootstrapApplication(config) verwendet.
+        
 
 
 
@@ -554,33 +554,52 @@ standalone-componetns-v1.pdf
 Da keine Module mehr verwendet werden, wir werden kine RouterModule mit Routes Array Konfigurieren und diese in Modules laden. Anstetten Routes werden in main.ts konfiguriert: 
 
 in main.ts:
-  bootstrapApplication(AppComponent, {	// standalone component, was bootstrapped wird
-  providers: [
-    importProvidersFrom(HttpClientModule), // importing providers from modules usually
+    A.: 
+        wir können routes und providers dirkt im main.ts Datei angeben:  
+        bootstrapApplication(AppComponent, {	// standalone component, was bootstrapped wird
+          providers: [
+            importProvidersFrom(HttpClientModule), // importing providers from modules usually
+        
+            // we add routes to the bootstrapApplication configuration
+            // wir können child rourtes oder auch einzelne Komponente auch lazy loaden
+            provideRouter([
+                {
+                path: 'navigation',
+                  loadChildren: () => import('./app/core/navigation.routing').then(r => r.NAVIGATION_ROUTES)
+                                                      // lazy loading  navigation child routes
+                                                      // we set loadChildren property to a dynamic function, we import the file dynamically,
+                                                      // when the file/with Routes inside is loaded, we have can load/pull in our routes definitions
+                },
+                {
+                  path: 'navigationerror',
+                  component: NavigationErrorComponent  // loading component eagerly
+        
+                },
+                {path: '',    						   // lazy loading single standalone component
+                  loadComponent: ()=> import('./app/core/welcome.component').then(e => e.WelcomeComponent)
+                }, 									   // accessing with outer route
+                {path: '**', component: TemplateComponent}
+              ],
+              withDebugTracing(),
+              // withPreloading(PreloadAllModules)
+            ),
 
-    // we add routes to the bootstrapApplication configuration
-    // wir können child rourtes oder auch einzelne Komponente auch lazy loaden
-    provideRouter([
-        {
-        path: 'navigation',
-          loadChildren: () => import('./app/core/navigation.routing').then(r => r.NAVIGATION_ROUTES)
-											  // lazy loading  navigation child routes
-											  // we set loadChildren property to a dynamic function, we import the file dynamically,
-											  // when the file/with Routes inside is loaded, we have can load/pull in our routes definitions
-        },
-        {
-          path: 'navigationerror',
-          component: NavigationErrorComponent  // loading component eagerly
+    B.:
+            Oder in app.routing.ts und app.config.ts:
+            Anstelle RouteDefinitionen mit forRoot() in root/feature Module zu registrieren:
+            in app.routing.ts definieren wir eine Array von Routes ( mit möglicher loadChildren/loadComponent für lazy loading), die man in app.config.ts mit provideRouter(APP_ROUTES) Function
+            verwenden, um die Router zu registrieren. Diese app.config.ts wird dann im main.ts als paramter im bootstrapApplication(config) verwendet.
 
-        },
-        {path: '',    						   // lazy loading single standalone component
-          loadComponent: ()=> import('./app/core/welcome.component').then(e => e.WelcomeComponent)
-        }, 									   // accessing with outer route
-        {path: '**', component: TemplateComponent}
-      ],
-      withDebugTracing(),
-      // withPreloading(PreloadAllModules)
-    ),
+            Also, wir registrieren Services mit dem root injector in main.ts so:   https://angularexperts.io/blog/angular-core-module-standalone-migration)
+            export const appConfig: ApplicationConfig = {
+                // registering providers with the root injector
+                providers: [
+                provideRouter(APP_ROUTES),
+                importProvidersFrom(    // importing providers from modules
+                HttpClientModule, FakeService),
+                {provide: ErrorHandler, useClass: GlobalErrorHandler}
+            ]
+};
 
 Geminsames Service für eine Gruppe von Komponente:
 Environmental Injectors: mit Modules, alle lazy modules hatten ihre eigene Injectors, mit SD alle Route können eigene Injector haben. Also ein gemeinsames Injector und damit ein 
@@ -838,15 +857,15 @@ Zwei Typen von Errorbehandlungen:
 			oder(und) in der Komponenten in der Observers error Property callback handler.
 
 	2.	FEHLERBEHANDLUNG IN SYNKRON CODE:
-    - Mit try/catch Block: nicht ausreichend in Applikationen, wo Ein Exception überall passieren kann.
-    - GLobal Fehlerbehandlung in ANgular: 
-       Standardmaessig Angular verwendet ErrorHandler Service und ruft handleError() Methode für jede unbehandelte Errors auf,
-		die dann zum Browser Console ausgeschrieben werden. 
-        Errorhandling Strategien für Client side errors: Wir extendieren die ErrorHandler Klasse als Service, und überschreiben (overrride) handleError() Methode,loggiert zum Server back
-        und leitet zu einer error page weiter. Wir verwenden global error h. für alle unbehandelte Errors
-		(ansonsten sollte man mit try catch auf die	error seite leiten).
-		utility projekt: runtime-error-handler.service.ts amely extendálja a ErrorHandlert és ez rakja ki az a bazi nagy piros hiba popup overlay üzenetet, ez a handleError metódusát
-		az Angular maga hivja meg ha valami gebasz van!!
+        - Mit try/catch Block: nicht ausreichend in Applikationen, wo Ein Exception überall passieren kann.
+        - GLobal Fehlerbehandlung in ANgular: 
+           Standardmaessig Angular verwendet ErrorHandler Service und ruft handleError() Methode für jede unbehandelte Errors auf,
+            die dann zum Browser Console ausgeschrieben werden. 
+            Errorhandling Strategien für Client side errors: Wir extendieren die ErrorHandler Klasse als Service, und überschreiben (overrride) handleError() Methode,loggiert zum Server back
+            und leitet zu einer error page weiter. Wir verwenden global error h. für alle unbehandelte Errors
+            (ansonsten sollte man mit try catch auf die	error seite leiten).
+            utility projekt: runtime-error-handler.service.ts amely extendálja a ErrorHandlert és ez rakja ki az a bazi nagy piros hiba popup overlay üzenetet, ez a handleError metódusát
+            az Angular maga hivja meg ha valami gebasz van!!
 
 creating Promise manually: https://www.educba.com/typescript-promise/
 

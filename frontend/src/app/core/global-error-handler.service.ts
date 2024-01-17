@@ -7,7 +7,7 @@ import {ErrorHandler, Injectable} from "@angular/core";
 export class GlobalErrorHandler extends ErrorHandler {
 
   override handleError(error) {
-    console.log("GlobalErrorHandler")
+    console.log("GlobalErrorHandler:  " + error.message)
   }
 
 }

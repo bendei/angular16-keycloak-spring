@@ -1,17 +1,26 @@
 import {Routes} from '@angular/router';
 import {TemplateComponent} from './core/template.component';
-import {compact} from "lodash";
 import {WelcomeComponent} from "./core/welcome.component";
-import {KonnektorViewComponent} from "./konnektor/konnektor-view.component";
-import {AuditlogComponent} from "./auditlog/auditlog.component";
-import {CdComponent} from "./ChangeDetection/cd.component";
-import {Cd2Component} from "./ChangeDetectionTwo/cd2.component";
-import {OnpushparentComponent} from "./onpush/onpushparent.component";
 import {NavigationErrorComponent} from "./core/navigationerror.component";
 
 export const APP_ROUTES: Routes = [
   /* default routing */
-
+  {
+    path: 'navigationerror',
+    component: NavigationErrorComponent
+  },
+  {
+    path: 'navigation',
+    loadChildren: () => import('../app/core/navigation.routing').then(r => r.NAVIGATION_ROUTES)
+    // lazy loading  navigation child routes
+    // we set loadChildren property to a dynamic function, we import the file dynamically,
+    // when the file/with Routes inside is loaded, we have can load/pull in our routes definitions
+  },
+  {
+    path: '',    // lazy loading single standalone component
+    loadComponent: () => import('../app/core/welcome.component').then(e => e.WelcomeComponent)
+  }, // accessing with outer route
+  {path: '**', component: TemplateComponent},
   {path: '', component: WelcomeComponent}, // accessing with outer route
   {path: '**', component: TemplateComponent}
 ];
