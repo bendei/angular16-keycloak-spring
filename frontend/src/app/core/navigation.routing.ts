@@ -28,7 +28,8 @@ export const NAVIGATION_ROUTES: Routes = [
         component: CdComponent
       },
       {
-        path: "cd2",
+        path: "cd2/:routeParamOne",
+        title: 'Change detection Two',
         component: Cd2Component
       },
       {

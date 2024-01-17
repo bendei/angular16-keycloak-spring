@@ -460,49 +460,6 @@ STANDALONE COMPONENTS:
 	thus, wir brauchen keine NgModules mehr für unsere SC ( sowie standalone Direktive/Pipes)
 	Wir brauchen keinen root module mehr um die appl. zu bootstrappen.
 
-
-#######################################################################################################################################################################################
-KVS:
-######################################################################################################################################################################################
-
-1. Opció: nincsen a feature modulnak külön  feature-routing.module.ts fálja:
-Alle feature modules hatten
-ihr eigenes routing.ts file(zb: card-terminal.routing.ts) , das die RoutenDefinitionen als ein Array (cardTerminalsRoutes) von Routes types exportiert hatte.
-Diese RoutenDefinitionen sind dann im feature Module importiert (nem egy routing modulban!) und mittels  RouterModule.forChild(cardTerminalsRoutes) ein Module mit den Routen konfiguriert zurückgegeben.
-@NgModule({
-  imports: [
-     RouterModule.forChild(cardTerminalsRoutes),
-A KVS-ben nem volt lazy loaded modulunk.
-
-2. opció: a feature modulnak van saját feature-routing.module.ts fálja:
-De a routen definiciók lehetnének egy nyomonkovetes-routing.module.ts fileban,
-const routes: Routes = [
-    {path: "home", component: InputOutputParentComponent},
-     {path: "form", component: InputOutputFormComponent},
-    {path: "table", component: InputOutputTableComponent}
-];
-
-@NgModule({
-    imports: [RouterModule.forChild(routes)]
-})
-export class InputOutputRoutingModule {
-
-}
-
-majd ezt a nyomonkovetes-routing.module.ts fájlt lazy modulként importáljuk be a app-routing.module.ts fájlba:
-const routes: Routes = [
-	{path: "nyomonkovetes",
-		  loadChildren: () => import("./nyomonkovetes/shared/nyomonkovetes-routing.module").then(i => i.NyomonkovetesRoutingModule)
-		}]
-@NgModule({
-    imports: [RouterModule.forRoot(routes)]
-})
-export class AppRoutingModule {
-
-}
-
-..igy ez egy lazy loaded modul lett
-
 #######################################################################################################################################################################################
 ROUTING
 ######################################################################################################################################################################################
@@ -586,20 +543,28 @@ in main.ts:
 
     B.:
             Oder in app.routing.ts und app.config.ts:
+https://www.angulararchitects.io/blog/the-refurbished-httpclient-in-angular-15-standalone-apis-and-functional-interceptors/
             Anstelle RouteDefinitionen mit forRoot() in root/feature Module zu registrieren:
             in app.routing.ts definieren wir eine Array von Routes ( mit möglicher loadChildren/loadComponent für lazy loading), die man in app.config.ts mit provideRouter(APP_ROUTES) Function
             verwenden, um die Router zu registrieren. Diese app.config.ts wird dann im main.ts als paramter im bootstrapApplication(config) verwendet.
 
+            ApplicationConfig Interface declares eine Array von providers, die für root component und alle seine Kinder zur Verfügung stehen sollen
             Also, wir registrieren Services mit dem root injector in main.ts so:   https://angularexperts.io/blog/angular-core-module-standalone-migration)
             export const appConfig: ApplicationConfig = {
                 // registering providers with the root injector
                 providers: [
-                provideRouter(APP_ROUTES),
-                importProvidersFrom(    // importing providers from modules
-                HttpClientModule, CommonService),
-                {provide: ErrorHandler, useClass: GlobalErrorHandler}
-            ]
-};
+                    importProvidersFrom(HttpClientModule, CommonService),               // importing providers from modules
+                    provideRouter(APP_ROUTES, withComponentInputBinding()),             // 
+                    provideHttpClient(withInterceptors([pistiInterceptor])),            // configures HttpClient Service -functional Interceptor (ang 16 style)
+                    {provide: ErrorHandler, useClass: GlobalErrorHandler},              // also registered with the root injector
+                    {provide: CommonService, useClass: CommonService},                  //  registering service for used by a group of child components commonly for data shareing
+                    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},      // registering class-based old ( before version 16) style interceptor
+                ]
+
+ROUTES PARAMETER MAPPING in SD: https://www.freecodecamp.org/news/use-input-for-angular-route-parameters/
+    ActivatedRoute Service wird seit version 16 nicht mehr verwendet. Seit version 16 wir verwenden @Input properties um route parameter zu lesen. Davon muss aber Angular wissen:
+    app.config.ts : provideRouter(APP_ROUTES, withComponentInputBinding())
+    
 
 Geminsames Service für eine Gruppe von Komponente:
 Environmental Injectors: mit Modules, alle lazy modules hatten ihre eigene Injectors, mit SD alle Route können eigene Injector haben. Also ein gemeinsames Injector und damit ein 
@@ -855,6 +820,11 @@ Zwei Typen von Errorbehandlungen:
 			auslagern. HttpInterceptor ist ein Service die erstellen und registrieren global in dem root Module. Dieses faengt alle eingehende und ausgehende Requests.
 			Generelle Errors werden mit Interceptor behandelt, für API spezifische Errors werden entweder in der Service's catchError() Operator abgefangen und weitergeworfen,
 			oder(und) in der Komponenten in der Observers error Property callback handler.
+            STANDALONE INTERCEPTOR: https://medium.com/@bhargavr445/angular-httpinterceptors-standalone-applications-part-5-dd855f052d45
+            Ab version 16 functional interfaces oder class based interfaces, vorher nur class based interfaces.
+            Functional means:
+            
+
 
 	2.	FEHLERBEHANDLUNG IN SYNKRON CODE:
         - Mit try/catch Block: nicht ausreichend in Applikationen, wo Ein Exception überall passieren kann.
@@ -892,23 +862,29 @@ REACTIVE FORMS
 
 Die Grundidee der Reactive Forms ist, dass das komplette Modell des Formulars in der Komponentenklasse angesiedelt wird. Das bedeutet, dass nicht mehr nur die reinen
 Eingabedaten in einem Objekt in der Klasse gespeichert sind, sondern alle logischen FormControls mit ihren Zuständen, Validierungsregeln und Werten. jedes unserer Formularfelder wird
-durch ein FormControl repräsentiert. Eine Menge von FormControls in einem Objekt zusammenfassen: einer FormGroup. Das FormArray besitzt Methoden: mit push() können wir weitere Controls
+durch ein FormControl repräsentiert. Eine Menge von FormControls in einem Objekt zusammenfassen: einer FormGroup, es ist das Model für den Form. FormGroup verwaltet das Status und Wert der 
+Form ControlsDas FormArray besitzt Methoden: mit push() können wir weitere Controls
  am Ende anfügen; zm Entfernen removeAt() bzw. Einfügen insert(). Template mit dem Model verknüpfen: formControlName="lastname". FormBuilder: Klasse, die das Kreieren von FormControll,
- FormArray und FormGroup.
-	this.bookForm = this.fb.group({
+ 
+    Wir können FormBuilder Service verwenden, um Controls einfacher zu generieren.
+	this.bookForm = this.formBuilder.group({
       id: [book?.isbn],
       isbn: [{value: book?.isbn, disabled: this.modes == Modes.edit}, Validators.minLength(3)], ...
 
-	Mit setValue() können wir die Werte des gesammten Formulars neu setzten. Mit patchValue() einzelne Felder: bookForm.patchValue({username: 'pisti'});
+    nachedem wird das Model (FormGroup) in dem Komponent gemacht haben, wir müssen das  FormControl mit dem input field in der Template ( mit formControl Directive) registrieren:
+    <input id="id" [formControl]="id">
+
+	Mit setValue() können wir die Werte des gesammten Formulars Model neu setzten. Mit patchValue() einzelne Felder: bookForm.patchValue({username: 'pisti'});
 	we are also checking for the dirty & touched. Because we do not want the application to display the error when the form is displayed for the first time.
 	dirty: A control is dirty if the user has changed the value in the UI.
 	touched: A control is touched if the user has triggered a blur event on it.
 
 	Jedes FormControl, FormGroup und FormArray besitzt dafür zwei besondere Propertys: valueChanges und statusChanges. Dahinter verstecken sich Observables, die sich immer dann melden,
-wenn sich der Formularwert ändert (valueChanges) oder der Formularzustand (status-Changes). Wie jedes Observable können wir diese Änderungen abonnieren und weiterverarbeiten.
-( this.myForm.valueChanges.subscribe(groupValue => console.log(groupValue)); )
-( this.myForm.get("username").valueChanges.subscribe(groupValue => console.log(groupValue)); )
-D.h: wir können änderungen nicht nur in einzelnen Formfelder überwachen, sondern die einer FormArray mit mehrerern FormControlls auch!
+    wenn sich der Formularwert ändert (valueChanges) oder der Formularzustand (status-Changes). Wie jedes Observable können wir diese Änderungen abonnieren und weiterverarbeiten.
+    ( this.myForm.valueChanges.subscribe(groupValue => console.log(groupValue)); )
+    ( this.myForm.get("username").valueChanges.subscribe(groupValue => console.log(groupValue)); )
+    D.h: wir können änderungen nicht nur in einzelnen Formfelder überwachen, sondern die einer FormArray mit mehrerern FormControlls auch!
+   
 
 	TYPE ASSERTION: mit dem Schlüsselwort "as" machen wir Objekt-Type casting: this.bookForm.get('authors') as FormArray;
 
@@ -1227,7 +1203,7 @@ Wir können aus der Direktive-Klasse auf das Host-Element zugreifen( ezért neve
 Wir binden ein property zu dem host Element, wenn proprty aendert Hostbinding wird da host Element updaten:
 	-	@HostBinding
 	-	ElementRef.
-	-	@HostListener (für Komponente auch !)
+	-	@HostListener (für Komponente auch !): HostListener('click') myClick(){ } is exactly the same as (click)="myClick()"
 	Als Bezeichner für das Binding wird der Name der Eigenschaft/Property verwendet.
 	Also hier setzten wir die Eigenschaft/Property des Host-Elements aus der Direktive hinaus.
 
@@ -1242,9 +1218,6 @@ Wir binden ein property zu dem host Element, wenn proprty aendert Hostbinding wi
 
 	// CSS-Eigenschaft 'color' auf 'red' setzen
 	@HostBinding('style.color') get foo() { return 'red'; }
-
-
-
 	Binding erlauben aber keine direkten Zugriff auf das DOM-Element. daür ist die ELementRef (durch konstrukto Propoerty Referenz auf dem Host-Element, mit @ViewChild)
 
 Häufig verwendet man Attributdirektiven, um auf Ereignisse zu reagieren, die auf dem Host-Element auftreten. Diese Events lassen sich durch den Decorator @HostListener(mouseenter)
@@ -1595,6 +1568,7 @@ PERFORMANCE TUNING:
 
 	Lamgsamer Applikation kann auf folgende zurückgeführt werden:
 		1	Improving change detection.
+        2.  using pipes anstelle von string interpolation
 		2	Überarbeiten page loading
 		3	UX design Überarbeiten
 		4.	trackBy for ngFor

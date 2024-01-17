@@ -5,7 +5,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  DoCheck,
+  DoCheck, Input,
   OnChanges,
   OnDestroy,
   OnInit
@@ -24,11 +24,11 @@ import {CommonService} from "../core/common.service";
 })
 export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, AfterViewInit, AfterViewChecked, AfterContentInit, AfterContentChecked{
 
+  @Input() routeParamOne = '';
   counter: number = 0;
   commonServiceProperty = 0;
 
   constructor(private commonService: CommonService) {
-    console.log("--------- Cd2Component:Contructed");
     this.commonServiceProperty = this.commonService.commonServiceProperty;
 
     let myObservable: Observable<string> = of("pisti");
@@ -58,7 +58,7 @@ export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, Afte
   }
 
   ngOnInit() {
-    console.log("Cd2Component:ngOnInit");
+    console.log(`Cd2Component:ngOnInit, reading url input parameters: ${this.routeParamOne}`);
   }
 
   ngDoCheck() {

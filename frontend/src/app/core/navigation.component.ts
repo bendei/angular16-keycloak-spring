@@ -11,6 +11,8 @@ import {RouterLink, Routes} from "@angular/router";
 })
 export class NavigationComponent {
 
+  routeParamOne = "44342";
+
   constructor() {
     console.log("-------NavigationComponent");
   }
