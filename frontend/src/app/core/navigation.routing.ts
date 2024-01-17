@@ -6,14 +6,14 @@ import {CdComponent} from "../ChangeDetection/cd.component";
 import {OnpushparentComponent} from "../onpush/onpushparent.component";
 import {NavigationErrorComponent} from "./navigationerror.component";
 import {Cd2Component} from "../ChangeDetectionTwo/cd2.component";
+import {CommonService} from "./common.service";
 
 export const NAVIGATION_ROUTES: Routes = [
   {
     path: '',
     component: TemplateComponent,
     //canActivate: [navigationGuard],
-    //providers: [MyCommonService]
-
+    providers: [CommonService],
     children: [
       {
         path: 'konnektor-view',

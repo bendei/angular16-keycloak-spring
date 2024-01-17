@@ -11,19 +11,19 @@ import {ToastService} from "../toast/toast.service";
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
 
-  constructor(private readonly toast: ToastService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     return next.handle(req).pipe(tap(
       {
         next: (event) => {
-          /*const  myEvent = event as HttpEvent<any>;
-          console.log(JSON.stringify(myEvent));*/
+          const  myEvent = event as HttpEvent<any>;
+          console.log(JSON.stringify(myEvent));
         },
         error: (event) => {
           const  myEvent = event as HttpEvent<any>;
-          this.toast.error("StatusText: " + myEvent["statusText"] + " \n Message: " + myEvent["message"]);
+          console.log(" ------------ HttpErrorInterceptor: " + event.error());
+          //this.toast.error("StatusText: " + myEvent["statusText"] + " \n Message: " + myEvent["message"]);
         }
       }
     ));

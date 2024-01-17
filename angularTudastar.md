@@ -596,7 +596,7 @@ in main.ts:
                 providers: [
                 provideRouter(APP_ROUTES),
                 importProvidersFrom(    // importing providers from modules
-                HttpClientModule, FakeService),
+                HttpClientModule, CommonService),
                 {provide: ErrorHandler, useClass: GlobalErrorHandler}
             ]
 };

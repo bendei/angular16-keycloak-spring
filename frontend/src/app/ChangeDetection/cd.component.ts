@@ -12,6 +12,7 @@ import {
 } from "@angular/core";
 import {of} from "rxjs";
 import {CdchildComponent} from "./cdchild.component";
+import {CommonService} from "../core/common.service";
 
 export interface User {
   name: string;
@@ -28,6 +29,7 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewInit, AfterView
   counterInputPropertySetter = 0;
   text = 'text';
   _szam = 22;
+  commonServiceProperty = 0;
 
   private unlistener!: () => void;
 
@@ -52,8 +54,9 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewInit, AfterView
     age: 50
   }
 
-  constructor(private renderer2: Renderer2, private ngZone: NgZone) {
+  constructor(private renderer2: Renderer2, private ngZone: NgZone, private commonService: CommonService) {
     console.log("PARENT ---- constructor");
+    this.commonServiceProperty = this.commonService.commonServiceProperty;
 
     // a setTimout is triggerelni a DC-t ezért lefut az egesz DC :)
     setTimeout( () => {
@@ -61,9 +64,9 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewInit, AfterView
       //this.conversions();
       //this.myoperators();
     }, 2000);
-
-
   }
+
+
 
   // hooks
 

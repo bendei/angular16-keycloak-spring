@@ -13,21 +13,23 @@ import {
 import {Cd2child11Component} from "./cd2child11.component";
 import {Cd2child1Component} from "./cd2child1.component";
 import {Observable, of} from "rxjs";
-import {GlobalErrorHandler} from "../core/global-error-handler.service";
+import {CommonService} from "../core/common.service";
 
 @Component({
   standalone: true,
   selector: 'cd2',
   templateUrl: './cd2.component.html',
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [Cd2child1Component, Cd2child11Component]
+  imports: [Cd2child1Component, Cd2child11Component],
 })
 export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, AfterViewInit, AfterViewChecked, AfterContentInit, AfterContentChecked{
 
   counter: number = 0;
+  commonServiceProperty = 0;
 
-  constructor() {
+  constructor(private commonService: CommonService) {
     console.log("--------- Cd2Component:Contructed");
+    this.commonServiceProperty = this.commonService.commonServiceProperty;
 
     let myObservable: Observable<string> = of("pisti");
     myObservable.subscribe( (value) => {
@@ -35,7 +37,12 @@ export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, Afte
     });
 
     // just to show how ErrorHandler works
-    throw new Error("hiba");
+    //throw new Error("hiba");
+  }
+
+  incrementCommonServiceProperty() {
+    this.commonService.incrementCommonServiceProperty();
+    this.commonServiceProperty = this.commonService.commonServiceProperty;
   }
 
   incrementProperty(): void {

@@ -5,6 +5,8 @@
 <br>
 <div (click)="donotincrementProperty()">click on this div element will not change @Input property on the child1, so it will not trigger CD if child is OnPush</div>
 
+Common service property's value (used in child components: ): {{commonServiceProperty}}  <button (click)="incrementCommonServiceProperty()">incrementCommonServiceProperty</button>
+
 <cd2child1 [parentCounter]="counter">
   <header>content projection header, counter from parent: {{counter}}</header>
   <footer>content projection footer, counter from parent, but it will be referenced via ContentChild in child and extra-incremented: {{counter}}</footer>
