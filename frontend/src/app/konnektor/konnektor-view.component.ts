@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO } from '../../../target/generated-sources/openapi';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
@@ -28,10 +28,11 @@ export class KonnektorViewComponent implements OnInit {
   readonly headerHeight = 50;
   readonly rowHeight = 50;
 
-  loading = true;
+  loaded = false;
   konnektorFilterForm!: FormGroup;
   konnektors: KonnektorDTO[] = [];
   isEditMode: string[] = [];
+  @ViewChild("errorStrip") errorStrip: ElementRef;
 
   // for pipe
   maiDatum: Date = new Date();
@@ -55,7 +56,7 @@ export class KonnektorViewComponent implements OnInit {
   @ViewChild(KonnektorViewChildComponent)
   private konnektorViewChildComponent!: KonnektorViewChildComponent;
 
-  constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder,
+  constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder, private renderer: Renderer2
   //            private readonly toast: ToastService
   ) {
     this.bendeClone = {...this.bende, nevem: "enenen"};
@@ -73,9 +74,9 @@ export class KonnektorViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadKonnektors();
-    this.cretaeForm();
 
+    this.cretaeForm();
+    this.loadKonnektors();
     const pisti: PistiFunction = function(text: string) {return text};
     const feri: PistiFunction = (text: string) => {return text}
     console.log('------ ' + pisti("pisti implementing function type interface"));
@@ -150,22 +151,30 @@ export class KonnektorViewComponent implements OnInit {
 
   // überarbeitet, da toPromise is deprecated
   private loadKonnektors(hostname?: string, serialNumber?: string, firmwareVersion?: string, hardwareVersion?: string, created?: string) {
-    this.loading = true;
 
+    this.loaded = false;
     const $allKonnektors = this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created);
     lastValueFrom($allKonnektors).then(
       result => {
+        console.log("...............RESULT");
+        this.konnektors = result
+      },
+      error => {
+        console.log("......................ERROR");
+        this.renderer.setStyle(this.errorStrip.nativeElement, 'visibility', 'visible');
+      }
+      /*result => {
         console.log(result);
         this.konnektors = result
       },
-      /*error => {
-        for (let pr in (error as HttpErrorResponse)) {
-          console.log(`property name: ${pr}, value: ${error[pr]}`);
-        }
-        this.toast.error((error as HttpErrorResponse).message);
-      })*/
+      error => {
+         this.renderer.setStyle(this.errorStrip.nativeElement, 'visibility', 'visible');
+      }*/
     )
-     .finally( () => this.loading = false);
+      .finally(
+        () =>  {this.loaded = true}
+      )
+
   }
 
   private cretaeForm(): void {

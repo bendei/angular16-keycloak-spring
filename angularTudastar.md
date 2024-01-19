@@ -1,17 +1,101 @@
+// Complete Angular Tutorial For Beginners
+https://www.tektutorialshub.com/angular-tutorial/#component-communication
 
-
-## How to migrate CoreModule to Standalone APIs
+// function-iterables-promises-observables
+https://www.telerik.com/blogs/angular-basics-comparing-data-producers-javascript-functions-promises-iterables-observables
+// subjects
+https://www.tektutorialshub.com/angular/subjects-in-angular/
+// BeavoirSubject
+https://www.tektutorialshub.com/angular/replaysubject-behaviorsubject-asyncsubject-in-angular/
+// Object is possibly undefined error
+https://www.jsowl.com/solve-the-error-ts2532-object-is-possibly-undefined-in-typescript/?utm_content=cmp-true
+// threads in javascript
+https://www.telerik.com/blogs/angular-basics-introduction-processes-threads-web-ui-developers
+// @Input
+https://blog.angular-university.io/angular-input/
+// @ViewChild
+https://www.tektutorialshub.com/angular/understanding-viewchild-viewchildren-querylist-in-angular/
+// communication between components
+https://www.tektutorialshub.com/angular/angular-component-communication-sharing-data/#listens-to-child-event
+// injecting
+https://www.tektutorialshub.com/angular/angular-injector-injectable-inject/
+// services
+https://www.tektutorialshub.com/angular/angular-services/
+// lyfecycle
+https://www.tektutorialshub.com/angular/angular-component-life-cycle-hooks/#ngdocheck
+// CD
+https://blog.angular-university.io/onpush-change-detection-how-it-works/
+https://medium.com/@toha.marko/angular-onpush-check-your-knowledge-on-a-simple-example-bf461b76cef3
+https://blogs.halodoc.io/understanding-angular-change-detection-strategy/#:~:text=By%20default%2C%20angular%20will%20run,()%20has%20a%20new%20reference
+// DoCheck
+https://www.tektutorialshub.com/angular/angular-component-life-cycle-hooks/#ngdocheck
+// functional interceptors
+https://www.angulararchitects.io/blog/the-refurbished-httpclient-in-angular-15-standalone-apis-and-functional-interceptors/
+// Interceptorok felhasználási területei:
+https://medium.com/angular-in-depth/top-10-ways-to-use-interceptors-in-angular-db450f8a62d6
+// ng-template
+https://morioh.com/p/fbef3198c6f0
+// SD route parameters
+https://www.freecodecamp.org/news/use-input-for-angular-route-parameters/
+// rxjs operator
+https://rxjs.dev/guide/operators
+// rxjs higher order mapping
+https://blog.angular-university.io/rxjs-higher-order-mapping/
+// observable
+https://dev.to/devbyrayray/you-don-t-have-to-use-observables-in-angular-1653
+https://blog.danieleghidoli.it/2020/10/30/when-should-i-unsubscribe-from-an-observable-in-angular/
+https://medium.com/@gesteira2046/goodbye-to-unsubscribe-in-angular-components-8817e1b21db2
+// Promise
+https://javascript.info/promise-basics
+https://www.w3schools.com/js/js_promise.asp
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
+https://www.syncfusion.com/blogs/post/angular-promises-vs-observables.aspx/amp
+// 4 ways to listen to events
+https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
+// error handling
+https://www.tektutorialshub.com/angular/angular-http-error-handling/
+https://pkief.medium.com/global-error-handling-in-angular-ea395ce174b1
+https://blog.angular-university.io/rxjs-error-handling/
+// style, class-binding, NgClass, NgStyle
+https://angular.io/guide/class-binding
+// DI
+https://www.tektutorialshub.com/angular/angular-dependency-injection/
+https://www.tektutorialshub.com/angular/how-dependency-injection-resolution-works-in-angular/
+https://www.tektutorialshub.com/angular/how-dependency-injection-resolution-works-in-angular/
+// ViewProvider
+ https://debugmode.net/2020/06/24/when-to-use-viewproviders-in-angular-simplified/
+// forms
+https://www.tektutorialshub.com/angular/valuechanges-in-angular-forms/
+// Object type in TS
+https://mariusschulz.com/blog/the-object-type-in-typescript
+// performance tuning
+https://christianlydemann.com/the-complete-guide-to-angular-performance-tuning/
+// property binding
+https://angular.io/guide/property-binding
+// data binding
+https://www.javatpoint.com/data-binding-in-angular-8
+// pipes
+https://angular.io/guide/pipes
+// 4 ways to listen to DOM venets in Angular:
+1.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-1-event-binding-3ec7e9f51a1d
+2.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-2-hostlistener-1b66d45b3e3d
+3.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
+// How to migrate CoreModule to Standalone APIs
 https://angularexperts.io/blog/angular-core-module-standalone-migration
+// modules in TS:
+https://www.tutorialsteacher.com/typescript/typescript-module
+// Generics:
+https://www.tutorialsteacher.com/typescript/typescript-generic
+// async await
+https://javascript.info/async-await
+//  asynchronous js
+https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Introducing
+// typescript version
+https://marketsplash.com/tutorials/typescript/how-to-check-typescript-version/
+○
 
 
-modules in TS:
-  https://www.tutorialsteacher.com/typescript/typescript-module
-
-Generics:
-  https://www.tutorialsteacher.com/typescript/typescript-generic
-
-Checking angular version: ng version
-
+Checking angular version: ng version:
 Checking typescript version: tsc --version ( updating to lates version: https://marketsplash.com/tutorials/typescript/how-to-check-typescript-version/)
 Miután npm install -g typescript@latest --save  , globálisan a npm-el installáltam a legújab (5.3.3) ts verziót a gépemre. De a package json-ban 5.1.1 verzió volt megadva. Ezt kézzel felülírtam 5.3.3-ra de pirossal aláhúzta ->
 futtassam a npm install-t itt a Intellij ben és akkor updateli magát és eltűnik a piros is.
@@ -197,6 +281,7 @@ PROPERTY BINDING: mit Komponenten kommunizieren
 
 Wir können  Komponente veschachteln und dise können mineinander kommunizieren mittel property binding: in dem Child-Komponente selectors html tag mit property-binding setzten
 wir den zu übergebenden Wert von der Host-Komponente, die wir mit dem  @Input()  Decorator in der Chid-Komponente auslesen können.
+https://blog.angular-university.io/angular-input/
  Aendert sich die Daaten, wird das binding automatisch aktualisiert. jedes Element im DOM-Baum hat Propertys die sich schreiben lassen.
  [property]="expression"  (ohne eckigen Klammern  wirh rechte Seite als string literar und nicht als expression ausgewertet= Attribute Schreibweise)).
   Wir können belibige Properties in einem  DOM Element schreiben.
@@ -543,7 +628,7 @@ in main.ts:
 
     B.:
             Oder in app.routing.ts und app.config.ts:
-https://www.angulararchitects.io/blog/the-refurbished-httpclient-in-angular-15-standalone-apis-and-functional-interceptors/
+    https://www.angulararchitects.io/blog/the-refurbished-httpclient-in-angular-15-standalone-apis-and-functional-interceptors/
             Anstelle RouteDefinitionen mit forRoot() in root/feature Module zu registrieren:
             in app.routing.ts definieren wir eine Array von Routes ( mit möglicher loadChildren/loadComponent für lazy loading), die man in app.config.ts mit provideRouter(APP_ROUTES) Function
             verwenden, um die Router zu registrieren. Diese app.config.ts wird dann im main.ts als paramter im bootstrapApplication(config) verwendet.
@@ -686,6 +771,19 @@ PROMISE:	https://javascript.info/promise-basics
 	ngOnDestroy() {
 	  this.userSubscription.unsubscribe()
 	}
+
+PROMISE FROM OBSERVABLE ( wenn wir nur data holen):
+    async open() {
+        const $auditlog =  this.defaultService.getAllAuditLog(this.konnektor.id!);  // retrieving Observable
+        await lastValueFrom($auditlog).then(                                        // getting a Promise
+            result => {
+            const modalRef = this.modalService.open(AuditlogModalComponent,  { size: 'xl' });
+            modalRef.componentInstance.auditlogs = result;
+            },
+            error => {
+            this.toast.error((error as HttpErrorResponse).message);
+            });    
+    }
 
 RxJS Operators:
 
@@ -867,7 +965,7 @@ Form ControlsDas FormArray besitzt Methoden: mit push() können wir weitere Cont
  am Ende anfügen; zm Entfernen removeAt() bzw. Einfügen insert(). Template mit dem Model verknüpfen: formControlName="lastname". FormBuilder: Klasse, die das Kreieren von FormControll,
  
     Wir können FormBuilder Service verwenden, um Controls einfacher zu generieren.
-	this.bookForm = this.formBuilder.group({
+	this.bookForm = this.formBuilder.group({    // vagy  this.formBuilder.nonNullable.group ...
       id: [book?.isbn],
       isbn: [{value: book?.isbn, disabled: this.modes == Modes.edit}, Validators.minLength(3)], ...
 
@@ -883,6 +981,8 @@ Form ControlsDas FormArray besitzt Methoden: mit push() können wir weitere Cont
     wenn sich der Formularwert ändert (valueChanges) oder der Formularzustand (status-Changes). Wie jedes Observable können wir diese Änderungen abonnieren und weiterverarbeiten.
     ( this.myForm.valueChanges.subscribe(groupValue => console.log(groupValue)); )
     ( this.myForm.get("username").valueChanges.subscribe(groupValue => console.log(groupValue)); )
+    let streetNumber = this.myformModel.get("address.street")!.value;
+    this.myformModel.controls.foodOpetionsArray.push(new FÍormControl(''));
     D.h: wir können änderungen nicht nur in einzelnen Formfelder überwachen, sondern die einer FormArray mit mehrerern FormControlls auch!
    
 
@@ -1149,9 +1249,6 @@ Wenn index.html ist geladen, dann core and 3party libraries sind ebenfalls gelad
 platformBrowserDynamic im main.ts ist ein Module, der bootstrap die Anwendung für desktop browser durch Laden der AppModule.ts, was danach die RootComponent ladet.
 
 ######################################################################################################################################################################################
-	https://www.tektutorialshub.com/angular/angular-http-error-handling/
-	https://pkief.medium.com/global-error-handling-in-angular-ea395ce174b1
-	https://blog.angular-university.io/rxjs-error-handling/
 
 ######################################################################################################################################################################################
 

@@ -1,8 +1,9 @@
-<ng-template #notloaded>
+<ng-container *ngIf="!loaded">
   Wird geladen...
-</ng-template>
+</ng-container>
 
-<ng-template #loaded>
+loaded: {{loaded}}
+
 
   <h4>Mai dátum:  {{maiDatum | puredatepipe}}</h4>
 
@@ -117,9 +118,7 @@
     </div>
   </div>
 
-</ng-template>
 
-<div *ngIf="!loading; then loaded; else notloaded">
-</div>
+
 
 
