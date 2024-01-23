@@ -1,15 +1,17 @@
 
 
 
-<div (click)="incrementProperty()">click on this div element will incerement a property on the component wich is an @Input on the child1, wich will trigger CD even if child is OnPush</div>
+<button (click)="incrementProperty()">click on this div element will incerement a property on the component wich is an @Input on the child1, wich will trigger CD even if child is OnPush {{parentcounter.count}}</button>
 <br>
-<div (click)="donotincrementProperty()">click on this div element will not change @Input property on the child1, so it will not trigger CD if child is OnPush</div>
+simpleParentProperty: {{simpleParentProperty}}
+<br>
+routeCommonServiceProperty service property's value:  {{routeCommonServiceProperty}} - <button (click)="incrementRouteCommonServiceProperty()">Increment it</button>
+<br>Datenaustausch zwischen navigation und CD2 Komponenten (keine Beziehung) mit Verwendung von BehaviorSubject <br>
+incrementObservableServiceProperty: {{observableServiceProperty}} <button (click)="incrementObservableServiceProperty()">incrementObservableServiceProperty</button>
 
-Common service property's value (used in child components: ): {{commonServiceProperty}}  <button (click)="incrementCommonServiceProperty()">incrementCommonServiceProperty</button>
-
-<cd2child1 [parentCounter]="counter">
-  <header>content projection header, counter from parent: {{counter}}</header>
-  <footer>content projection footer, counter from parent, but it will be referenced via ContentChild in child and extra-incremented: {{counter}}</footer>
+<cd2child1 [parentCounter]="parentcounter">
+  <header>content projection header, counter from parent: {{parentcounter}}</header>
+  <footer>content projection footer, counter from parent, but it will be referenced via ContentChild in child and extra-incremented: {{parentcounter}}</footer>
 </cd2child1>
 
 

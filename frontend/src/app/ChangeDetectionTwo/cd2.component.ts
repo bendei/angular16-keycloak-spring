@@ -12,8 +12,9 @@ import {
 } from "@angular/core";
 import {Cd2child11Component} from "./cd2child11.component";
 import {Cd2child1Component} from "./cd2child1.component";
-import {Observable, of} from "rxjs";
-import {CommonService} from "../core/common.service";
+import { Observable, of, Subject} from "rxjs";
+import {RouteCommonService} from "../core/route.common.service";
+import {ObservableService} from "../core/observable.service";
 
 @Component({
   standalone: true,
@@ -24,12 +25,20 @@ import {CommonService} from "../core/common.service";
 })
 export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, AfterViewInit, AfterViewChecked, AfterContentInit, AfterContentChecked{
 
-  @Input() routeParamOne = '';
-  counter: number = 0;
-  commonServiceProperty = 0;
+  _simpleParentProperty = 111;
+  routeCommonServiceProperty = 0;
+  observableServiceProperty = 0;
 
-  constructor(private commonService: CommonService) {
-    this.commonServiceProperty = this.commonService.commonServiceProperty;
+  get simpleParentProperty(): number {
+    console.log("simpleParentProperty Cd2Component: " + this._simpleParentProperty);
+    return this._simpleParentProperty;
+  }
+
+  @Input() routeParamOne = '';
+  parentcounter: Counter = {count: 0};
+
+  constructor(private observableService: ObservableService, private routeCommonService: RouteCommonService) {
+    this.routeCommonServiceProperty = this.routeCommonService.commonServiceProperty;
 
     let myObservable: Observable<string> = of("pisti");
     myObservable.subscribe( (value) => {
@@ -40,18 +49,21 @@ export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, Afte
     //throw new Error("hiba");
   }
 
-  incrementCommonServiceProperty() {
-    this.commonService.incrementCommonServiceProperty();
-    this.commonServiceProperty = this.commonService.commonServiceProperty;
+  incrementRouteCommonServiceProperty() {
+    this.routeCommonService.incrementRouteCommonServiceProperty();
+    this.routeCommonServiceProperty = this.routeCommonService.commonServiceProperty;
+    console.log(this.routeCommonServiceProperty);
   }
 
   incrementProperty(): void {
-    ++this.counter;
+    this.parentcounter = {count: ++this.parentcounter.count};
   }
 
-  donotincrementProperty(): void {
-    // do nothing
+  incrementObservableServiceProperty() {
+    this.observableService.incrementCommonServiceProperty();
+    this.observableServiceProperty = this.observableService.getCommonData();
   }
+
 
   ngOnChanges() {
     console.log("Cd2Component:ngOnChanges");
@@ -85,5 +97,8 @@ export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, Afte
     console.log("Cd2Component:ngOnDestroy");
   }
 
+}
 
+export interface Counter {
+  count: number;
 }

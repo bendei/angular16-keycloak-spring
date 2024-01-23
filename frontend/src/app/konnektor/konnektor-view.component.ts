@@ -21,7 +21,7 @@ import {RouterModule} from "@angular/router";
   imports: [PureDatePipe, KonnektorViewChildComponent,
     CommonModule, FormsModule, ReactiveFormsModule, NgxDatatableModule, KonnektorDropdownComponent, NgbModule, KonnektorRemoveComponent, RouterModule
   ],
-  providers: [FormBuilder, ToastService,  {provide: 'defaultService', useClass: DefaultService}]
+  providers: [FormBuilder, ToastService]
 
 })
 export class KonnektorViewComponent implements OnInit {
@@ -32,7 +32,6 @@ export class KonnektorViewComponent implements OnInit {
   konnektorFilterForm!: FormGroup;
   konnektors: KonnektorDTO[] = [];
   isEditMode: string[] = [];
-  @ViewChild("errorStrip") errorStrip: ElementRef;
 
   // for pipe
   maiDatum: Date = new Date();
@@ -112,7 +111,8 @@ export class KonnektorViewComponent implements OnInit {
     this.isEditMode[index] = !this.isEditMode[index];
   }
 
-  public async onUpdateHostname(event: any, rowIndex: string, dto: KonnektorDTO) {
+  public onUpdateHostname(event: any, rowIndex: string, dto: KonnektorDTO) {
+    console.log("onUpdateHostname");
     this.isEditMode[rowIndex] = false;
     const reqDto: KonnektorDTO = {
       id: dto.id,
@@ -150,10 +150,19 @@ export class KonnektorViewComponent implements OnInit {
   }
 
   // überarbeitet, da toPromise is deprecated
-  private loadKonnektors(hostname?: string, serialNumber?: string, firmwareVersion?: string, hardwareVersion?: string, created?: string) {
+  private async loadKonnektors(hostname?: string, serialNumber?: string, firmwareVersion?: string, hardwareVersion?: string, created?: string) {
 
     this.loaded = false;
-    const $allKonnektors = this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created);
+    try {
+      const allKonnektors$ = this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created);
+      this.konnektors = await lastValueFrom(allKonnektors$);
+      console.table(this.konnektors);
+    } catch(error) {
+      console.log("......................ERROR: " + error.message);
+    }
+    this.loaded = true;
+
+    /*const $allKonnektors = this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created);
     lastValueFrom($allKonnektors).then(
       result => {
         console.log("...............RESULT");
@@ -163,17 +172,17 @@ export class KonnektorViewComponent implements OnInit {
         console.log("......................ERROR");
         this.renderer.setStyle(this.errorStrip.nativeElement, 'visibility', 'visible');
       }
-      /*result => {
+      /!*result => {
         console.log(result);
         this.konnektors = result
       },
       error => {
          this.renderer.setStyle(this.errorStrip.nativeElement, 'visibility', 'visible');
-      }*/
+      }*!/
     )
       .finally(
         () =>  {this.loaded = true}
-      )
+      )*/
 
   }
 

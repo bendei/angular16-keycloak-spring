@@ -2,13 +2,16 @@
 <hr>
 <h3>Child 1 component</h3>
 <br>
-cd2child1.component: {{parentCounter}}
-<br>
 
+<br>
+@Input értéke: {{parentCounter.count}}
 heavyCalculation: {{heavyCalculation()}}
 <br>
 
 <ng-content select="header"></ng-content>
 <ng-content select="footer"></ng-content>
-<div (click)="doNothing()">valami</div>
+<button (click)="doNothing()">valami</button>
 <hr>
+
+Nevem: {{nevem}}
+<cd2child11></cd2child11>

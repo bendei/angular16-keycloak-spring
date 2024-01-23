@@ -84,7 +84,7 @@ loaded: {{loaded}}
         >
           <ngx-datatable-column [width]="95" name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
 
-          <ngx-datatable-column [width]="200" name="Hostname" prop="hostname" [canAutoResize]="false" [sortable]="true">
+          <ngx-datatable-column [width]="200"  name="Hostname" prop="hostname" [canAutoResize]="false" [sortable]="true">
             <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
               <span *ngIf="row.active && !isEditMode[rowIndex]">
                 {{row.hostName}}
@@ -99,7 +99,6 @@ loaded: {{loaded}}
             </ng-template>
 
           </ngx-datatable-column>
-
           <ngx-datatable-column [width]="20" name="Serial Number" prop="serialNumber" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
           <ngx-datatable-column [width]="170" name="Firmware Version" prop="firmwareVersion" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
           <ngx-datatable-column [width]="470" name="Hardware Version" prop="hardwareVersion" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>

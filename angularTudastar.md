@@ -24,9 +24,12 @@ https://www.tektutorialshub.com/angular/angular-services/
 // lyfecycle
 https://www.tektutorialshub.com/angular/angular-component-life-cycle-hooks/#ngdocheck
 // CD
+https://www.telerik.com/blogs/simplifying-angular-change-detection
 https://blog.angular-university.io/onpush-change-detection-how-it-works/
 https://medium.com/@toha.marko/angular-onpush-check-your-knowledge-on-a-simple-example-bf461b76cef3
 https://blogs.halodoc.io/understanding-angular-change-detection-strategy/#:~:text=By%20default%2C%20angular%20will%20run,()%20has%20a%20new%20reference
+https://www.telerik.com/blogs/simplifying-angular-change-detection
+https://www.telerik.com/blogs/angular-basics-step-by-step-understanding-async-pipe
 // DoCheck
 https://www.tektutorialshub.com/angular/angular-component-life-cycle-hooks/#ngdocheck
 // functional interceptors
@@ -76,6 +79,8 @@ https://angular.io/guide/property-binding
 https://www.javatpoint.com/data-binding-in-angular-8
 // pipes
 https://angular.io/guide/pipes
+// async pipes - for data communication with between components on onPush
+https://www.telerik.com/blogs/angular-basics-step-by-step-understanding-async-pipe
 // 4 ways to listen to DOM venets in Angular:
 1.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-1-event-binding-3ec7e9f51a1d
 2.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-2-hostlistener-1b66d45b3e3d
@@ -446,7 +451,10 @@ STANDALONE Koomponente:
 
   https://www.tektutorialshub.com/angular/angular-component-life-cycle-hooks/#ngdocheck
 
+#######################################################################################################################################################################################
 CHANGE DETECTION:
+#######################################################################################################################################################################################
+
 ist das Mechanismus, wodurch Angular das Template mit dem Komponent synchron haelt. d.h. property binding bleibt immer aktualisiert. Woher weisst Angular,
 ob der Wert eines property binding geaendert ist?
 
@@ -467,6 +475,9 @@ dann aktualiseiert es in dem DOM. Wenn data aendert sich im einem des child Komp
 und wenn ja, dann rerenderiert das view: also wenn das Initial Anderung im child Komponente passiert, dann werden die mögliche parent auch geprüft.
 Dieses kann aber zu Performance probleme führen, dann wenn bestimmte bounded properties schwerwigende  Arbeiten brauchen , dann diese verlangsamen die Anwendung.
 Wenn es Wertaenderung findet auf dem komponent dann aktualisiert es  das DOM und ruft die life cycle hooks callback Funktionen auf.
+WICHTIG! 
+- CD läuft immer von oben nach unten ab, d.h. wenn irgendwo in einem child component ein event ausgelöst wird, dann ausgehend vom root component wird jedes Change detector
+aufgerufen und nach unten bis zum letzten compnent ausgeführt. Also, wenn child event (in onPush auch) (button click) ausgelöst, binding on paretn werden auch geupdated.
 
 Mit OnPush wir können CD for Komponente auslassen, die OnPush Strategie verwnden, also wir wollen das CD für ein bestimmten Komponent nicht nicht immer sondern nur in bestimmten
 Faellen lauft.!!
@@ -638,11 +649,11 @@ in main.ts:
             export const appConfig: ApplicationConfig = {
                 // registering providers with the root injector
                 providers: [
-                    importProvidersFrom(HttpClientModule, CommonService),               // importing providers from modules
+                    importProvidersFrom(HttpClientModule, RouteCommonService),               // importing providers from modules
                     provideRouter(APP_ROUTES, withComponentInputBinding()),             // 
                     provideHttpClient(withInterceptors([pistiInterceptor])),            // configures HttpClient Service -functional Interceptor (ang 16 style)
                     {provide: ErrorHandler, useClass: GlobalErrorHandler},              // also registered with the root injector
-                    {provide: CommonService, useClass: CommonService},                  //  registering service for used by a group of child components commonly for data shareing
+                    {provide: RouteCommonService, useClass: RouteCommonService},                  //  registering service for used by a group of child components commonly for data shareing
                     {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},      // registering class-based old ( before version 16) style interceptor
                 ]
 
@@ -785,6 +796,29 @@ PROMISE FROM OBSERVABLE ( wenn wir nur data holen):
             });    
     }
 
+Async vor dem function: der Methode gibt immer ein Promise zurück, d.h. Rückgabewert wird immer als ein resolved Promise eingehüllt.
+ async myFunction() {
+    return 1;
+    }
+..dann :
+    myFunction.then(..something);
+
+await lässt javascript warten bis Promise settled wird und einen Wert zurückliefert. d.h. wir brauchen then() nicht mehr:
+    Methoden aufruf pausiert beim await bis Promise resolved wird und ein Wert zurückgibt, so js engine kann etwas anderes auch machen.
+    await kann man nur verwenden, wenn async da ist. ErrorHandling: mit try/catch Block, anstelle von .catch() Methode
+
+    async -> Funktionrückgabewert wird ein Promise
+    await -> anstelle von Promise.then()
+
+    async loadData() {
+        1.  let promise$ = new Promise(...);
+        2. let promise$ = fetch("http:/...json");
+        3. let observable$ = httpClient.getAllKonnektors(...);
+        try {
+            let result = await promise$;
+        } catch (error) {}
+    }
+
 RxJS Operators:
 
 https://javascript.plainenglish.io/most-frequently-used-rxjs-operators-with-use-cases-7645639317fc
@@ -838,6 +872,17 @@ https://javascript.info/promise-basics
     );
     // sind wir nur in errors interessiert: catch()
     // finally( () => {})
+
+SUBJECT:
+    Subject ist ein Observable und Observer in einem:
+        -   Es ermöglicht Werte an mehrere observers zu liefern / emmitieren ( multicasting). Es hat subscribe Methode, es hat eine Kolletion von.
+        -   Es ist hot observable: es starten Werte zu emmitieren ohne auf Subcriber zu warten.
+        -   Es ist ein Observer auch: mit next, error, complete callback Funktionen, also er kann auf ein Observable lauschen, und so Werte zu bekommen ( kann also als ein Bridge funktioneieren).
+        Typen: 
+            BehaviorSubject: braucht einen Anfangswert, speichert den aktuellen Wert und emmitierts es dem neuem Subscribers. D.h. observer bekommt den letzten aktuellen Wert noch, aber wenn er nach
+                            complete() subscribiert dann schon nix.
+            ReplaySubject:
+            AsyncSubject:
 
 
 #######################################################################################################################################################################################
@@ -1221,7 +1266,7 @@ A. Komponente haben paretn-child Beziehung:
 		-	Mit @ViewChild bekommen wir ein Referenz aus  dem Parent-Komponent heraus auf die Child-Komponent und so haben wir Zugriff auf seine Properties.
 
 B.	Es gibt keine Beziehung zwischen den komponenten:
-	1.	mit Services: Datenaustausch zwischen sogar mehreren Komponeten.
+	1.	mit Services in den Route Definitionen: Datenaustausch zwischen Komponeten, die zu gleichen route child angehören.
 	2.	Mit Observable: erstellt man ein Service und ein Observable darin, das ein Ereignis wird emittiert sobald es zur Verfügung seht oder sich aendert. In der komponenten können
 		wir dann daran abbonieren. https://www.tektutorialshub.com/angular/angular-component-communication-sharing-data/#listens-to-child-event
 
@@ -1516,8 +1561,6 @@ https://medium.com/angular-in-depth/top-10-ways-to-use-interceptors-in-angular-d
 implements HttpInterceptor -> intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>
 
 ######################################################################################################################################################################################
-
-######################################################################################################################################################################################
 https://www.tektutorialshub.com/angular/valuechanges-in-angular-forms/
 
 DOM event -> Observable
@@ -1710,7 +1753,6 @@ PERFORMANCE TUNING:
     2.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-2-hostlistener-1b66d45b3e3d
     3.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
     4.  Using RxJS .fromEvent() operator that turns events into observable sequences
-#####################################################################################################################################################################################
 #####################################################################################################################################################################################
 #####################################################################################################################################################################################
 mapping outside the pipe operator:

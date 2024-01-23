@@ -16,11 +16,13 @@ export const APP_ROUTES: Routes = [
     // we set loadChildren property to a dynamic function, we import the file dynamically,
     // when the file/with Routes inside is loaded, we have can load/pull in our routes definitions
   },
+  /*
   {
-    path: '',    // lazy loading single standalone component
+    path: '',    // ha csak ennyi: localhost:4200; lazy loading single standalone component
     loadComponent: () => import('../app/core/welcome.component').then(e => e.WelcomeComponent)
   }, // accessing with outer route
-  {path: '**', component: TemplateComponent},
-  {path: '', component: WelcomeComponent}, // accessing with outer route
-  {path: '**', component: TemplateComponent}
+  */
+
+  {path: '**', component: TemplateComponent}, // minden más url ide vezet
+  //{path: '', component: WelcomeComponent}, // accessing with outer route
 ];

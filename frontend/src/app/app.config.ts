@@ -6,7 +6,8 @@ import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptors} from "@angular/c
 import {GlobalErrorHandler} from "./core/global-error-handler.service";
 import {HttpErrorInterceptor} from "./interceptors/HttpErrorInterceptor";
 import {pistiInterceptor} from "./interceptors/pisti.interceptor";
-import {CommonService} from "./core/common.service";
+import {RouteCommonService} from "./core/route.common.service";
+import {ObservableService} from "./core/observable.service";
 
 // diese Interface declares eine Array von providers, die für root component und alle seine Kinder zur Verfügung stehen sollen
 export const appConfig: ApplicationConfig = {
@@ -15,7 +16,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(APP_ROUTES, withComponentInputBinding()),                         //
     provideHttpClient(withInterceptors([pistiInterceptor])),            // configures HttpClient Service -functional Interceptor (ang 16 style)
     {provide: ErrorHandler, useClass: GlobalErrorHandler},                          // also registered with the root injector
-    {provide: CommonService, useClass: CommonService},                              // registering service for used by a group of child components commonly for data shareing
+    {provide: RouteCommonService, useClass: RouteCommonService},                              // registering service for used by a group of child components commonly for data shareing
+    {provide: ObservableService, useClass: ObservableService},
     {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},      // registering class-based old style interceptor
 
   ]

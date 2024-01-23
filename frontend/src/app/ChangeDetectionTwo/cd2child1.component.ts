@@ -14,19 +14,28 @@ import {
   OnInit,
   Renderer2
 } from "@angular/core";
+import {Cd2child11Component} from "./cd2child11.component";
+import {Counter} from "./cd2.component";
 
 
 @Component({
   standalone: true,
   selector: 'cd2child1',
   templateUrl: 'cd2child1.component.html',
-  changeDetection: ChangeDetectionStrategy.Default
+  imports: [
+    Cd2child11Component
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Cd2child1Component implements OnChanges, DoCheck, OnDestroy, OnInit, AfterViewInit, AfterViewChecked, AfterContentInit, AfterContentChecked {
 
   private _nevem: string = "bende";
 
-  get nemem(): string {
+  @Input() parentCounter: Counter;
+  @ContentChild("footer") projectedContent: ElementRef;
+
+  get nevem(): string {
+    console.log(" nevem proerty get - Cd2child1Component:" + this._nevem);
     return this._nevem;
   }
 
@@ -34,9 +43,6 @@ export class Cd2child1Component implements OnChanges, DoCheck, OnDestroy, OnInit
     console.log("heavyCalculation");
     return "heavy calculated";
   }
-
-  @Input() parentCounter: number;
-  @ContentChild("footer") projectedContent: ElementRef;
 
   constructor(public renderer: Renderer2) {
     console.log("   Cd2child1Component:Contructed");
