@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, DoCheck, OnChanges, SimpleChanges} from "@angular/core";
 import {OnpushService} from "./onpush.service";
-import {interval} from "rxjs";
 import {ChildBComponent} from "./childB.component ";
 
 

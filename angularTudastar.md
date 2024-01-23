@@ -53,6 +53,8 @@ https://javascript.info/promise-basics
 https://www.w3schools.com/js/js_promise.asp
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
 https://www.syncfusion.com/blogs/post/angular-promises-vs-observables.aspx/amp
+// signal
+https://www.freecodecamp.org/news/angular-signals/
 // 4 ways to listen to events
 https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
 // error handling
@@ -97,7 +99,9 @@ https://javascript.info/async-await
 https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Introducing
 // typescript version
 https://marketsplash.com/tutorials/typescript/how-to-check-typescript-version/
-○
+// dropdown select html
+https://www.telerik.com/blogs/angular-basics-how-to-get-value-selected-dropdown-menu-item
+
 
 
 Checking angular version: ng version:
@@ -1215,7 +1219,7 @@ RENDERER2: ermöglicht uns, die DOM Elemente zu manipulieren, ohne diese direkt 
  ElementRef verwenden, weil Angular snychronisiert das View und Komponent durch das Template, data binding, change detection, und beim Verwenden von ElementRef all diese werden
  ausgelassen. Renderer2 muss als Konstrukor-Property deklariert werden, und dann können wird damit Element erstellen, Styles/Classes/Propertys/Html Attribute zugeben/entfernen.
 
-  const innerText = this.renderer.createText('book-list.caption');  // text justr created, not yet added to the DOM
+  const innerText = this.renderer.createText('book-list.caption');  // text justr created, not yet added to the DOM            
   this.renderer.appendChild(this.booklistheader.nativeElement, innerText);  // adding it to existing element
 
 CONTENTCHILD: (Content bezieht sich auf das projected Content)  ein Referenz auf die Projected Content in dem DOM zu bekommen. (Projected Content ist ein html Inhalt,

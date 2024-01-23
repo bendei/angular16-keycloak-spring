@@ -7,6 +7,7 @@ import {OnpushparentComponent} from "../onpush/onpushparent.component";
 import {NavigationErrorComponent} from "./navigationerror.component";
 import {Cd2Component} from "../ChangeDetectionTwo/cd2.component";
 import {RouteCommonService} from "./route.common.service";
+import {OrderingformComponent} from "../OrderingForm/orderingform.component";
 
 export const NAVIGATION_ROUTES: Routes = [
   {
@@ -35,6 +36,10 @@ export const NAVIGATION_ROUTES: Routes = [
       {
         path: "onpush",
         component: OnpushparentComponent
+      },
+      {
+        path: "oderingform",
+        component: OrderingformComponent
       }
     ]
   },

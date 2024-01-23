@@ -1,0 +1,66 @@
+<div  class="card mt-3">
+  <div class="card-body">
+
+    <h5 class="card-title bg-body-tertiary">Cart</h5>
+
+    <div class="row border-1 border-black">
+
+      <div class="col-3">
+        <b>Vehicle</b>
+        <ng-container *ngFor="let veh of vehicles">
+            <div> {{veh.brand}}</div>
+        </ng-container>
+        </div>
+
+      <div class="col-3">
+        <b>Price</b>
+        <ng-container *ngFor="let veh of vehicles">
+          <div> {{veh.price}}</div>
+        </ng-container>
+      </div>
+
+      <div class="col-2">
+        <b>Quantity</b>
+        <ng-container *ngFor="let veh of vehicles">
+          <div>
+            <select [(ngModel)]="selectedQuantity" style="width: 60px;" (change)="onChangeSelectedVehicle(veh)">
+              <option *ngFor="let quant of veh.quantity">
+                {{quant}}
+              </option>
+            </select>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="col-2">
+        &nbsp;
+        <ng-container *ngFor="let veh of vehicles">
+          <div>  <button>delete</button></div>
+        </ng-container>
+
+      </div>
+
+    </div>
+
+    <hr>
+
+    <div class="row border-1 border-black bg-body-secondary">
+      <div class="col-3">
+        <div>Subtotal:</div>
+        <div>Delivery:</div>
+        <div>Estimated Tax:</div>
+        <div><b>Total:</b></div>
+       </div>
+      <div class="col-3">
+        <div>{{subTotal}}</div>
+        <div>222</div>
+        <div>{{estimatedTax}}</div>
+        <div>{{total}}</div>
+      </div>
+      <div class="col-6">
+      </div>
+
+    </div>
+
+  </div>
+</div>
