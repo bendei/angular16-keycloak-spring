@@ -1,4 +1,4 @@
-import { Component, OnInit} from "@angular/core";
+import {Component, computed, effect, OnInit, Signal, signal} from "@angular/core";
 import {NgFor} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 
@@ -6,18 +6,18 @@ const TAX = 0.3;
 
 @Component({
   standalone: true,
-  templateUrl: 'orderingform.component.html',
-  selector: 'orderingform',
+  templateUrl: 'orderingsignal.component.html',
+  selector: 'orderingsignal',
   imports: [NgFor, FormsModule]
 })
-export class OrderingformComponent {
+export class OrderingSignalComponent {
 
   selectedQuantityForVehicle: ISelectedVehicle[] = [];  // we are storing qunatites in the IVehicle quantity property for computation
   selectedQuantity = 0;
 
-  subTotal = 0;
-  total = 0;
-  estimatedTax = 0;
+  subTotal = signal(0);
+  total: Signal<number> = signal<number>(0);
+  estimatedTax: Signal<number> = signal<number>(0);
 
   vehicles: IVehicle[] = [];
 
@@ -52,13 +52,27 @@ export class OrderingformComponent {
         this.selectedQuantityForVehicle.push({brand: veh.brand, quantity: this.selectedQuantity, price: veh.price});
       }
     }
-    this.subTotal = this.selectedQuantityForVehicle.reduce((accumulator, value) => {
+
+    this.subTotal.set(this.selectedQuantityForVehicle.reduce((accumulator, value) => {
       return accumulator + (value.quantity * value.price);
-    }, 0);
-    this.estimatedTax = this.subTotal * TAX;
-    this.total = this.subTotal + this.estimatedTax;
+    }, 0));
+
+    this.estimatedTax = computed(() => this.subTotal() * TAX);
+    this.total = computed(() => this.subTotal() + this.estimatedTax());
+    console.log(this.estimatedTax());
+
+    console.table(this.selectedQuantityForVehicle);
+
+  //  effect(() => console.log(this.estimatedTax()));
+  //  effect(() => console.log(this.subTotal()));
+  }
+
+  multiplayBy10() {
+    this.subTotal.update((ez) => ez * 10);
+
   }
 }
+
 
 interface IVehicle {
   price: number,

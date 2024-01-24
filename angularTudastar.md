@@ -55,6 +55,8 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
 https://www.syncfusion.com/blogs/post/angular-promises-vs-observables.aspx/amp
 // signal
 https://www.freecodecamp.org/news/angular-signals/
+https://hackernoon.com/a-guide-to-angular-signals-with-practical-use-cases-part-1
+https://hackernoon.com/a-guide-to-angular-signals-with-practical-use-cases-part-2
 // 4 ways to listen to events
 https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
 // error handling

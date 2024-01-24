@@ -8,6 +8,7 @@ import {NavigationErrorComponent} from "./navigationerror.component";
 import {Cd2Component} from "../ChangeDetectionTwo/cd2.component";
 import {RouteCommonService} from "./route.common.service";
 import {OrderingformComponent} from "../OrderingForm/orderingform.component";
+import {OrderingSignalComponent} from "../OrderingFormSignals/orderingsignal.component";
 
 export const NAVIGATION_ROUTES: Routes = [
   {
@@ -40,6 +41,10 @@ export const NAVIGATION_ROUTES: Routes = [
       {
         path: "oderingform",
         component: OrderingformComponent
+      },
+      {
+        path: "oderingsignals",
+        component: OrderingSignalComponent
       }
     ]
   },
