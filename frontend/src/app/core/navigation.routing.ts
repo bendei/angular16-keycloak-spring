@@ -9,6 +9,7 @@ import {Cd2Component} from "../ChangeDetectionTwo/cd2.component";
 import {RouteCommonService} from "./route.common.service";
 import {OrderingformComponent} from "../OrderingForm/orderingform.component";
 import {OrderingSignalComponent} from "../OrderingFormSignals/orderingsignal.component";
+import {AuthGuard} from "../keycloak/authguard";
 
 export const NAVIGATION_ROUTES: Routes = [
   {
@@ -32,7 +33,9 @@ export const NAVIGATION_ROUTES: Routes = [
       {
         path: "cd2/:routeParamOne",
         title: 'Change detection Two',
-        component: Cd2Component
+        component: Cd2Component,
+       // canActivate: [AuthGuard],
+       // data: { roles: ['ADMIN'] }
       },
       {
         path: "onpush",

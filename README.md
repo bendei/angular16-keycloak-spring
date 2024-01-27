@@ -111,4 +111,8 @@ reosurce server valieidet dann diese.
 Authentication Protocol: eine Reihe von Regeln, die die Kommunikation zwischen Identity und Service Providers regeln. Protocolstypen: SAML, AuthO, OpenID ( AuthO ist ein
 protocol, wogegen OpenID ist ein identity layer gebaut auf dem AuthO)
 OIDC is about who someone is. OAuth 2.0 is about what they are allowed to do.
-		
+
+
+https://www.baeldung.com/spring-boot-keycloak
+
+https://plainenglish.io/blog/secure-an-angular-single-page-application-with-keycloak-cdbe5026881e
