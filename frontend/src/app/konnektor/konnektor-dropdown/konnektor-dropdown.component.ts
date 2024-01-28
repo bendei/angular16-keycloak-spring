@@ -1,11 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {KonnektorDTO} from "../../../../target/generated-sources/openapi";
+import {NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   standalone: true,
   selector: 'app-konnektor-dropdown',
-  templateUrl: './konnektor-dropdown.component.html'
+  templateUrl: './konnektor-dropdown.component.html',
+  imports: [NgbDropdown, NgbDropdownMenu, NgbDropdownItem, NgbDropdownToggle]
 })
 export class KonnektorDropdownComponent implements  OnInit {
 

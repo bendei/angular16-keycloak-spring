@@ -36,8 +36,6 @@ export class TemplateComponent implements OnInit, AfterViewInit {
 
   }
 
-  ngView
-
   ngAfterViewInit(): void {
     console.log("TemplateComponent");
 

@@ -74,44 +74,41 @@ loaded: {{loaded}}
 
       <div  class="card mt-3">
         <div class="card-body">
-        <ngx-datatable #konnektorDataTable id="konnektorDataTable"
-                       [columnMode]="'flex'"
-                       [messages]="{emptyMessage: 'Keine Daten vorhanden'}"
-                       [headerHeight]="headerHeight"
-                       [rowHeight]="rowHeight"
-                       [rows]="konnektors"
-                       [scrollbarV]="true"
-        >
-          <ngx-datatable-column [width]="95" name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-
-          <ngx-datatable-column [width]="200"  name="Hostname" prop="hostname" [canAutoResize]="false" [sortable]="true">
-            <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+          <ngx-datatable #konnektorDataTable id="konnektorDataTable"
+                         [columnMode]="'flex'"
+                         [messages]="{emptyMessage: 'Keine Daten vorhanden'}"
+                         [headerHeight]="headerHeight"
+                         [rowHeight]="rowHeight"
+                         [rows]="konnektors"
+          >
+            <ngx-datatable-column [width]="95" name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+            <ngx-datatable-column [width]="200"  name="Hostname" prop="hostname" [canAutoResize]="false" [sortable]="true">
+              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
               <span *ngIf="row.active && !isEditMode[rowIndex]">
                 {{row.hostName}}
                 <b  id="editClicker" (click)="editMode(rowIndex)">M</b>
               </span>
-              <span *ngIf="isEditMode[rowIndex]">
+                <span *ngIf="isEditMode[rowIndex]">
                   <input type="text" class="form-control mb-2 mr-sm-2" id=`updateHostName${rowIndex}` [value]="row.hostName" (blur)="onUpdateHostname($event, rowIndex, row)">
               </span>
-              <span *ngIf="!row.active">
+                <span *ngIf="!row.active">
                 {{row.hostName}}
               </span>
-            </ng-template>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [width]="20" name="Serial Number" prop="serialNumber" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+            <ngx-datatable-column [width]="170" name="Firmware Version" prop="firmwareVersion" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+            <ngx-datatable-column [width]="470" name="Hardware Version" prop="hardwareVersion" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+            <ngx-datatable-column [width]="200" name="Created" prop="created" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+            <ngx-datatable-column [width]="95" class="pl-4" name="Active" prop="active" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+            <ngx-datatable-column [width]="95" class="pl-4" name="hostNameAndSerial" prop="hostNameAndSerial" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
+            <ngx-datatable-column [width]="100" class="pl-4">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                <app-konnektor-dropdown [konnektor]="row"></app-konnektor-dropdown>
+              </ng-template>
 
-          </ngx-datatable-column>
-          <ngx-datatable-column [width]="20" name="Serial Number" prop="serialNumber" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-          <ngx-datatable-column [width]="170" name="Firmware Version" prop="firmwareVersion" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-          <ngx-datatable-column [width]="470" name="Hardware Version" prop="hardwareVersion" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-          <ngx-datatable-column [width]="200" name="Created" prop="created" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-          <ngx-datatable-column [width]="95" class="pl-4" name="Active" prop="active" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-          <ngx-datatable-column [width]="95" class="pl-4" name="hostNameAndSerial" prop="hostNameAndSerial" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
-          <ngx-datatable-column [width]="100" class="pl-4">
-            <ng-template ngx-datatable-cell-template let-row="row">
-             <app-konnektor-dropdown [konnektor]="row"></app-konnektor-dropdown>
-            </ng-template>
-
-          </ngx-datatable-column>
-        </ngx-datatable>
+            </ngx-datatable-column>
+          </ngx-datatable>
       </div>
       </div>
     </div>
