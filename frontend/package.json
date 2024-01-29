@@ -13,7 +13,8 @@
     "lint-ci": "concurrently -r \"npm run ts-lint\" \"npm run stylelint\"",
     "stylelint": "stylelint --syntax scss \"src/**/*.scss\"",
     "commit-check": "npm run test && ng lint --fix && npm run stylelint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "generate-types": "openapi-typescript openAPI.yaml --output src/types/api.ts"
   },
   "private": true,
   "dependencies": {
@@ -52,6 +53,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "openapi-typescript": "^6.7.4",
     "typescript": "~5.2.0"
   }
 }
