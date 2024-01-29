@@ -1,7 +1,8 @@
 import {ChangeDetectionStrategy, Component, DoCheck, Input, OnChanges, SimpleChanges} from "@angular/core";
 import {reject} from "lodash";
 import {Observable, of} from "rxjs";
-import {DefaultService, KonnektorDTO} from "../../../target/generated-sources/openapi";
+import {DefaultService} from "../openapi-generated-sources";
+import {KonnektorDTO} from '../openapi-generated-sources';
 import {map} from "rxjs/operators";
 
 @Component({
@@ -17,7 +18,7 @@ export class ChildBComponent implements DoCheck, OnChanges {
 
   _szam: number;
   @Input()
-  get szam(): number {   return  this._szam; console.log("-----child B - get szam callled"); };
+  get szam(): number {   return  this._szam };
   set szam(sz: number) {this._szam = sz;  console.log("-----child B - set szam callled");}
 
 

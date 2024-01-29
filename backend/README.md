@@ -4,7 +4,7 @@ Spring Boot Tutorials:
 https://www.baeldung.com/spring-boot
 
 # OpenAPI generated server
-## Overview  
+## mvn clean install -DskipeTest führt openapi-generator-maven-plugin aus, die die nötigen Klassen (java) generieren wird.
 
 // migrating Spring Boot 2 to 3 with openAPI
 https://marco.dev/spring-boot-openapi-generator

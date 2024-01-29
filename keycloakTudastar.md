@@ -70,6 +70,22 @@ https://medium.com/@rayen19952/securing-angular-app-routes-using-keycloack-4fdb2
 Ha már setup minden akkor megnézhetjük a beállitásokat:
     a Admin oldalon a dropdownbol a Login realmot kiválasztjuk és ott akkor a hozzá tartozó client, user, role ok jelennek meg ill. managelhetőek.
 
+#######################################################################################################################################################################
+KEYCLOAK IN ANGULAR
+#######################################################################################################################################################################
+
+Angular applban:
+   -  npm install keycloak-angular und keycloak.js
+     -  Implementieren ein initializer Function, womit man des KeycloakService (vom npm package) initialisieren.
+       -  im app.config.ts wir definieren ein provider:
+          {provide: APP_INITIALIZER, useFactory: initializer, multi: true, deps: [KeycloakService]},    // dieses ermöglicht, dass initializer Funktion ausgeführt wird, bevor dei Appl startet
+          KeycloakService
+       - Implementieren ein Authguard, und wir verwenden es zum schützen unsere Pfade:
+         canActivate: [AuthGuard],
+         // The user need to have this roles to access
+         data: { roles: ['ROLE_ADMIN'] },
+
+
 Angular Frontend übergibt das Login-Verwaltung komplett dem keycloak server. Das Login Prozess ist administriert bei dem keycloak ( provider). Angular erhält ein OIDC Json 
 webtoken vom Provider nach dem erfolgreichen Login und schickt es dem Spring Backend im Http Header weiter. Backend ebenfals beschäftigt sich mit dem Login Prozess nicht.
 
@@ -83,4 +99,8 @@ grant-type: password
 client_id: frontend
 client_secret: amit a client -> credetnials fülön a client secret mezőben találunk a keycloak UI-on
 username:/password: pisti
+
+#######################################################################################################################################################################
+KEYCLOAK IN SPRING
+#######################################################################################################################################################################
 

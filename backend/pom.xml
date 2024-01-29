@@ -88,6 +88,11 @@
             <version>2.2.20</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-spring-boot-starter</artifactId>
+            <version>21.0.0</version>
+        </dependency>
 
         <!--testing-->
         <dependency>

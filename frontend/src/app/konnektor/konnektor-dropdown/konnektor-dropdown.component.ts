@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {KonnektorDTO} from "../../../../target/generated-sources/openapi";
 import {NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle} from "@ng-bootstrap/ng-bootstrap";
+import {KonnektorDTO} from "../../openapi-generated-sources";
 
 @Component({
   standalone: true,

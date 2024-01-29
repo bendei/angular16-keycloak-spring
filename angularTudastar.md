@@ -83,6 +83,7 @@ https://angular.io/guide/property-binding
 https://www.javatpoint.com/data-binding-in-angular-8
 // pipes
 https://angular.io/guide/pipes
+https://www.geeksforgeeks.org/explain-pure-and-impure-pipe-in-angular/
 // async pipes - for data communication with between components on onPush
 https://www.telerik.com/blogs/angular-basics-step-by-step-understanding-async-pipe
 // 4 ways to listen to DOM venets in Angular:
@@ -103,6 +104,10 @@ https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Introduci
 https://marketsplash.com/tutorials/typescript/how-to-check-typescript-version/
 // dropdown select html
 https://www.telerik.com/blogs/angular-basics-how-to-get-value-selected-dropdown-menu-item
+// proxy , for avoiding CORS problem, angular appl calls different origin
+https://plainenglish.io/blog/all-you-need-to-know-about-angular-proxy-configuration
+// spread operator
+https://www.samanthaming.com/tidbits/92-6-use-cases-of-spread-with-array/
 
 
 
@@ -502,56 +507,43 @@ Wenn OnPush is not working: https://blog.angular-university.io/onpush-change-det
 https://angular.io/guide/lifecycle-hooks
 Lebenszyklus einer Komponente / Directive (lifecycle hooks sing callback Funktionen, die vom Angular gerufen werden wenn bestimmte Errignisse passieren):
 	1.	Angular instanziert die Komponente, wobei der Konstruktor aufgerufen und ihre Abhaengigkeiten injiziert werden.
-
 	2.	Change detection startet:
 	    A.  Angular prüft und setzt/aktualisiert die input Propertys (@Input) => die Komponente wird inizialisiert. Wenn child comp's @Input propoerty's Wert
 	        (its default value) ist geaendert durch das parent component, dann  ONCHANGES wird gerufen beim CD.  Jeder geaenderte! @Input property bekommt ein SimpleCahnge Objekt
 	         und SimpleChanges beinhaltet die Instanzen von SimpleChange Objekten.
 	    B.  Beim anderen data bind properties wird ONCHANGES nicht gerufen, aber string interpolation und template expressions werden auch ausgewertet:
 	        {{szam}} {{kiir()}}
-
 		https://www.tektutorialshub.com/angular/angular-ngonchanges-life-cycle-hook/
-
 	3.	Onchanges: Diese Methode wird aufgerufen, nachdem change detector die data binding @Input geprüft hat (bei anderen data binding changes wird dises callback nicht aufgerufen)
 	    und mindenstens eine geaendert wurde. Als Argument erhält die Methode ein Objekt vom Typ SimpleChange, in dem die veränderten Propertys und ihr aktueller und vorheriger
 	    Wert angegeben sind.
-
 		(wird nicht aufgerufen wenn input property ein array/Object ist, weil change detection verwendet ===
 		  strict equality operator zum Erkennen Aenderung in input propertys. Für pirimitive Typen geht dass, für Objekten wird aber die Referenzen verglichen die gleich sind,
 		  so wird Onchanges nicht aufgerufen.
 				Lösungen:
 					1.	Erstellen ein neues objekt mit den Werten des Alten
 					2.	Lagert man die Logik in das Docheck() hinaus.
-
 			ALternative wir können @Input property changes prüfen, wenn wir set / get Metode verwenden, anstatt callback Methode:
 			@Input()  set count(count: number) {
                           this._count = count;
                           console.log(count);
                       }
             get count(): number { return this._count; }
-
 	4.	Oninit: signalisiert, dass die Komponente fertig ist, Initialisierunglogik sollte hier kommen, lauft nur einmal ab.
-
 	5.	Docheck: wird IMMER by change detection aufgerufen unabhaengig ob eine Property geaendert wurde oder nicht., besonder beim OnPush.,
 	    funktioniert mit array/Objekt-Typen auch.
 	    Cd prüft data-binding ausser @Input nach DoCheck()
-
 	6.  AfterContentInit: Content ist hier ein external content injiziert durch ein parent component.
 		  gerufen nur einmal nachdem der content inizialisiert und change det abgelaufen ist.in die Komponente projected ist. (Content Projection!),
 		  You really don't need to worry about 	it if you're not messing around with templates or <ng-content>. Here @ContentChild and
 		  @ContentChildren will be resolved.
-
 	7.	AfterContentChecked: gleich wie oben, aber immer wenn change detection ablauft, Angular aktualisiert properties decorated ,it @ContentChild.
-
 	8.	AfterViewInit: View ist der Template eines Komponents.  nachdem Komponente-View und ihre child views inizialisiert sind. Kann zum extra Initialisierungslogik.
 		 Erst ab dieser Stufe im Lebenszyklus können wir mit @ViewChild() zuverlässig auf Elemente in der View zugreifen. Angular compiles all views to JS files, not html -
 		 the framework manages templates in code and has a rendering engine to interact with the DOM. At this hook @ViewChild and @ViewChildren will be resolved (aktualisiert)
 		 -- child compo
-
   9.	AfterViewChecked: laeft nach change IMMER detection ab, weil nach beim jedec CD wird das komponent neugerendert.
-
 	10. Ondestroy: Komponente wird aus dem DOM ausgebaut.(man navigiert weg. oder durch	Strukturdirektive wird aus dem DOM ausgebaut )
-
 	Im Generell: Init hooks: wenn view/content ist inizialisiert zum ersten Male. Dieses passiert 1. change detection cycle, gleich nach Instanzierung der Komponente.
 				 Checked hooks: Angular prüft ob view/content anders ist.
 
@@ -571,7 +563,6 @@ Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade
 	Schritte um Router zu verwenden:
 	- Routen konfigurieren: Pfad - Komponente: diese Zuordnung ist die Routendefinition, es ist ein Object : { path: 'mypath', component: MyComponent }. Diese RoDefinitionen werden
 		in einem array von Typ Routes festgelegt = routesArray, sie werden in einem separaten Datei definiert.
-
 
 	- forRoot(): outing module einbauen:
 		In simplen Fall: diese routesArray wird in dem root-Module importiert:
@@ -593,9 +584,6 @@ Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade
 		Anstelle RouteDefinitionen mit forRoot() in root/feature Module zu registrieren:
 		in app.routing.ts definieren wir eine Array von Routes ( mit möglicher loadChildren/loadComponent für lazy loading), die man in app.config.ts mit provideRouter(APP_ROUTES) Function 
         verwenden, um die Router zu registrieren. Diese app.config.ts wird dann im main.ts als paramter im bootstrapApplication(config) verwendet.
-        
-
-
 
 	- Komponente anzeigen: <router-outlet name="main"> ist ein Platzhalter das vom Router dynamisch durch geladene Komponente ersetzt wird, zeigt geroutete Komponente an, und mit dem
 		name attribute können wir mehrere router-outlet in der Anwendung verwenden.
@@ -604,7 +592,7 @@ Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade
 		Beim Klick auf einen normalen Link wird die gesamte Seite neu geladen. Die Anwendung wird also beendet, und dieselbe Anwendung wird unter der neuen Adresse neu geladen und gestartet.
 		Das Attribut darf 'href' also für Links auf interne Angular-Routen nicht verwendet werden, nur für externe.
 
-	ROUTENPARAMETER:  ':id',{ path:'mypath/component: MyComponent } => <a routerLink="/myPath/42">Link auf 42</a> , Zum Auslesen von Parametern bietet der Router die Klasse
+	ROUTENPARAMETER:  ':id',{ path:'mypath/component: MyComponent } => <a routerLink="/myPath/42">Link auf 42</a> , Zum Auslesen von Parametern (veraltete) bietet der Router die Klasse
 	ActivatedRouteSnapshot, die Auskunft über die gerade aktivierte Route und den  Zustand des Routers gibt.
 
 Routing with SD standalone components:
@@ -657,7 +645,7 @@ in main.ts:
                 providers: [
                     importProvidersFrom(HttpClientModule, RouteCommonService),               // importing providers from modules
                     provideRouter(APP_ROUTES, withComponentInputBinding()),             // 
-                    provideHttpClient(withInterceptors([pistiInterceptor])),            // configures HttpClient Service -functional Interceptor (ang 16 style)
+                    provideHttpClient(withInterceptors([corsInterceptor])),            // configures HttpClient Service -functional Interceptor (ang 16 style)
                     {provide: ErrorHandler, useClass: GlobalErrorHandler},              // also registered with the root injector
                     {provide: RouteCommonService, useClass: RouteCommonService},                  //  registering service for used by a group of child components commonly for data shareing
                     {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},      // registering class-based old ( before version 16) style interceptor
@@ -669,18 +657,19 @@ ROUTES PARAMETER MAPPING in SD: https://www.freecodecamp.org/news/use-input-for-
     
 
 Geminsames Service für eine Gruppe von Komponente:
-Environmental Injectors: mit Modules, alle lazy modules hatten ihre eigene Injectors, mit SD alle Route können eigene Injector haben. Also ein gemeinsames Injector und damit ein 
-gemeinsames Service für alle children Komponente. D.h. wir können alle Routes mit providers array versehen, und so bekommen diese ( auch non-lezy routes auch, nicht wie beim Modules
-eigene Injectors=> gemeinsames Services) ein eigenes Injector. Jetzt sind alle environmental injectors: root injectors auch.
 
-    export const NAVIGATION_ROUTES: Routes = [
-        {
-        path: '',
-        component: TemplateComponent,
-        //canActivate: [navigationGuard],
-        //providers: [MyCommonService]
-        
-            children: [
+    ENVIROMENT INJECTOR: mit Modules, alle lazy modules hatten ihre eigene Injectors, mit SD alle Route können eigene Injector haben. Also ein gemeinsames Injector und damit ein 
+    gemeinsames Service für alle children Komponente. D.h. wir können alle Routes mit providers array versehen, und so bekommen diese ( auch non-lezy routes auch, nicht wie beim Modules
+    eigene Injectors=> gemeinsames Services) ein eigenes Injector. Jetzt sind alle environmental injectors: root injectors auch.
+    
+        export const NAVIGATION_ROUTES: Routes = [
+            {
+            path: '',
+            component: TemplateComponent,
+            //canActivate: [navigationGuard],
+            //providers: [MyCommonService]
+            
+                children: [
               {
 Wir sollten aber meistens providedIn: root verwenden, weil diese ermöglicht lazy loading jetzt schon.
 
@@ -733,7 +722,7 @@ Beispiel: cold Ob in hot Ob. umwandeln, damit ein einziger Http-Request ausgefü
 	httpShared$.subscribe(e => console.log(e));
 
 Erstellen eines Observables (maunell):
-  let mybookObs: Observable<Book> = of(mybook);
+  let mybookObs$: Observable<Book> = of(mybook);
   .. wobei außerhalb der Klassendefinition das mybook ist:  const mybook: Book =   {   id: '3333', ... sellers:  []};
 
 PROMISE vs OBSERVABLE:
@@ -809,6 +798,7 @@ Async vor dem function: der Methode gibt immer ein Promise zurück, d.h. Rückga
 ..dann :
     myFunction.then(..something);
 
+AWAIT / ASYNC
 await lässt javascript warten bis Promise settled wird und einen Wert zurückliefert. d.h. wir brauchen then() nicht mehr:
     Methoden aufruf pausiert beim await bis Promise resolved wird und ein Wert zurückgibt, so js engine kann etwas anderes auch machen.
     await kann man nur verwenden, wenn async da ist. ErrorHandling: mit try/catch Block, anstelle von .catch() Methode
@@ -824,6 +814,27 @@ await lässt javascript warten bis Promise settled wird und einen Wert zurückli
             let result = await promise$;
         } catch (error) {}
     }
+
+    PROMISE:
+    https://javascript.info/promise-basics
+    let promise = new Promise(function(resolve, reject) {
+    setTimeout(() => resolve("done!"), 1000);
+    });
+    
+        syntax von then():
+            promise.then(
+            function(result) { },
+            function(error) { }
+            );
+    
+        // Consuming Funktion kann mit then() registriert werden.
+        // resolve runs the first function in .then
+        promise.then(
+            result => alert(result), // shows "done!" after 1 second
+            error => alert(error) // doesn't run
+        );
+        // sind wir nur in errors interessiert: catch()
+        // finally( () => {})
 
 RxJS Operators:
 
@@ -857,27 +868,6 @@ we can debounce using RxJS operator debounceTime() on a form control's valueChan
 
 Unsubscribing from Observables:
 https://medium.com/@gesteira2046/goodbye-to-unsubscribe-in-angular-components-8817e1b21db2
-
-PROMISE:
-https://javascript.info/promise-basics
-    let promise = new Promise(function(resolve, reject) {
-    setTimeout(() => resolve("done!"), 1000);
-    });
-    
-            syntax von then():
-                promise.then(
-                function(result) { },
-                function(error) { }
-                );
-
-    // Consuming Funktion kann mit then() registriert werden.
-    // resolve runs the first function in .then
-    promise.then(
-        result => alert(result), // shows "done!" after 1 second
-        error => alert(error) // doesn't run
-    );
-    // sind wir nur in errors interessiert: catch()
-    // finally( () => {})
 
 SUBJECT:
     Subject ist ein Observable und Observer in einem:
@@ -991,14 +981,14 @@ creating Promise manually: https://www.educba.com/typescript-promise/
         ERROR HANDLING WITH PROMISE: mit then und catch functions:
         
         await this.defaultService.getKonnektor(this.konnektorId).toPromise()
-        .then( result => {
-        this.konnektor = result;
-        this.loadFormData();
+            .then( result => {
+            this.konnektor = result;
+            this.loadFormData();
         })
         .catch( error => {
-        const err = error as HttpErrorResponse;
-        this.toast.error(err.message);
-        }
+            const err = error as HttpErrorResponse;
+            this.toast.error(err.message);
+            }
         )
 
 #######################################################################################################################################################################################
@@ -1283,7 +1273,7 @@ BOOTSTRAPPING ANGULAR:
 Angular takes the following steps to load our first view.
 
 	1.	Loads Index.html
-	2.	Loads Angular & Third-party libraries & Application, angular findet findet diese in dem package.json
+	2.	Loads Angular & Third-party libraries & Application, angular findet diese in dem package.json
 	3.	Executes application entry point (main.ts), die genaue Stelle findetangular im angular.json
 	4.	Load & execute Root Module (app.module.ts)
 	5.	Executes the Root Component (app.component.ts)
@@ -1561,7 +1551,7 @@ The viewProviders defines the set of injectable objects that are visible to its 
 
 ######################################################################################################################################################################################
 
-Interceptorok felhasználási területei:
+Interceptorok felhasználási területei: SD -> functional Interceptors
 https://medium.com/angular-in-depth/top-10-ways-to-use-interceptors-in-angular-db450f8a62d6
 
 implements HttpInterceptor -> intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>
@@ -1704,13 +1694,10 @@ PERFORMANCE TUNING:
   Data binding: string interpolation, property binding, event binding, attribute binding, class and style binding, 2-way binding.
   Nach jedem DOM event das change detection leauft ab und prüft Aenderungen in den Werten für data bindings und rerenderiert das ganze Kompoenent.
 
-
   Ausgangssituation:
 	By default change detection compoenente werden jedesmal neugerendert, wenn ein asynchron Erreignis passiert: click event, HttpRequest wird versendet etc, weil dabei
 	change detection jedesmal ablaeuft.
 	button click -> change detection lauft ab -> Kompoenent wird neu gerendert
-
-
 
 	Lamgsamer Applikation kann auf folgende zurückgeführt werden:
 		1	Improving change detection.
@@ -1761,6 +1748,13 @@ PERFORMANCE TUNING:
     4.  Using RxJS .fromEvent() operator that turns events into observable sequences
 #####################################################################################################################################################################################
 #####################################################################################################################################################################################
+MOCK BACKEND RESPONSES 
+
+
+
+#####################################################################################################################################################################################
+#####################################################################################################################################################################################
+
 mapping outside the pipe operator:
 
  this.defaultService.getAllKonnektors().subscribe((konnektors) => {

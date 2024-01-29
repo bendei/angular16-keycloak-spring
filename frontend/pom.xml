@@ -5,7 +5,7 @@
 
   <parent>
     <groupId>com.bende</groupId>
-    <artifactId>angular16-keycloak-spring</artifactId>
+    <artifactId>angular17-keycloak-spring</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
 
@@ -16,14 +16,13 @@
   <packaging>jar</packaging>
 
   <dependencies>
-  <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-clean-plugin -->
-  <dependency>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-clean-plugin</artifactId>
-    <version>3.2.0</version>
-  </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-clean-plugin -->
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-clean-plugin</artifactId>
+      <version>3.2.0</version>
+    </dependency>
   </dependencies>
-
 
   <build>
     <plugins>
@@ -61,46 +60,46 @@
           </execution>
 
           <!-- clean install -->
-   <!--       <execution>
-            <id>npm install</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-          </execution>
+          <!--       <execution>
+                   <id>npm install</id>
+                   <goals>
+                     <goal>npm</goal>
+                   </goals>
+                 </execution>
 
-          &lt;!&ndash; code validation &ndash;&gt;
-          <execution>
-            <id>npm run lint</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <phase>test</phase>
-            <configuration>
-              <arguments>run lint</arguments>
-            </configuration>
-          </execution>
--->
+                 &lt;!&ndash; code validation &ndash;&gt;
+                 <execution>
+                   <id>npm run lint</id>
+                   <goals>
+                     <goal>npm</goal>
+                   </goals>
+                   <phase>test</phase>
+                   <configuration>
+                     <arguments>run lint</arguments>
+                   </configuration>
+                 </execution>
+       -->
           <!-- build app -->
-         <!-- <execution>
-            <id>npm run build</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>run build &#45;&#45;prod</arguments>
-            </configuration>
-          </execution>-->
+          <!-- <execution>
+             <id>npm run build</id>
+             <goals>
+               <goal>npm</goal>
+             </goals>
+             <configuration>
+               <arguments>run build &#45;&#45;prod</arguments>
+             </configuration>
+           </execution>-->
 
         </executions>
       </plugin>
 
     </plugins>
 
-  <!--  <resources>
-      <resource>
-        &lt;!&ndash; we copy the content of the frontend directory in the final artifact &ndash;&gt;
-        <directory>dist/frontend</directory>
-      </resource>
-    </resources>-->
+    <!--  <resources>
+        <resource>
+          &lt;!&ndash; we copy the content of the frontend directory in the final artifact &ndash;&gt;
+          <directory>dist/frontend</directory>
+        </resource>
+      </resources>-->
   </build>
 </project>

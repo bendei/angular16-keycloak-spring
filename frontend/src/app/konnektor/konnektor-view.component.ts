@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {DefaultService, KonnektorDTO } from '../../../target/generated-sources/openapi';
+import {DefaultService, KonnektorDTO} from '../openapi-generated-sources';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
 import {lastValueFrom, Observable, of} from "rxjs";

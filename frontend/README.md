@@ -27,11 +27,14 @@ a report a C:\Gyakorlat\java-angular-basic\frontend\coverage\index.html lesz
 https://www.jetbrains.com/help/idea/running-unit-tests-on-karma.html#ws_karma_code_coverage
 
 ## openAPI for frontend:   https://miloszeljko.com/how-to-make-api-first-approach-spring-angular/
+We use OpenAPI Generator npm package.
+!! generated sources werden im git nicht gespeichert, sie müssen vor apll run generiert werden
   API first approach, we define openai.yaml Endpoint definition file, und dann anhand dieses wir genereieren typescipt model und service ts files. Verlauf:
   1.  Install: npm install @openapitools/openapi-generator-cli --save-dev
   2.  in dem package.json wir definieren:
       "generate-api": "openapi-generator-cli generate -i ../openAPI.yaml -g typescript-angular -o src/app/openapi-generated-sources  -p=removeOperationIdPrefix=true"
   3.  Zuletzt wir generieren typescript codes: npm run generate-api 
+ 
 
 ## Further help
 
