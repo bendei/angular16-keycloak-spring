@@ -1,5 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# by bende
+/src/app/openapi-generated-sources
+/app/openapi-generated-sources
 # compiled output
 /dist
 /tmp
@@ -7,6 +10,7 @@
 # Only exists if Bazel was run
 /bazel-out
 /target
+/api/openapi-generated-sources
 
 # dependencies
 /node_modules

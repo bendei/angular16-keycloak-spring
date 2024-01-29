@@ -78,3 +78,4 @@ fabric.properties
 /frontend/target/*
 /target/unit-tests/reports/Chrome_104.0.5112.102_(Windows_10)/unit-test-webchannel.xml
 /target/unit-tests/reports/Chrome_105.0.0.0_(Windows_10)/unit-test-webchannel.xml
+/frontend/src/app/openapi-generated-sources/model/artistResponseDTO.ts
