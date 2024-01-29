@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.bende</groupId>
-    <artifactId>angular16-keycloak-spring</artifactId>
+    <artifactId>angular17-keycloak-spring</artifactId>
     <packaging>pom</packaging>
     <version>0.1-SNAPSHOT</version>
 

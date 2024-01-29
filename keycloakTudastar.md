@@ -22,6 +22,23 @@ https://miloszeljko.com/step-by-step-guide-setting-up-keycloak-oauth2-in-angular
 JBoss has developed Keycloak as a Java-based open-source Identity and Access Management solution. Besides the support of both OAuth 2.0 and OIDC, 
 it also offers features like identity brokering, user federation, and SSO.
 
+Keycloak is an Identity and Access Management Server.
+
+OAuth is a protocol that enables applications to access resources on behalf of a user. It works by having the user authorize a third-party application
+to access their resources, such as their social media profile, without sharing their login credentials.
+On the other hand, OpenID Connect is an authentication protocol that builds on top of OAuth 2.0 to enable user authentication.
+It provides a standardized way for users to authenticate with an identity provider (IdP) and then receive an ID token, which can be used to access protected resources.
+
+Identity Provider / authorization Server: ist ein Service, das authentifiziert den User und es liefert user credentials für das Service Provider. Es verwaltet den User Identity und seine
+Zugriffsrechte. Keycloak. Verifiziert und identifiziert den User, und generiert ein access token das der client verwendet, um auf ein protected resource zugreigen zu können.
+
+Service Provieder / Resource Server: REST Endpoint, Der client sendet der access token (bekommen vom Authorization server) im http header zum Resource server, das
+reosurce server valieidet dann diese.
+
+Authentication Protocol: eine Reihe von Regeln, die die Kommunikation zwischen Identity und Service Providers regeln. Protocolstypen: SAML, AuthO, OpenID ( AuthO ist ein
+protocol, wogegen OpenID ist ein identity layer gebaut auf dem AuthO)
+OIDC is about who someone is. OAuth 2.0 is about what they are allowed to do.
+
 We can use Keycloak as a standalone server with an admin console or embed it in a Spring application. Once we have our Keycloak running in either of these ways, we can try the endpoints.
 ###########################################################################################################################################################################
 keycloak telepitése és admnisztrálása

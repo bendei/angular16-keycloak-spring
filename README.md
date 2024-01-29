@@ -27,7 +27,7 @@ Pacjaking von Backend was als war File, und wir haben es in einer der Wildfly Se
 Az (backend) app futtatása:
 1. mvn clean; mvn package
 2. cd bacend/target
-3. mvn java -jar backend-0.1-SNAPSHOT.jar
+3. java -jar backend-0.1-SNAPSHOT.jar
 
 vagy: Application RUn configból futtatjuk a Application osztályt.
 
@@ -94,25 +94,3 @@ Elsőként IntelliJ-n kívül inditjuk el a servert: (see: https://docs.wildfly.
          B.
          Simán az IntelliJ start server zöld ikon fent
 
-## Keycloak is an open-source identity and access management solution that supports OpenID Connect and OAuth 2.0 protocols. ○○
-Keycloak is an Identity and Access Management Server.
-
-OAuth is a protocol that enables applications to access resources on behalf of a user. It works by having the user authorize a third-party application
-to access their resources, such as their social media profile, without sharing their login credentials.
-On the other hand, OpenID Connect is an authentication protocol that builds on top of OAuth 2.0 to enable user authentication.
-It provides a standardized way for users to authenticate with an identity provider (IdP) and then receive an ID token, which can be used to access protected resources.
-
-Identity Provider / authorization Server: ist ein Service, das authentifiziert den User und es liefert user credentials für das Service Provider. Es verwaltet den User Identity und seine
-Zugriffsrechte. Keycloak. Verifiziert und identifiziert den User, und generiert ein access token das der client verwendet, um auf ein protected resource zugreigen zu können.
-
-Service Provieder / Resource Server: REST Endpoint, Der client sendet der access token (bekommen vom Authorization server) im http header zum Resource server, das
-reosurce server valieidet dann diese.
-
-Authentication Protocol: eine Reihe von Regeln, die die Kommunikation zwischen Identity und Service Providers regeln. Protocolstypen: SAML, AuthO, OpenID ( AuthO ist ein
-protocol, wogegen OpenID ist ein identity layer gebaut auf dem AuthO)
-OIDC is about who someone is. OAuth 2.0 is about what they are allowed to do.
-
-
-https://www.baeldung.com/spring-boot-keycloak
-
-https://plainenglish.io/blog/secure-an-angular-single-page-application-with-keycloak-cdbe5026881e
