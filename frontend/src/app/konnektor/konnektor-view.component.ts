@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO} from '../openapi-generated-sources';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
@@ -12,6 +12,7 @@ import {KonnektorDropdownComponent} from "./konnektor-dropdown/konnektor-dropdow
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {KonnektorRemoveComponent} from "./konnektor-remove/konnektor-remove.component";
 import {RouterModule} from "@angular/router";
+import {MockService} from "../mock/mock.service";
 
 @Component({
   standalone: true,
@@ -55,9 +56,8 @@ export class KonnektorViewComponent implements OnInit {
   @ViewChild(KonnektorViewChildComponent)
   private konnektorViewChildComponent!: KonnektorViewChildComponent;
 
-  constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder, private renderer: Renderer2
-  //            private readonly toast: ToastService
-  ) {
+  constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder, private renderer: Renderer2,
+              private mockService: MockService) {
     this.bendeClone = {...this.bende, nevem: "enenen"};
     this.apu = {
       kora: 80,
@@ -70,6 +70,7 @@ export class KonnektorViewComponent implements OnInit {
     };
 
     this.isApu = this.apu instanceof Valami;
+
   }
 
   ngOnInit(): void {

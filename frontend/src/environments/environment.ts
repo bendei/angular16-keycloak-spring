@@ -2,9 +2,12 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import {MockService} from "../app/mock/mock.service";
+
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8081/api',
+  apiUrl: 'http://localhost:3000/konnektors',
+  apiService: MockService,
   keycloak: {
     issuer: 'http://localhost:8080',
     realm: 'Login',

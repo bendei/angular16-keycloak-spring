@@ -1,7 +1,6 @@
 import {Component, ErrorHandler, isDevMode, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import { environment } from '../environments/environment';
-import {RouterModule, RouterOutlet} from '@angular/router';
+import {RouterModule} from '@angular/router';
 
 import { mymodulenevem, myfunction } from './myjsmoduleone';
 import {GlobalErrorHandler} from "./core/global-error-handler.service";
@@ -16,14 +15,9 @@ import {GlobalErrorHandler} from "./core/global-error-handler.service";
 })
 export class AppComponent implements OnInit {
 
-  apiUrl = environment.apiUrl;
-
   async ngOnInit(): Promise<Ember | null> {
-    console.log("apiUrl: " + this.apiUrl);
-
     if (isDevMode()) {
       console.log("DEV MODE");
-
       console.log("working with module: " + mymodulenevem +  " " + myfunction(2,3));
 
       myfunk().then(result => {console.log(result)});

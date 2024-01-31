@@ -10,6 +10,8 @@ import {RouteCommonService} from "./core/route.common.service";
 import {ObservableService} from "./core/observable.service";
 import {KeycloakService} from "keycloak-angular";
 import {initializer} from "./keycloak/app-init";
+import {environment} from "../environments/environment";
+import {DefaultService} from "./openapi-generated-sources";
 
 // diese Interface declares eine Array von providers, die für root component und alle seine Kinder zur Verfügung stehen sollen
 export const appConfig: ApplicationConfig = {
@@ -23,5 +25,8 @@ export const appConfig: ApplicationConfig = {
     {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},      // registering class-based old style interceptor
    //{provide: APP_INITIALIZER, useFactory: initializer, multi: true, deps: [KeycloakService]},
    // KeycloakService
+
+    // mock server API backend provider
+    {provide: DefaultService, useClass: environment.apiService}
   ]
 };

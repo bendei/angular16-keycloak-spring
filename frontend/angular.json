@@ -67,17 +67,24 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "development": {
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "frontend:build"
+            "buildTarget": "frontend:build",
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
-            "production": {
+            "prod": {
               "buildTarget": "frontend:build:production"
+            },
+            "dev": {
+              "buildTarget": "frontend:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           }
         },

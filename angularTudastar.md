@@ -23,6 +23,8 @@ https://www.tektutorialshub.com/angular/angular-injector-injectable-inject/
 https://www.tektutorialshub.com/angular/angular-services/
 // lyfecycle
 https://www.tektutorialshub.com/angular/angular-component-life-cycle-hooks/#ngdocheck
+// CORS cors
+https://www.stackhawk.com/blog/angular-cors-guide-examples-and-how-to-enable-it/
 // CD
 https://www.telerik.com/blogs/simplifying-angular-change-detection
 https://blog.angular-university.io/onpush-change-detection-how-it-works/
@@ -1749,6 +1751,26 @@ PERFORMANCE TUNING:
 #####################################################################################################################################################################################
 #####################################################################################################################################################################################
 MOCK BACKEND RESPONSES 
+
+Anstelle von real backend API, wir installieren server-json npm package, erstellen ein json API response Datei (mockdata.json), und starten wir das server-json mit diesem json Datei,
+die es bei Request zurückgibt. Je nach prod oder dev environment wir tauschen das data source service für real remote backend API = defalut.service.ts mit MockSeervice service aus, 
+die dann diesen server-json backend server aufruft.
+    Starten server-json mit mock data:  son-server --watch mockdata.json --port 3000
+    -    im environment.ts:    apiService: MockService
+    -   im app.config.ts:  {provide: DefaultService, useClass: environment.apiService}
+je nach Befehle: ng serve / build --configuration=dev/prod wird der reale mock service und API aufgerufen.
+
+CORS Problem: angular appl. läuft im localhost:4200 und wenn es ruft API localhost:8081 / oder mock API localhost:3000 dann kriegen wir CORS Problem.
+Lösungen:
+    Für DEV: configurieren ein proxy, die redirects unsere API request zu anderem Domain zu umgehen wir das CORS Problem:
+    -   konfigurieren proxy:
+        1.  Erstellen: proxy.conf.json:
+                                {
+                                    "/api": {
+                                    "target": "http://localhost:8081/api",
+                                    "secure": false
+                                }
+        2.  und wir registrieren diesen Datei im angular.json
 
 
 

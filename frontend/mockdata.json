@@ -1,0 +1,35 @@
+
+{"konnektors":
+[
+  {
+    "id": 1,
+    "hostname": "127.0.0.2",
+    "serialNumber": "213232",
+    "firmwareVersion": "21.11",
+    "hardwareVersion": "23.33.32",
+    "active": true,
+    "created": "2024-01-31T16:48:24.74",
+    "validUntil": "2022-12-31T21:59:59"
+  },
+  {
+    "id": 2,
+    "hostname": "127.0.0.1",
+    "serialNumber": "213231",
+    "firmwareVersion": "11.01",
+    "hardwareVersion": "23.33.33",
+    "active": true,
+    "created": "2024-01-31T16:48:24.74",
+    "validUntil": "2022-12-31T21:59:59"
+  },
+  {
+    "id": 3,
+    "hostname": "127.0.0.3",
+    "serialNumber": "213232",
+    "firmwareVersion": "11.03",
+    "hardwareVersion": "23.33.33",
+    "active": true,
+    "created": "2024-01-31T16:48:24.74",
+    "validUntil": "2022-12-31T21:59:59"
+  }
+]
+}
