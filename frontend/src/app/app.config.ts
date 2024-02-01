@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, ApplicationConfig, ErrorHandler} from '@angular/core';
+import {APP_INITIALIZER, ApplicationConfig, ErrorHandler, importProvidersFrom} from '@angular/core';
 import {provideRouter, withComponentInputBinding} from '@angular/router';
 
 import {APP_ROUTES} from "./app.routing";
@@ -12,6 +12,7 @@ import {KeycloakService} from "keycloak-angular";
 import {initializer} from "./keycloak/app-init";
 import {environment} from "../environments/environment";
 import {DefaultService} from "./openapi-generated-sources";
+import {LoggerModule, NgxLoggerLevel} from "ngx-logger";
 
 // diese Interface declares eine Array von providers, die für root component und alle seine Kinder zur Verfügung stehen sollen
 export const appConfig: ApplicationConfig = {
@@ -27,6 +28,13 @@ export const appConfig: ApplicationConfig = {
    // KeycloakService
 
     // mock server API backend provider
-    {provide: DefaultService, useClass: environment.apiService}
+    {provide: DefaultService, useClass: environment.apiService},
+    // importing ngx-logger module's providers
+    importProvidersFrom(LoggerModule.forRoot({
+      serverLoggingUrl: 'http://localhost:8081/api/logs',
+      level: NgxLoggerLevel.DEBUG,
+      serverLogLevel: NgxLoggerLevel.ERROR,
+
+    }))
   ]
 };

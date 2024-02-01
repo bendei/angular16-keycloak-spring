@@ -13,6 +13,7 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {KonnektorRemoveComponent} from "./konnektor-remove/konnektor-remove.component";
 import {RouterModule} from "@angular/router";
 import {MockService} from "../mock/mock.service";
+import {NGXLogger} from "ngx-logger";
 
 @Component({
   standalone: true,
@@ -57,7 +58,7 @@ export class KonnektorViewComponent implements OnInit {
   private konnektorViewChildComponent!: KonnektorViewChildComponent;
 
   constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder, private renderer: Renderer2,
-              private mockService: MockService) {
+              private mockService: MockService, private logger: NGXLogger) {
     this.bendeClone = {...this.bende, nevem: "enenen"};
     this.apu = {
       kora: 80,
@@ -70,7 +71,9 @@ export class KonnektorViewComponent implements OnInit {
     };
 
     this.isApu = this.apu instanceof Valami;
-
+    this.logger.error("Your log message goes here error");
+    this.logger.debug("Your log message goes here debug");
+    this.logger.info("Your log message goes here info");
   }
 
   ngOnInit(): void {

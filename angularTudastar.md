@@ -110,6 +110,8 @@ https://www.telerik.com/blogs/angular-basics-how-to-get-value-selected-dropdown-
 https://plainenglish.io/blog/all-you-need-to-know-about-angular-proxy-configuration
 // spread operator
 https://www.samanthaming.com/tidbits/92-6-use-cases-of-spread-with-array/
+// lodash
+https://www.geeksforgeeks.org/lodash/
 
 
 
@@ -147,41 +149,55 @@ KLONING OBJECTS:
   const ujobj = {...source};
 3. lodash deep copy
 
+#######################################################################################################################################################################################
+INTERFACE
+#######################################################################################################################################################################################
+Object type:
 Instanz erstellen (Interface Type):
 1. von interface Typ:
 	const error: Error = {
       name: "pisti error",
       message: "pisti message"
     };
-2. Klasse-Typ:
-	let ez: Pista = {
-		name: "bende"
-	};
-ohne Tipisierung / Angabe der Klasse:
-	let ez = {
-		name: "rjkreoirp"
-	};
+   2. Klasse-Typ:
+       let ez: Pista = {
+           name: "bende"
+       };
+   ohne Tipisierung / Angabe der Klasse:
+       let ez = {
+           name: "rjkreoirp"
+       };
 
-HAHSHATBLE in ts: (nem más mint egy string k
-export declare interface SimpleChanges {
-    [propName: string]: SimpleChange;
-}
-let ht: string[]: SimpleChange;
+Function type:
+        interface PistiFunction {
+        (text: string): string;
+        }
+      Instanzieren: let psitiFunction: PistiFunction = (input: string) => input.toLoweCase();
+      Aufrufen: pistiFunction("zümi");
 
-accessing it:
 
 INTERFACES dienen dazu, die Struktur eines Objekts grundsätzlich zu definieren.
 Optionale Eigenschaften werden durch ein Fragezeichen-Symbol gekennzeichnet.
 	export interface User { // szintaktikája mint a class-nak!
 		name: string,
-		age?: number
+		age?: number,
+        getValami: (input) => string,   //arror function
+        getValami(input): string        // csak a metódust deklaráljuk, de a metódus implementálását a konkrét példányban végezzük el!!!! Szemben a class al
 	}
 instanzieren interface type object (object literal stilusban):
-	const pista: User = {name: 'bende'};    // szemben a objektummal:  pista: User = new ('bende');
+	const pista: User = {
+name: 'bende'};    // szemben a objektummal:  pista: User = new ('bende');
 	vagy ha array: let pistikek: User[] = [];
 
 TEMPLATE-SYNTAX _> Angular erweiter html syntax mit folgenden Ausdrücken: interpolation {{componentProperty}}, template strings, safe-navigator-operator (?), property binding,
 	event binding,  2-way binding, #Elementreferenzen, Direktiven, *Strukturdirektiven, Attributdirektiven, Pipes
+
+HAHSHATBLE in ts: (nem más mint egy string k
+export declare interface SimpleChanges {
+[propName: string]: SimpleChange;
+}
+let ht: string[]: SimpleChange;
+
 
 TEMPLATE-STRINGS
 Mit einem normalen String in einfachen Anführungszeichen ist es nicht möglich, einen Text über mehrere Zeilen anzugeben. TEMPLATE-STRINGS im Code
@@ -461,6 +477,7 @@ STANDALONE Koomponente:
 - SD importiert alle seine Importierte Teile (Komponente, Directive, Pipes NgModules) in eigenem import: [] Property, und wird dazu keine NgModule mehr gebraucht: SD ist sein eigenes Module auch.
 - child SD wird vom parent SD in seinem import: [] importiert, und nicht in declaration mehr angegeben. Also SD gehört keinem Module mehr.
 - SD kann bootsrapped werden, mit bootsrapAppplication( BootsrappableSD, ...) in main.ts
+    
 
   https://www.tektutorialshub.com/angular/angular-component-life-cycle-hooks/#ngdocheck
 
@@ -475,7 +492,9 @@ ob der Wert eines property binding geaendert ist?
     https://medium.com/@toha.marko/angular-onpush-check-your-knowledge-on-a-simple-example-bf461b76cef3
     https://blogs.halodoc.io/understanding-angular-change-detection-strategy/#:~:text=By%20default%2C%20angular%20will%20run,()%20has%20a%20new%20reference.
 
-Es starter das CD jedesmal, wenn
+Der Entwickler / User ändert das Datamodel eines Komponenten mit folgenden: DOM event, @Input changes, setTimer/Interval, promise, subscription -> Angular startet das CD: 
+von oben nach unten Ruft das Change Detector aller Komponente und prüft, ob ein Wert in einem der Modelle anders ist. Wenn ja, dann neurenderiert das DOM Element; 
+wenn nicht dan wird kein Neurenderiren erfolgen
 
 DEFAULT
 (ChangeDetectionStrategy.Default):
@@ -506,6 +525,7 @@ Bim ONPUSH strategie, wird CD getriggert werden wenn:
 
 Wenn OnPush is not working: https://blog.angular-university.io/onpush-change-detection-how-it-works/
 
+Wenn child = onPush es DOM event passirt dann parent wird auch geupdated.
 https://angular.io/guide/lifecycle-hooks
 Lebenszyklus einer Komponente / Directive (lifecycle hooks sing callback Funktionen, die vom Angular gerufen werden wenn bestimmte Errignisse passieren):
 	1.	Angular instanziert die Komponente, wobei der Konstruktor aufgerufen und ihre Abhaengigkeiten injiziert werden.
@@ -602,12 +622,18 @@ standalone-componetns-v1.pdf
 
 Da keine Module mehr verwendet werden, wir werden kine RouterModule mit Routes Array Konfigurieren und diese in Modules laden. Anstetten Routes werden in main.ts konfiguriert: 
 
+LOGGER SERVERSIDE
 in main.ts:
     A.: 
         wir können routes und providers dirkt im main.ts Datei angeben:  
         bootstrapApplication(AppComponent, {	// standalone component, was bootstrapped wird
           providers: [
-            importProvidersFrom(HttpClientModule), // importing providers from modules usually
+            importProvidersFrom(HttpClientModule), // importing providers from modules usually, régen LoggerModule.forRoot({ ...
+            most: importProvidersFrom(LoggerModule.forRoot({
+                    serverLoggingUrl: '/api/logs',
+                    level: NgxLoggerLevel.DEBUG,
+                    serverLogLevel: NgxLoggerLevel.ERROR
+                    })
         
             // we add routes to the bootstrapApplication configuration
             // wir können child rourtes oder auch einzelne Komponente auch lazy loaden
@@ -1749,6 +1775,7 @@ PERFORMANCE TUNING:
     3.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
     4.  Using RxJS .fromEvent() operator that turns events into observable sequences
 #####################################################################################################################################################################################
+MOCK BACKEND RESPONSES
 #####################################################################################################################################################################################
 MOCK BACKEND RESPONSES 
 
@@ -1775,7 +1802,25 @@ Lösungen:
 
 
 #####################################################################################################################################################################################
+SIGNAL
 #####################################################################################################################################################################################
+Signal ist eine Variable mit chnage Notification. ein reaktives primitive. Es hat immer einen Wert, synchron.
+    quantity = signal(10);                                          // Erstellt und inizialisiert ein Signal = signal constructor function, kann parametisiert werden
+    let ertek = quantity();                                         // Wert Auslesen
+    this.quantity.set(11);                                          // Wert ändern den Wert, indem wir es überschreiben mit dem neuen wert
+    this.quantity.update( (ertek) => ertek * 2)                     // update nimmt den aktuellen Wert und macht etwas damit
+    this.autoSignal.mutate((auto => auto.szine = "zöld"));          // mutiert den Inhalt nicht den Wert: zB, Andern object property oder array's element
+    this.notifications.mutate(list => list.push(notification));     
+    totlaPrice = computed( () => this.price() * this.quantity();    // wenn ein Signals Wert hängt von dem Wert anderer Signale: änderts sich der wert einers Signals dann wird totalPrice Signal 
+                                                                        neukalkuliert.
+    effect(() => console.log(this.selectedVehicle()));              // wird jedesmal ausgeführt, wenn signals Wert änderts sich (darf den Wert nicht ändern)
+    
+    Wenn wir den Signal's Wert andern dann CD wird scheduled to run.
+
+
+#####################################################################################################################################################################################
+#####################################################################################################################################################################################
+
 
 mapping outside the pipe operator:
 
