@@ -11,24 +11,28 @@
   <div class="mb-3" >If you click edit in the row, than static fields become input fields, by subsequent click on edit will convert them into static fields, but not save them.
   Rows already edited will have black pencil icon, not edited white ones.</div>
   <ngx-datatable #auditlogsDataTable id="auditlogsDataTable"
-                 [columnMode]="'force'"
-                 [messages]="{emptyMessage: 'Keine Daten vorhanden'}"
-                 [headerHeight]="30"
-                 [rowHeight]="30"
-                 [rows]="auditlogs"
-                 [scrollbarV]="false"
-  >
+    [columnMode]="'force'"
+    [messages]="{emptyMessage: 'Keine Daten vorhanden'}"
+    [headerHeight]="30"
+    [rowHeight]="30"
+    [rows]="auditlogs"
+    [scrollbarV]="false"
+    >
     <ngx-datatable-column  [width]="66" name="Id" prop="id" [canAutoResize]="false" [sortable]="true"></ngx-datatable-column>
 
     <ngx-datatable-column  name="user" prop="user" [canAutoResize]="true" [sortable]="true" >
       <ng-template  ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
-        <span *ngIf="!editable[row.id + '-user']" (dblclick)="editable[row.id + '-user'] = true" [id]="row.id+'-userspan'">
-          {{row.user}}
-          <!--{{templateMethodOne(row.user)}} &lt;!&ndash;template expression ami a user string hosszat adja vissza&ndash;&gt;
-          {{row.user | demo}} &lt;!&ndash;pure pipe, ami a a user string hosszat adja vissza&ndash;&gt;
-          {{row.user | usernamelength}} &lt;!&ndash;caching vlaue with un-pure pipe, ami a a user string hosszat adja vissza&ndash;&gt;-->
-        </span>
-        <input type="text" class="form-control" [id]="row.id+'-user'" *ngIf="editable[row.id + '-user']" (blur)="onUpdateCell(row.id, '-user', $event)" [value] = "row.user">
+        @if (!editable[row.id + '-user']) {
+          <span (dblclick)="editable[row.id + '-user'] = true" [id]="row.id+'-userspan'">
+            {{row.user}}
+            <!--{{templateMethodOne(row.user)}} &lt;!&ndash;template expression ami a user string hosszat adja vissza&ndash;&gt;
+            {{row.user | demo}} &lt;!&ndash;pure pipe, ami a a user string hosszat adja vissza&ndash;&gt;
+            {{row.user | usernamelength}} &lt;!&ndash;caching vlaue with un-pure pipe, ami a a user string hosszat adja vissza&ndash;&gt;-->
+          </span>
+        }
+        @if (editable[row.id + '-user']) {
+          <input type="text" class="form-control" [id]="row.id+'-user'" (blur)="onUpdateCell(row.id, '-user', $event)" [value] = "row.user">
+        }
       </ng-template>
     </ngx-datatable-column>
 
@@ -39,25 +43,35 @@
     <!--  https://upmostly.com/angular/using-value-vs-ngvalue-in-angular -->
     <ngx-datatable-column  [width]="266" name="userAction" prop="userAction" [canAutoResize]="true" [sortable]="true">
       <ng-template  ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
-        <span *ngIf="!editable[row.id + '-useraction']" (dblclick)="editable[row.id + '-useraction'] = true">
-          {{mapUserActionToString(row.userAction)}}
-        </span>
-        <select *ngIf="editable[row.id + '-useraction']" (blur)="onUpdateCell(row.id, '-useraction', $event)">
-          <option [value]="row"> {{mapUserActionToString(row.userAction)}}</option>
-          <option *ngFor="let sor of messagesTypes" [value]="sor" [hidden]="row.userAction == sor">
-            {{mapUserActionToString(sor)}}
-          </option>
-        </select>
+        @if (!editable[row.id + '-useraction']) {
+          <span (dblclick)="editable[row.id + '-useraction'] = true">
+            {{mapUserActionToString(row.userAction)}}
+          </span>
+        }
+        @if (editable[row.id + '-useraction']) {
+          <select (blur)="onUpdateCell(row.id, '-useraction', $event)">
+            <option [value]="row"> {{mapUserActionToString(row.userAction)}}</option>
+            @for (sor of messagesTypes; track sor) {
+              <option [value]="sor" [hidden]="row.userAction == sor">
+                {{mapUserActionToString(sor)}}
+              </option>
+            }
+          </select>
+        }
       </ng-template>
     </ngx-datatable-column>
 
     <ngx-datatable-column  name="timestamp" [canAutoResize]="true" [sortable]="true">
       <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex" >
-        <span title="double click to edit" *ngIf="!editable[row.id + '-timestamp']" (dblclick)="editable[row.id + '-timestamp'] = true">
-         {{row.timestamp | date:"YYYY-MM-dd"}}
-        </span>
-        <input ngbDatepicker #d="ngbDatepicker" type="text" class="form-control"  *ngIf="editable[row.id + '-timestamp']" [value]="convertISODateToString(row.timestamp)"
-          (blur)="onUpdateCell(row.id, '-timestamp', $event)">
+        @if (!editable[row.id + '-timestamp']) {
+          <span title="double click to edit" (dblclick)="editable[row.id + '-timestamp'] = true">
+            {{row.timestamp | date:"YYYY-MM-dd"}}
+          </span>
+        }
+        @if (editable[row.id + '-timestamp']) {
+          <input ngbDatepicker #d="ngbDatepicker" type="text" class="form-control"  [value]="convertISODateToString(row.timestamp)"
+            (blur)="onUpdateCell(row.id, '-timestamp', $event)">
+        }
       </ng-template>
     </ngx-datatable-column>
 
@@ -80,6 +94,8 @@
 </div>
 <div [style.font-size.px]="fontSizePx">Resizable Text</div>
 
-<div *ngFor="let log of auditlogs"> <!--ha az uditlog változik vagy ujat adunk hozzá akkor a pipe bemebete is változik es lefut a transform maskülönben nem-->
-  {{log.user! | printuser}}
-</div>
+@for (log of auditlogs; track log) {
+  <div> <!--ha az uditlog változik vagy ujat adunk hozzá akkor a pipe bemebete is változik es lefut a transform maskülönben nem-->
+    {{log.user! | printuser}}
+  </div>
+}

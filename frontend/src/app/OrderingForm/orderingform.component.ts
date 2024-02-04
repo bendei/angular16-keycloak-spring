@@ -1,5 +1,5 @@
 import { Component, OnInit} from "@angular/core";
-import {NgFor} from "@angular/common";
+
 import {FormsModule} from "@angular/forms";
 
 const TAX = 0.3;
@@ -8,7 +8,7 @@ const TAX = 0.3;
   standalone: true,
   templateUrl: 'orderingform.component.html',
   selector: 'orderingform',
-  imports: [NgFor, FormsModule]
+  imports: [FormsModule]
 })
 export class OrderingformComponent {
 

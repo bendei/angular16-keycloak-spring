@@ -6,7 +6,7 @@ import {lastValueFrom, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
 import {KonnektorViewChildComponent} from "./konnektor-view-child.component";
 import {PureDatePipe} from "../pipes/pureDatePipe";
-import {CommonModule} from "@angular/common";
+
 import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 import {KonnektorDropdownComponent} from "./konnektor-dropdown/konnektor-dropdown.component";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
@@ -20,9 +20,7 @@ import {NGXLogger} from "ngx-logger";
   selector: 'konnektor-view',
   templateUrl: './konnektor-view.component.html',
   styleUrls: ['./konnektor-view.component.css'],
-  imports: [PureDatePipe, KonnektorViewChildComponent,
-    CommonModule, FormsModule, ReactiveFormsModule, NgxDatatableModule, KonnektorDropdownComponent, NgbModule, KonnektorRemoveComponent, RouterModule
-  ],
+  imports: [PureDatePipe, KonnektorViewChildComponent, FormsModule, ReactiveFormsModule, NgxDatatableModule, KonnektorDropdownComponent, NgbModule, KonnektorRemoveComponent, RouterModule],
   providers: [FormBuilder, ToastService]
 
 })
