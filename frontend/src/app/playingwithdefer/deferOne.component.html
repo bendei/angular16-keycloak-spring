@@ -1,0 +1,14 @@
+defere One
+<br/>
+isDeferOneVisible: {{isDeferOneVisible}}
+
+<br/>
+
+@defer(when isDeferOneVisible; prefetch on immediate) {
+  <deferTwo/>
+} @placeholder {
+  placeholder
+}
+<br/>
+<br/>
+<button (click)="isDeferOneVisible = true">Show component</button>

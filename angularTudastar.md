@@ -112,6 +112,8 @@ https://plainenglish.io/blog/all-you-need-to-know-about-angular-proxy-configurat
 https://www.samanthaming.com/tidbits/92-6-use-cases-of-spread-with-array/
 // lodash
 https://www.geeksforgeeks.org/lodash/
+// defer
+https://netbasal.com/a-comprehensive-guide-to-angulars-defer-block-468c74048df4
 
 
 
@@ -1734,6 +1736,7 @@ PERFORMANCE TUNING:
 		3	UX design Überarbeiten
 		4.	trackBy for ngFor
 		5.  improving page load: lazy loading
+        6. Signals
 
   1 A. https://angular.io/guide/pipes
 		https://christianlydemann.com/the-complete-guide-to-angular-performance-tuning/
@@ -1808,8 +1811,8 @@ Signal ist eine Variable mit chnage Notification. ein reaktives primitive. Es ha
     quantity = signal(10);                                          // Erstellt und inizialisiert ein Signal = signal constructor function, kann parametisiert werden
     let ertek = quantity();                                         // Wert Auslesen
     this.quantity.set(11);                                          // Wert ändern den Wert, indem wir es überschreiben mit dem neuen wert
-    this.quantity.update( (ertek) => ertek * 2)                     // update nimmt den aktuellen Wert und macht etwas damit
-    this.autoSignal.mutate((auto => auto.szine = "zöld"));          // mutiert den Inhalt nicht den Wert: zB, Andern object property oder array's element
+    this.quantity.update( (ertek) => ertek * 2)                     // update nimmt den aktuellen Wert und macht etwas damit, array.filter
+    this.autoSignal.mutate((auto => auto.szine = "zöld"));          // mutiert den Inhalt nicht den Wert: zB, Andern object property oder array's element, array.push()
     this.notifications.mutate(list => list.push(notification));     
     totlaPrice = computed( () => this.price() * this.quantity();    // wenn ein Signals Wert hängt von dem Wert anderer Signale: änderts sich der wert einers Signals dann wird totalPrice Signal 
                                                                         neukalkuliert.
@@ -1819,8 +1822,19 @@ Signal ist eine Variable mit chnage Notification. ein reaktives primitive. Es ha
 
 
 #####################################################################################################################################################################################
+DEFER bLOCK
 #####################################################################################################################################################################################
-
+Ziel: lazay loading a content. Sollte es ein Komponent, Directive oder Pipe, ist es plaziert in einem @defer vblock, dann Angular ladet es basierend auf einer Kondition oder einen 
+Erreignis. => Leistungsoptimierung, 
+FONTOS : alapból a @defer lzay loadingolja a komponenst !!! Tehát, méh ha on immeditae van akkor is külön js filéban tölti be a komponenst !!
+    1.  @defer(when isTrue) {.. // renderiert basierend auf einer Kkondition
+    2.  @loading {}             // zeigt Inhalt während loading prozesse
+    3.  @placeholder {          // 
+    4.  @error {                // wenn ein Error passiert während Laden
+    5.  @defer(on immediate)    // ladet Komponente gelich - natürlich in einem separaten js Datei
+    6.  @defer(on interaction(trigger))  <button #trigger   // button click
+    7.  @defer(on timer(2000ms))
+    8.  @defer(on viewport(trigger))
 
 
 

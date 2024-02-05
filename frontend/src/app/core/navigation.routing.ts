@@ -10,6 +10,7 @@ import {RouteCommonService} from "./route.common.service";
 import {OrderingformComponent} from "../OrderingForm/orderingform.component";
 import {OrderingSignalComponent} from "../OrderingFormSignals/orderingsignal.component";
 import {AuthGuard} from "../keycloak/authguard";
+import {DeferOneComponent} from "../playingwithdefer/deferOne.component";
 
 export const NAVIGATION_ROUTES: Routes = [
   {
@@ -48,6 +49,10 @@ export const NAVIGATION_ROUTES: Routes = [
       {
         path: "oderingsignals",
         component: OrderingSignalComponent
+      },
+      {
+        path: "playingdefer",
+        component: DeferOneComponent
       }
     ]
   },
