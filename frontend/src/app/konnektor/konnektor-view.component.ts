@@ -1,4 +1,4 @@
-import {Component, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, inject, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO} from '../openapi-generated-sources';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
@@ -14,6 +14,7 @@ import {KonnektorRemoveComponent} from "./konnektor-remove/konnektor-remove.comp
 import {RouterModule} from "@angular/router";
 import {MockService} from "../mock/mock.service";
 import {NGXLogger} from "ngx-logger";
+import {ErrorService} from "../core/error.service";
 
 @Component({
   standalone: true,
@@ -25,6 +26,9 @@ import {NGXLogger} from "ngx-logger";
 
 })
 export class KonnektorViewComponent implements OnInit {
+
+  errorService = inject(ErrorService);
+
   readonly headerHeight = 50;
   readonly rowHeight = 50;
 
@@ -132,7 +136,6 @@ export class KonnektorViewComponent implements OnInit {
   }
 
   private loadAndMapKonnektors() {
-    console.log('------loadAndMapKonnektors ');
     let innerkonnektors: KonnektorDTO[] = [];
     let mapKonnektors: KonnektorMapperDTO[] = [];
 
@@ -147,7 +150,6 @@ export class KonnektorViewComponent implements OnInit {
         )
       )
       .subscribe( (konnektorsMapped) => {
-        console.log('------ ' + konnektorsMapped[0].hostNameAndSerial + ", :" + konnektorsMapped[0].hostName + ", mappedDate: " + konnektorsMapped[0].mappedDate);
       });
   }
 
@@ -158,9 +160,10 @@ export class KonnektorViewComponent implements OnInit {
     try {
       const allKonnektors$ = this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created);
       this.konnektors = await lastValueFrom(allKonnektors$);
-      console.table(this.konnektors);
     } catch(error) {
-      console.log("......................ERROR: " + error.message);
+      if (error.status != '504') {
+        console.log("ki kellene rakni egy popupt");
+      }
     }
     this.loaded = true;
 

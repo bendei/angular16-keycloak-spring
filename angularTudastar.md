@@ -62,6 +62,7 @@ https://hackernoon.com/a-guide-to-angular-signals-with-practical-use-cases-part-
 // 4 ways to listen to events
 https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
 // error handling
+https://www.youtube.com/watch?v=hy_8JsOIVug     // nomralis http error handling in interceptor (functional)
 https://www.tektutorialshub.com/angular/angular-http-error-handling/
 https://pkief.medium.com/global-error-handling-in-angular-ea395ce174b1
 https://blog.angular-university.io/rxjs-error-handling/
@@ -1812,13 +1813,12 @@ Signal ist eine Variable mit chnage Notification. ein reaktives primitive. Es ha
     let ertek = quantity();                                         // Wert Auslesen
     this.quantity.set(11);                                          // Wert ändern den Wert, indem wir es überschreiben mit dem neuen wert
     this.quantity.update( (ertek) => ertek * 2)                     // update nimmt den aktuellen Wert und macht etwas damit, array.filter
-    this.autoSignal.mutate((auto => auto.szine = "zöld"));          // mutiert den Inhalt nicht den Wert: zB, Andern object property oder array's element, array.push()
-    this.notifications.mutate(list => list.push(notification));     
     totlaPrice = computed( () => this.price() * this.quantity();    // wenn ein Signals Wert hängt von dem Wert anderer Signale: änderts sich der wert einers Signals dann wird totalPrice Signal 
                                                                         neukalkuliert.
     effect(() => console.log(this.selectedVehicle()));              // wird jedesmal ausgeführt, wenn signals Wert änderts sich (darf den Wert nicht ändern)
     
-    Wenn wir den Signal's Wert andern dann CD wird scheduled to run.
+    Wenn wir den Signal's Wert andern dann CD wird scheduled to run. 
+    CD laeft nicht für alle Komponente sondern nur für das einzige komponent, wo signal gelesen wird. 
 
 
 #####################################################################################################################################################################################
