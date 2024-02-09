@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, inject, OnInit, ViewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO} from '../openapi-generated-sources';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
@@ -12,9 +12,8 @@ import {KonnektorDropdownComponent} from "./konnektor-dropdown/konnektor-dropdow
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {KonnektorRemoveComponent} from "./konnektor-remove/konnektor-remove.component";
 import {RouterModule} from "@angular/router";
-import {MockService} from "../mock/mock.service";
-import {NGXLogger} from "ngx-logger";
 import {ErrorService} from "../core/error.service";
+import {NGXLogger} from "ngx-logger";
 
 @Component({
   standalone: true,
@@ -28,6 +27,9 @@ import {ErrorService} from "../core/error.service";
 export class KonnektorViewComponent implements OnInit {
 
   errorService = inject(ErrorService);
+
+  private static readonly TIMEOUT_ERROR = '504';
+  private static readonly ERROR_MSG = 'A non-timeout error occurred when fetching';
 
   readonly headerHeight = 50;
   readonly rowHeight = 50;
@@ -59,8 +61,8 @@ export class KonnektorViewComponent implements OnInit {
   @ViewChild(KonnektorViewChildComponent)
   private konnektorViewChildComponent!: KonnektorViewChildComponent;
 
-  constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder, private renderer: Renderer2,
-              private mockService: MockService, private logger: NGXLogger) {
+  constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder) {
+    console.log("CREATED");
     this.bendeClone = {...this.bende, nevem: "enenen"};
     this.apu = {
       kora: 80,
@@ -73,13 +75,12 @@ export class KonnektorViewComponent implements OnInit {
     };
 
     this.isApu = this.apu instanceof Valami;
-    this.logger.error("Your log message goes here error");
-    this.logger.debug("Your log message goes here debug");
-    this.logger.info("Your log message goes here info");
+    //this.logger.error("Your log message goes here error");
+    //this.logger.debug("Your log message goes here debug");
+    //this.logger.info("Your log message goes here info");
   }
 
   ngOnInit(): void {
-
     this.cretaeForm();
     this.loadKonnektors();
     const pisti: PistiFunction = function(text: string) {return text};
@@ -87,11 +88,9 @@ export class KonnektorViewComponent implements OnInit {
     console.log('------ ' + pisti("pisti implementing function type interface"));
     console.log('------ ' + feri("feri implementing function type interface lambda"));
 
-
     // deconstructing object properties
     const {kora : korom} = this.apu;
     console.log("deconstructing: " + korom);
-
   }
 
   public filterForm(): void {
@@ -155,14 +154,14 @@ export class KonnektorViewComponent implements OnInit {
 
   // überarbeitet, da toPromise is deprecated
   private async loadKonnektors(hostname?: string, serialNumber?: string, firmwareVersion?: string, hardwareVersion?: string, created?: string) {
-
     this.loaded = false;
     try {
       const allKonnektors$ = this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created);
       this.konnektors = await lastValueFrom(allKonnektors$);
     } catch(error) {
-      if (error.status != '504') {
-        console.log("ki kellene rakni egy popupt");
+      if (error.status != KonnektorViewComponent.TIMEOUT_ERROR) {
+        console.log("itt jön");
+        console.error(KonnektorViewComponent.ERROR_MSG, error);
       }
     }
     this.loaded = true;

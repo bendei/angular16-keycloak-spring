@@ -4,15 +4,15 @@
 
 loaded: {{loaded}}
 
-
 <h4>Mai dátum:  {{maiDatum | puredatepipe}}</h4>
 
 <div  class="card mt-3">
   <div class="card-body">
-    <h5 class="card-title">Using template reference to call method and property on the child component</h5>
+    <h5 class="card-title" data-testid="header-one">Using template reference to call method and property on the child component</h5>
     <div class="row border-1 border-black">
       <div class="col-3">
-        <button (click)="konnektorChild.increment()">Methodenaufruf auf dem child componente mit temp ref variable</button>
+        <button (click)="konnektorChild.increment()" data-testid="incrementOnChild">
+          Methodenaufruf auf dem child componente mit temp ref variable</button>
       </div>
       <div class="col-3">
         <button (click)="useViewChild()">Counter on child vith ViewChild</button>
@@ -76,7 +76,7 @@ loaded: {{loaded}}
 
     <div  class="card mt-3">
       <div class="card-body">
-        <ngx-datatable #konnektorDataTable id="konnektorDataTable"
+        <ngx-datatable #konnektorDataTable id="konnektorDataTable" data-testid="konnektorDataTable"
           [columnMode]="'flex'"
           [messages]="{emptyMessage: 'Keine Daten vorhanden'}"
           [headerHeight]="headerHeight"
