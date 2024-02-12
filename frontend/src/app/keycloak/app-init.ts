@@ -38,7 +38,8 @@ export function initializer(keycloak: KeycloakService): () => Promise<any> {
         });
         resolve(resolve);
       } catch (error) {
-        reject(error);
+        console.error("Error initializing Keycloak", error);
+        throw error;
       }
     });
   };

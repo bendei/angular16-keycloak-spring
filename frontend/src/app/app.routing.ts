@@ -1,6 +1,5 @@
 import {Routes} from '@angular/router';
 import {TemplateComponent} from './core/template.component';
-import {WelcomeComponent} from "./core/welcome.component";
 import {NavigationErrorComponent} from "./core/navigationerror.component";
 import {AuthGuard} from "./keycloak/authguard";
 
@@ -13,8 +12,8 @@ export const APP_ROUTES: Routes = [
   {
     path: 'navigation',
     loadChildren: () => import('../app/core/navigation.routing').then(r => r.NAVIGATION_ROUTES),
-   // canActivate: [AuthGuard],
-   // data: { roles: ['admin','visitor'] }
+    canActivate: [AuthGuard],
+    data: { roles: ['admin','visitor'] }
     // lazy loading  navigation child routes
     // we set loadChildren property to a dynamic function, we import the file dynamically,
     // when the file/with Routes inside is loaded, we have can load/pull in our routes definitions
