@@ -1,6 +1,6 @@
-import { KonnektorViewComponent } from "../../../app/konnektor/konnektor-view.component";
+import { KonnektorViewComponent } from "../../../src/app/konnektor/konnektor-view.component";
 import { of } from 'rxjs';
-import {DefaultService, KonnektorDTO} from "../../../app/openapi-generated-sources";
+import {DefaultService, KonnektorDTO} from "../../../src/app/openapi-generated-sources";
 import {mount} from "cypress/angular";
 import {FormBuilder} from "@angular/forms";
 import Chainable = Cypress.Chainable;
