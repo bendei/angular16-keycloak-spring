@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpContext, HttpEvent, HttpHeaders, HttpResponse} from "@angular/common/http";
+import {HttpClient, HttpContext, HttpEvent, HttpResponse} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 import {KonnektorDTO, KonnektorHostnameDTO} from "../openapi-generated-sources";
 import {environment} from "../../environments/environment";
@@ -20,6 +20,7 @@ export class MockService {
 
 
     ///// https://www.stackhawk.com/blog/angular-cors-guide-examples-and-how-to-enable-it/
+    // az URL a mock-server-json-hoz a proxy configból jön: proxy.conf.json
     return this.httpClient.get<Array<KonnektorDTO>>("api/konnektors");
 
     // wollen wir keinen server-json verwenden, dann können wir hier data gleich haedcodieren und service liefert es gleich zurück!!!

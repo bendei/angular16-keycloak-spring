@@ -18,4 +18,9 @@ https://docs.cypress.io/examples/recipes#Stubbing-and-spying
 running cypress headfull: npx cypress open
 in headless: npx cypress run --headless --e2e
 
+To run Cypress e2e test agains keycloak , cypress test must be able to login durin running into keycloak.
+first install : npm install --save-dev cypress-keycloak-commands
+
+
+
 

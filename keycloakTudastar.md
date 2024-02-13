@@ -70,9 +70,26 @@ https://medium.com/@rayen19952/securing-angular-app-routes-using-keycloack-4fdb2
 Ha már setup minden akkor megnézhetjük a beállitásokat:
     a Admin oldalon a dropdownbol a Login realmot kiválasztjuk és ott akkor a hozzá tartozó client, user, role ok jelennek meg ill. managelhetőek.
 
+![img.png](tudastarImages/img.png)
+![img_1.png](tudastarImages/img_1.png)
+![img_2.png](tudastarImages/img_2.png)
+![img_3.png](tudastarImages/img_3.png)
+![img_4.png](tudastarImages/img_4.png)
+![img_5.png](tudastarImages/img_5.png)
+![img_6.png](tudastarImages/img_6.png)
+![img_7.png](tudastarImages/img_7.png)
+
+Postman:
+    ![img_8.png](tudastarImages/img_8.png)
+
+
 #######################################################################################################################################################################
 KEYCLOAK IN ANGULAR
 #######################################################################################################################################################################
+
+!! FONTOS !!!
+Ha a keycloakot használjuk, akkor a Chromeban nem tudunk beloginolni csak az Edgeben.
+Ha mégis a Chromban akarunk dolgozni, akkor a app.routing.ts ben a 16 sort és a app.config.ts ben a 30,31 sort ki kell kommentelnünk és akkor a keycloak nem lesz meghvva.
 
 Angular applban:
    -  npm install keycloak-angular und keycloak.js

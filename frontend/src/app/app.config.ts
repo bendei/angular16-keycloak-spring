@@ -25,9 +25,10 @@ export const appConfig: ApplicationConfig = {
     {provide: RouteCommonService, useClass: RouteCommonService},                              // registering service for used by a group of child components commonly for data shareing
     {provide: ObservableService, useClass: ObservableService},
    // {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},      // registering class-based old style interceptor
+
+  // COMMENT OUT IF WANT TO RUN APP IN CHOME
     {provide: KeycloakService, useClass: KeycloakService},
     {provide: APP_INITIALIZER, useFactory: initializer, multi: true, deps: [KeycloakService]},
-   // KeycloakService
 
     // mock server API backend provider
     {provide: DefaultService, useClass: environment.apiService},

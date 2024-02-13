@@ -1,4 +1,4 @@
-// Complete Angular Tutorial For Beginners
+server// Complete Angular Tutorial For Beginners
 https://www.tektutorialshub.com/angular-tutorial/#component-communication
 
 // function-iterables-promises-observables
@@ -1778,6 +1778,7 @@ PERFORMANCE TUNING:
     2.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-2-hostlistener-1b66d45b3e3d
     3.  https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
     4.  Using RxJS .fromEvent() operator that turns events into observable sequences
+
 #####################################################################################################################################################################################
 MOCK BACKEND RESPONSES
 #####################################################################################################################################################################################

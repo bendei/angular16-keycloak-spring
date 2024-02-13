@@ -12,6 +12,7 @@ export const APP_ROUTES: Routes = [
   {
     path: 'navigation',
     loadChildren: () => import('../app/core/navigation.routing').then(r => r.NAVIGATION_ROUTES),
+    //COMMENT OUT IF WANT TO RUN APP IN CHOME
     canActivate: [AuthGuard],
     data: { roles: ['admin','visitor'] }
     // lazy loading  navigation child routes
