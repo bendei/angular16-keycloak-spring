@@ -3,6 +3,9 @@
 Spring Boot Tutorials:
 https://www.baeldung.com/spring-boot
 
+// nagyon jo video, hogy hogyan kell Spring API-t fejleszteni Spring Boot-tal
+https://www.youtube.com/watch?v=yybOzbOLegE
+
 # OpenAPI generated server
 ## mvn clean install -DskipeTest führt openapi-generator-maven-plugin aus, die die nötigen Klassen (java) generieren wird.
 

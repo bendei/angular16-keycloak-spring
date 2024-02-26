@@ -1,4 +1,23 @@
 <div  class="card mt-3">
+
+  <div class="card-body">
+    <h5 class="card-title bg-body-tertiary">Type search classic</h5>
+    <input type="text" class="form-control" placeholder="Type search" (input)="filterNames($event)">
+
+    <ul>
+      @for(name of filteredNames ; track name) {
+        <li>{{name}}</li>
+
+      }
+    </ul>
+
+  </div>
+
+  <div class="card-body">
+    <h5 class="card-title bg-body-tertiary">Type search with signal</h5>
+
+  </div>
+
   <div class="card-body">
 
     <h5 class="card-title bg-body-tertiary">Cart</h5>

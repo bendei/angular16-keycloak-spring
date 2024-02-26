@@ -13,8 +13,8 @@ export const APP_ROUTES: Routes = [
     path: 'navigation',
     loadChildren: () => import('../app/core/navigation.routing').then(r => r.NAVIGATION_ROUTES),
     //COMMENT OUT IF WANT TO RUN APP IN CHOME
-    canActivate: [AuthGuard],
-    data: { roles: ['admin','visitor'] }
+  //  canActivate: [AuthGuard],
+   // data: { roles: ['admin','visitor'] }
     // lazy loading  navigation child routes
     // we set loadChildren property to a dynamic function, we import the file dynamically,
     // when the file/with Routes inside is loaded, we have can load/pull in our routes definitions

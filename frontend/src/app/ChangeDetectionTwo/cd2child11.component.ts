@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, DoCheck, OnChanges} from "@angular/core";
+import {ChangeDetectionStrategy, Component, DoCheck, OnChanges, signal} from "@angular/core";
 
 @Component({
   standalone: true,
@@ -15,16 +15,27 @@ export class Cd2child11Component implements OnChanges, DoCheck {
     return this._szamlalo;
   }
 
-  ngOnChanges() {
-    console.log("       Cd2child111Component:ngOnChanges");
+  counter = signal(0);
+
+
+  constructor() {
+    const inter = setInterval(() => {
+      this.counter.update((val) => ++val);
+
+      if (this.counter() == 4) {
+        clearInterval(inter);
+      }
+    }, 2000);
   }
 
-  ngOnInit() {
-    console.log("      Cd2child11Component:ngOnInit");
+
+
+  ngOnChanges() {
+    console.log("       Cd2child11 Component:ngOnChanges");
   }
 
   ngDoCheck() {
-    console.log("       CHANGE DETECTION TGRIGGERED - Cd2child11Component:DoCheck");
+    console.log("------Cd2child11 Component:DoCheck");
   }
 
 

@@ -19,6 +19,27 @@ export class OrderingSignalComponent {
   total: Signal<number> = signal<number>(0);
   estimatedTax: Signal<number> = signal<number>(0);
 
+  // names list to select from when typing
+  names = ["Alma", "Bela", "Cecil", "Dora", "Eszter", "Eszenyi", "Eszméletlen", "Ferenc", "Gabor", "Hajnal", "Istvan", "Jozsef", "Karoly", "Lajos", "Mihaly", "Nandor",
+    "Odon", "Peter", "Robert", "Ronda", "Sandor", "Simon","Sinkó", "Tamas", "Ubul", "Viktor", "Zoltan", "Zsolt", "Zsuzsa", "Zsuzsanna", "Zsuzska", "Zsuzsi", "Zsuzsika", "Zsuzsimama",
+    "Zsuzsipapa", "Zsuzsanyi", "Zsuzsanyika", "Zsuzsanyi mama", "Zsuzsanyi papa", "Zsuzsanyi nagymama", "Zsuzsanyi nagypapa"];
+  filteredNames: string[] = [];
+
+  filterNames(event: Event) {
+    console.log(event.target);
+    const elem = event.target as HTMLInputElement;
+    const valueName = elem.value;
+    console.log(valueName);
+    this.filteredNames = this.names.filter((value)=> {return value.toLowerCase().startsWith(valueName.toLowerCase());});
+  }
+
+
+
+
+
+
+
+
   vehicles: IVehicle[] = [];
 
   constructor() {

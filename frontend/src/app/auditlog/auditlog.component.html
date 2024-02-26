@@ -4,6 +4,12 @@
      (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">Auditlog</div>
 {{nevem}}
 
+<br/>
+<div>
+  Just playing with 2way binding in input field without a form around
+  <input type="text" [(ngModel)] = "eletkor" />
+</div>
+
 <button (click)="changeObjectTypeInput()">objekt tipusu értéket adunk át a auditlog directivának</button>
 {{objectForDirective.age}}
 

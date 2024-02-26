@@ -18,10 +18,7 @@ export class ErrorService {
   clearErrors() {
     this.myerrors = [];
   }
-
 }
-
-
 
 export interface MyError {
   message: string,

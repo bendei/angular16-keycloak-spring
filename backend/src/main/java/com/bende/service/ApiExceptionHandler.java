@@ -7,6 +7,9 @@ import com.bende.excpetions.ResourceNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -19,10 +22,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = ResourceNotFoundException.class)
     protected ResponseEntity<ApiError> handleEntityNotFound(ResourceNotFoundException ex) {
-        ApiError apiError = new ApiError();
-        apiError.setStatus(NOT_FOUND.name());
-        apiError.setMessage(ex.getMessage());
-        apiError.setTimestamp(LocalDateTime.now());
+        ApiError apiError = createApiError(HttpStatus.NOT_FOUND.name(), ex.getMessage());
         return buildResponseEntity(apiError, NOT_FOUND);
     }
 
@@ -43,8 +43,31 @@ public class ApiExceptionHandler {
         return buildResponseEntity(apiError, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<?> handleDataAccessException(DataAccessException ex) {
+        ApiError apiError = createApiError(HttpStatus.INTERNAL_SERVER_ERROR.name(), ex.getMessage());
+        return buildResponseEntity(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.BAD_REQUEST.name());
+        apiError.setMessage(ex.getMessage());
+        apiError.setTimestamp(LocalDateTime.now());
+        return buildResponseEntity(apiError, HttpStatus.BAD_REQUEST);
+    }
+
     private ResponseEntity<ApiError> buildResponseEntity(ApiError apiError, HttpStatus status) {
         return new ResponseEntity<>(apiError, status);
+    }
+
+    private ApiError createApiError(String status, String message) {
+        ApiError apiError = new ApiError();
+        apiError.setStatus(status);
+        apiError.setMessage(message);
+        apiError.setTimestamp(LocalDateTime.now());
+        return apiError;
     }
 
 }

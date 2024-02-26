@@ -64,7 +64,7 @@ export class ChildBComponent implements DoCheck, OnChanges {
 
   withObservable() {
 
-  /*  let konn1 : KonnektorDTO = {
+    let konn1 : KonnektorDTO = {
       id: 1,
       hostName: "http:pisti"
     };
@@ -102,7 +102,7 @@ export class ChildBComponent implements DoCheck, OnChanges {
         }
       }
     );
-*/
+
 
 
     this.defaultService.getAllKonnektors()

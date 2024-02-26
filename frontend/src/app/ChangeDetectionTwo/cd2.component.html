@@ -5,11 +5,14 @@
 <br>
 simpleParentProperty: {{simpleParentProperty}}
 <br>
+<div #viewChildOnParent>
+  viewchild on parent
+</div>
 routeCommonServiceProperty service property's value:  {{routeCommonServiceProperty}} - <button (click)="incrementRouteCommonServiceProperty()">Increment it</button>
 <br>Datenaustausch zwischen navigation und CD2 Komponenten (keine Beziehung) mit Verwendung von BehaviorSubject <br>
 incrementObservableServiceProperty: {{observableServiceProperty}} <button (click)="incrementObservableServiceProperty()">incrementObservableServiceProperty</button>
 
-<cd2child1 [parentCounter]="parentcounter">
+<cd2child1 #viewChildComponent [parentCounter]="parentcounter">
   <header>content projection header, counter from parent: {{parentcounter}}</header>
   <footer>content projection footer, counter from parent, but it will be referenced via ContentChild in child and extra-incremented: {{parentcounter}}</footer>
 </cd2child1>

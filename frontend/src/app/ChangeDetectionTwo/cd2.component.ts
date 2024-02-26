@@ -5,10 +5,10 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  DoCheck, Input,
+  DoCheck, ElementRef, Input,
   OnChanges,
   OnDestroy,
-  OnInit
+  OnInit, ViewChild
 } from "@angular/core";
 import {Cd2child11Component} from "./cd2child11.component";
 import {Cd2child1Component} from "./cd2child1.component";
@@ -36,6 +36,9 @@ export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, Afte
 
   @Input() routeParamOne = '';
   parentcounter: Counter = {count: 0};
+
+  @ViewChild('viewChildOnParent') viewChildOnParent: ElementRef;
+  @ViewChild((Cd2child1Component)) cd2child1Component: Cd2child1Component;
 
   constructor(private observableService: ObservableService, private routeCommonService: RouteCommonService) {
     this.routeCommonServiceProperty = this.routeCommonService.commonServiceProperty;
@@ -74,7 +77,7 @@ export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, Afte
   }
 
   ngDoCheck() {
-    console.log("CHANGE DETECTION TGRIGGERED -- Cd2Component:DoCheck");
+    console.log("Cd2Component:DoCheck");
   }
 
   ngAfterContentInit() {
@@ -91,6 +94,8 @@ export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, Afte
 
   ngAfterViewChecked() {
     console.log("Cd2Component:AfterViewChecked");
+    this.viewChildOnParent.nativeElement.style.backgroundColor = 'yellow';
+    this.cd2child1Component.heavyCalculation();
   }
 
   ngOnDestroy() {

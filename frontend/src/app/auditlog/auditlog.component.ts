@@ -5,16 +5,28 @@ import {
   HostBinding,
 } from '@angular/core';
 import {AuditlogDirective} from "./auditlog.directive";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-auditlog',
   templateUrl: `./auditlog.component.html`,
   styleUrls: ['./auditlog.component.css'],
-  imports: [AuditlogDirective],
+  imports: [AuditlogDirective, FormsModule],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuditlogComponent  {
+
+  // just playing with 2waybinding template-driven form like
+  private _eletkor: number = 0;
+  set eletkor(kor: number) {
+    this._eletkor = kor;
+    console.log("eletkor set:" + this._eletkor);
+  }
+  get eletkor(): number {
+    return this._eletkor;
+  }
+
 
   _nevem = 'pista';
   objectForDirective: ObjectForDirective = {age: 51};

@@ -45,15 +45,19 @@ export class Cd2child1Component implements OnChanges, DoCheck, OnDestroy, OnInit
   }
 
   constructor(public renderer: Renderer2) {
-    console.log("   Cd2child1Component:Contructed");
+    console.log("   Cd2child1 Component:Contructed");
   }
 
   doNothing(): void {
 
   }
 
+  valamitCsinalok(): void {
+    console.log("valamitCsinalok");
+  }
+
   ngOnChanges() {
-    console.log("   Cd2child1Component:ngOnChanges");
+    console.log("   Cd2child1 Component:ngOnChanges");
   }
 
   ngOnInit() {
@@ -61,7 +65,7 @@ export class Cd2child1Component implements OnChanges, DoCheck, OnDestroy, OnInit
   }
 
   ngDoCheck() {
-    console.log("   CHANGE DETECTION TGRIGGERED - Cd2child1Component:DoCheck");
+    console.log("---Cd2child1 Component:DoCheck");
   }
 
   ngAfterContentInit() {

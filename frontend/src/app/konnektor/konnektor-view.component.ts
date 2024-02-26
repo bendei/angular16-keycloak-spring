@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import {AfterContentChecked, Component, inject, OnInit, ViewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO} from '../openapi-generated-sources';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";

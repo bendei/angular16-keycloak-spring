@@ -95,8 +95,10 @@ Angular applban:
    -  npm install keycloak-angular und keycloak.js
      -  Implementieren ein initializer Function, womit man des KeycloakService (vom npm package) initialisieren.
        -  im app.config.ts wir definieren ein provider:
-          {provide: APP_INITIALIZER, useFactory: initializer, multi: true, deps: [KeycloakService]},    // dieses ermöglicht, dass initializer Funktion ausgeführt wird, bevor dei Appl startet
+          
+       - {provide: APP_INITIALIZER, useFactory: initializer, multi: true, deps: [KeycloakService]},    // dieses ermöglicht, dass initializer Funktion ausgeführt wird, bevor dei Appl startet
           KeycloakService
+      
        - Implementieren ein Authguard, und wir verwenden es zum schützen unsere Pfade:
          canActivate: [AuthGuard],
          // The user need to have this roles to access
@@ -117,7 +119,14 @@ client_id: frontend
 client_secret: amit a client -> credetnials fülön a client secret mezőben találunk a keycloak UI-on
 username:/password: pisti
 
+// How to get client secret:
+https://stackoverflow.com/questions/44752273/do-keycloak-clients-have-a-client-secret/69726692#69726692
+
 #######################################################################################################################################################################
 KEYCLOAK IN SPRING
 #######################################################################################################################################################################
+
+https://www.baeldung.com/spring-boot-keycloak
+
+https://www.geeksforgeeks.org/how-to-integrate-keycloak-with-spring-boot-and-spring-security/
 

@@ -1,7 +1,4 @@
 import {
-  AfterContentChecked,
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   inject, OnDestroy,
@@ -14,6 +11,7 @@ import {FooterComponent} from "./footer.component";
 import {NavigationComponent} from "./navigation.component";
 import {ErrorService, MyError} from "./error.service";
 import {Subscription} from "rxjs";
+import {ErrorsignalService} from "./errorsignal.service";
 
 @Component({
   standalone: true,
@@ -28,6 +26,18 @@ import {Subscription} from "rxjs";
                 <b>This message disappears in 4 sec</b>
         }
       <br>
+        Error from Signals
+        {{errorsignalService.errors()}}
+
+        @if(errorsignalService.errors().length > 0) {
+          @for (err of errorsignalService.errors(); track err.code) {
+          <div>
+            {{err.code}} - {{err.statusText}} - {{err.message}}
+          </div>
+          }
+        }
+      <br>
+
       </div>
         <router-outlet></router-outlet>
     </div>
@@ -40,15 +50,22 @@ import {Subscription} from "rxjs";
     NavigationComponent
   ]
 })
-export class TemplateComponent implements OnInit, OnDestroy, AfterContentChecked {
+export class TemplateComponent implements OnInit, OnDestroy {
 
   errorService = inject(ErrorService);
+  errorsignalService = inject(ErrorsignalService);
+
   errorMessage: MyError[] = [];
   private subscription: Subscription;
 
   @ViewChild("errorStrip") errorStrip: ElementRef;
 
   constructor(private renderer: Renderer2) {
+    this.errorsignalService.addError({
+      code: 504,
+      message: "proba error",
+      statusText: " statuszka"
+    });
   }
 
   ngOnInit(): void {
@@ -58,6 +75,7 @@ export class TemplateComponent implements OnInit, OnDestroy, AfterContentChecked
         this.renderer.setStyle(this.errorStrip.nativeElement, "display", "block");
       }
       setTimeout(() => {
+        this.errorsignalService.clearErrors();
         this.renderer.setStyle(this.errorStrip.nativeElement, "display", "none");
       }, 4000);
     });
@@ -69,11 +87,5 @@ export class TemplateComponent implements OnInit, OnDestroy, AfterContentChecked
     }
   }
 
-  ngAfterContentChecked(): void {
-    console.log("-------------ngAfterContentChecked");
-
-    this.errorService.clearErrors();
-    //if (this.errorStrip) {   this.renderer.setStyle(this.errorStrip.nativeElement, "display", "none"); }
-  }
 
 }

@@ -56,6 +56,7 @@ https://www.w3schools.com/js/js_promise.asp
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
 https://www.syncfusion.com/blogs/post/angular-promises-vs-observables.aspx/amp
 // signal
+https://blog.angular-university.io/angular-signals/
 https://www.freecodecamp.org/news/angular-signals/
 https://hackernoon.com/a-guide-to-angular-signals-with-practical-use-cases-part-1
 https://hackernoon.com/a-guide-to-angular-signals-with-practical-use-cases-part-2
@@ -197,7 +198,7 @@ TEMPLATE-SYNTAX _> Angular erweiter html syntax mit folgenden Ausdrücken: inter
 
 HAHSHATBLE in ts: (nem más mint egy string k
 export declare interface SimpleChanges {
-[propName: string]: SimpleChange;
+[propName: string]: SimpleChange;3
 }
 let ht: string[]: SimpleChange;
 
@@ -651,6 +652,7 @@ in main.ts:
                 {
                   path: 'navigationerror',
                   component: NavigationErrorComponent  // loading component eagerly
+                  resolve: [GetDataFrombackend] // resolve property is used to load data before the component is loaded
         
                 },
                 {path: '',    						   // lazy loading single standalone component
@@ -768,6 +770,10 @@ https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-a
  SUBSCRIPTION: ist ein Objekt, das ein Observable representiert, hat nur einen Method: unsubscribe, womit man das Observable wegwirft.
 
 OBSERVABLE:
+    -   liefert keinen Wert bis min ein Observer darauf abbonniert ist. Gibt es mehrere Subscriber, dann werden die Methoden mehrfach ausgeführt, d.h. für jeder Subscriber
+        wird ein neuer Http-Request ausgeführt.(Cold observable).
+        (Hot)liefert Werte dann auch wenn kein Subscriber ist, und liefert den gleichen Wert (wird ausgeführt) 
+        ( einziger Http Request) für alle Zuhörere. (Hot obs)
     -   Öffnet ein Strom von Events und lauscht darauf fortwährend.
 	-	Kann synchron und asynchron Operatrionen ausführen.
 	-	Wenn Instanziert es macht nichts, bis darauf abbonniert wird.
@@ -797,6 +803,8 @@ PROMISE:	https://javascript.info/promise-basics
 					-	FormGroup observables like form.valueChanges and form.statusChanges
 					-	Observables of Renderer2 service like renderer2.listen
 
+
+
 	private userSubscription: Subscription;
 
 	ngOnInit() {
@@ -809,18 +817,47 @@ PROMISE:	https://javascript.info/promise-basics
 	  this.userSubscription.unsubscribe()
 	}
 
-PROMISE FROM OBSERVABLE ( wenn wir nur data holen):
-    async open() {
-        const $auditlog =  this.defaultService.getAllAuditLog(this.konnektor.id!);  // retrieving Observable
-        await lastValueFrom($auditlog).then(                                        // getting a Promise
-            result => {
-            const modalRef = this.modalService.open(AuditlogModalComponent,  { size: 'xl' });
-            modalRef.componentInstance.auditlogs = result;
-            },
-            error => {
-            this.toast.error((error as HttpErrorResponse).message);
-            });    
+    ERSTELLUNG VON PROMISE:
+        1.  const myPromise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                    resolve('I have resolved');
+                }, 1000);
+                // vagy
+                    if(condition) {
+                    resolve("Promise resolved successfully");
+                    } else {
+                    reject("Promise rejected");
+                    }
+            });
+
+       2.  a legegyszerűbb hogy promiset hozzunk éetre az asnyc :
+        async function myMethod() {  // ez a metódus visszatérési értéke egy Promise lesz
+            return 1;   
+        }
+
+      3.    PROMISE FROM OBSERVABLE ( wenn wir nur data holen):
+         open() {
+            const $auditlog =  this.defaultService.getAllAuditLog(this.konnektor.id!);  // retrieving Observable
+             lastValueFrom($auditlog).then(                                        // getting a Promise
+                result => {
+                    const modalRef = this.modalService.open(AuditlogModalComponent,  { size: 'xl' });
+                    modalRef.componentInstance.auditlogs = result;
+                },
+                error => {
+                     this.toast.error((error as HttpErrorResponse).message);
+                });    
     }
+
+    ERSTELLUNG VON OBSERVABLES:
+       1.  const obs$ = new Observable((observer) => {
+            observer.next(1111);
+            observer.next(1112);
+            observer.next(1113);
+            observer.error(new Error("hiba"));
+        });
+
+     2.    const obs2$ = of(1,2,3,4,5,6);
+
 
 Async vor dem function: der Methode gibt immer ein Promise zurück, d.h. Rückgabewert wird immer als ein resolved Promise eingehüllt.
  async myFunction() {
@@ -861,11 +898,11 @@ await lässt javascript warten bis Promise settled wird und einen Wert zurückli
         // Consuming Funktion kann mit then() registriert werden.
         // resolve runs the first function in .then
         promise.then(
-            result => alert(result), // shows "done!" after 1 second
-            error => alert(error) // doesn't run
+            result => alert(result), // shows "done!" after 1 second    // first argument runs when promise resolves
+            error => alert(error) // doesn't run                        // second argument runs when promise rejects
         );
-        // sind wir nur in errors interessiert: catch()
-        // finally( () => {})
+        // sind wir nur in errors interessiert: promise.catch()
+        // .finally( () => {})
 
 RxJS Operators:
 
@@ -913,7 +950,7 @@ SUBJECT:
 
 
 #######################################################################################################################################################################################
-ERRORHANDLING:
+ERRORHANDLING: error handling
 #######################################################################################################################################################################################
 
 Zwei Typen von Errorbehandlungen:
@@ -1009,18 +1046,30 @@ Zwei Typen von Errorbehandlungen:
 
 creating Promise manually: https://www.educba.com/typescript-promise/
 
-        ERROR HANDLING WITH PROMISE: mit then und catch functions:
+    1.ERROR HANDLING WITH PROMISE: mit then und catch functions:
         
-        await this.defaultService.getKonnektor(this.konnektorId).toPromise()
+        this.defaultService.getKonnektor(this.konnektorId).toPromise()  // error handling in then method
             .then( result => {
-            this.konnektor = result;
-            this.loadFormData();
-        })
-        .catch( error => {
+                    this.konnektor = result;
+                    this.loadFormData();
+                    }),
+                    error => {alert(error.message)}
+        .catch( error => {              // wenn nur ein error passiert, dann wird catch() ausgeführt, wir sind nur in errors interessiert
             const err = error as HttpErrorResponse;
             this.toast.error(err.message);
             }
         )
+    2. error hanlding mit async/await (mit herkömmlichen try/catch Block):
+        async open() {
+            try {
+                const result = await this.defaultService.getKonnektor(this.konnektorId).toPromise();
+                this.konnektor = result;
+                this.loadFormData();
+            } catch (error) {
+                const err = error as HttpErrorResponse;
+                this.toast.error(err.message);
+            }
+        }
 
 #######################################################################################################################################################################################
 
@@ -1029,6 +1078,71 @@ CLI: Sie unterstützt uns beim Anlegen von Komponenten, Services und Modulen, st
 #######################################################################################################################################################################################
 REACTIVE FORMS
 ######################################################################################################################################################################################
+
+Unterschied zwischen template-driven und reactive forms:
+
+TD                                                                                         Reactive
+  - Template-driven sind besser geiegnet für einfache scenarios, like a contact form.           -   Reactive forms sind geiegnet für complex scenarios, formulare mit vielden dynamischen fields.
+  - Form Logic ist in dem Template.                                                         -   Form Logic ist in der Komponentenklasse.
+  - Two-way data binding: [(ngModel)]                                                       -   One-way data binding: [formControl]="myControl"
+  - Form creation ist in dem template                                                         -   Form creation ist Programmatisch in dem Controller
+  - Validation is done in the template.                                                    -   Validation is done in the component class.
+
+    <form #form="ngForm" (ngSubmit)="onSubmit(form.value)">
+      <div>
+        <label for="text">Only numbers:</label>
+        <input id="text" name="text" [(ngModel)]="model.text" appOnlyNumbers required>
+        <div *ngIf="form.form.controls['text'].errors?.notOnlyNumbers">Only numbers are allowed.</div>
+      </div>
+    
+    <button type="submit">Submit</button>
+    </form>
+    export class AppComponent {
+    model = {
+    text: ''
+    };
+    @Directive({
+        selector: '[appOnlyNumbers]',
+        providers: [{provide: NG_VALIDATORS, useExisting: OnlyNumbersValidatorDirective, multi: true}]
+    })
+    export class OnlyNumbersValidatorDirective implements Validator {
+        validate(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        const hasNonNumberCharacters = /\D/.test(value);    
+        return hasNonNumberCharacters ? { 'notOnlyNumbers': true } : null;
+    }
+    }
+--------------------------------------------------------------------------------------------------------
+export class AppComponent {
+
+    form = this.fb.group({
+        text: ['', NumberOnlyValidator ]
+    });
+    
+    constructor(private fb: FormBuilder) {}
+    
+   sole.log(this.form.value);
+    }
+    }
+   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="text">Only numbers:</label>
+    <input id="text" formControlName="text">
+    <div *ngIf="form.controls.text.invalid && form.controls.text.touched">
+      Only numbers are allowed in this field.
+    </div>
+  </div>
+
+<button type="submit">Submit</button>
+</form>
+    
+export function NumberOnlyValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasNonNumberCharacters = /\D/.test(value);
+
+    return hasNonNumberCharacters ? { 'notOnlyNumbers': true } : null;
+}
+
 
 Die Grundidee der Reactive Forms ist, dass das komplette Modell des Formulars in der Komponentenklasse angesiedelt wird. Das bedeutet, dass nicht mehr nur die reinen
 Eingabedaten in einem Objekt in der Klasse gespeichert sind, sondern alle logischen FormControls mit ihren Zuständen, Validierungsregeln und Werten. jedes unserer Formularfelder wird
@@ -1599,74 +1713,6 @@ const clicks = fromEvent(document, 'click');    clicks.subscribe...
 
 ######################################################################################################################################################################################
 
-ng add @ngrx/store
-
-jó egyszerű bevezető példa
-https://ngrx.io/guide/store
-
-https://dzone.com/articles/angular-app-state-management-with-ngrx
-
-- kérdés: ngrx el menedzseljük a form datat is?
-- az inputoutputot át lehetne jol irni reduxra
-Ausgangssituation: Wir haben ein form und ein table Kompoenent, wenn ein neuer Product in den form Kompoenent eingetragen wird, dann wird der neue Produtkt in dem  Tabellenkomponent
-angezeigt.
-	Lösung ohne NgRX: beide Komponente haben ein gemeinsames Elternkomponent, wodurch sie miteinander kommunizieren. Wird ein Product eingetragen, dann wird in der form Komp.
-	ein custom Erreignis mit dem Product payload ausgelöst (@Output) -> dieser Erreignis wird vom Parent Komponent empfangen und die products array damit aktualisiert. Table component
-	(in dem View) enthält ein @Input property products, die im Template angezeigt ist; dieses Property wird mit property binding immer aktualisiert wenn das Product array vom
-	parent aktualisiert ist.
-	Table kann selected Product (mit Klikk auf der Tabellenreihe) ebenfalls als ein Erreignis-Payload an das Form Kompoenente schicken, worauf - wie oben -durch event binding
-	ein Handler Methode aufgerufen wird, um die form Felder zu populieren.
-
-NgRX
-Ursprünglich jede Komponente hatte ihren eigenen Zustand und bildete eine abgeschottete Einheit zu den anderen Komponenten. Im NgRX Die Komponenten sollen dazu ihre bisherige Kontrolle
- über die Daten und die Koordination der Prozesse an eine zentrale Stelle abgeben. Die Aufgabe der Komponenten ist es dann nur noch, Daten für die Anzeige zu lesen,
- neue Daten zu erfassen und Events an die zentrale Stelle zu senden. zentrale Zustandsverwaltung (engl. State Management).
-
- REDUX: ein Architektusmuster;
- NgRX, Reactive Extension for Angular: Imlementierung von Redux Muster; Anwendunszustand verwalten und Prozesse verwalten.
-
- Der zentrale Bestandteil der Architektur ist ein Store, in dem der gesamte Anwendungszustand als eine einzige große verschachtelte Datenstruktur hinterlegt ist Der Store ist
- die Single Source of Truth für die Anwendung und enthält alle Zustände: vom Server heruntergeladene Daten, gesetzte Einstellungen, die aktuell geladene Route oder Infos
-zum angemeldeten Nutzer – alles, was sich zur Laufzeit in der Anwendung verändert und den Zustand beschreibt.
-
-Store: enthält die application state / Zustand
-Action: Erreignis, ausgelöst in dem Kompoenent / service, das den Applicationszustand mit seinem Payload ändert. Ein Acion ist zB addCustomer, deleteCustomer, getAllCustomers
-Reducer: alle Zustandsänderungen passieren hier, es reagiert auf dem Action und je nach dem Actiontype kreiert ein neues immutablen state und gibt es dem Strore zurück.
-Selector: eine Funktion, um bestimmten Teil des State von dem Strore zu erhalten.
-
-Jedes Feature Module soll ein eigenes ngrx feature haben (= mit eigenen Satz an Actions, Reducerns, Effects). Mit ng g feature können wir ngrx für ein bestehendes Feature-Modules
-aufsetzen. ng g feature inputOutput/store/inputoutput --module inputOutput/shared/inputOutput --api --defaults
-
-1.	StoreModule soll im AppModule importiert werden und hier konfigurieren wir den DevTool auch:
-		StoreModule.forRoot({}, {}),
-		StoreDevtoolsModule.instrument(
-		{ maxAge: 25, logOnly: environment.production }
-		)
-
-2.	NgRX einrichten in dem jeweiligen Feature Module, hier definieren wir die Struktur des globalen State-Objekts:
-
-	StoreModule.forRoot(fromBook.bookFeatureKey (= unter diesen Namen wird die Zustände dieses Feature im globalen State-Objekt festgelegt, fromBook.reducer
-	(=dieser Reducer ist verantwortlich für den State-Teil) ); ->
-	der globale State-Objekt wird durch forRoot also erweitert und die reducer wird integriert in die Anwendung.
-
-3.	Definieren der inputoutput feature-state für das Feature inputoutpt, als Interface , die festlegt welche Zustänfe und Daten wir speichern wollen.
-	Variable initialState.
-
-4.	Action: für die Kommunikation mit dem Store. Es ist ein "nachricht" Objekt mit Properties type und payload. NgRX stellt createAction Funtion zur  Verfügung:
-	1 Argument für Name der Action,
-	2. Arg: Payload. Ein möglicher Action-Onjekt Aufbau:
-		{
-			type: '[Inputoutput] Load Inputoutputs Success',
-			data: Book[]
-		}
-
-5.	Um mit dem Store zu kommunizieren und Zustandsänderungen anzustoßen, müssen die Actions von den Komponenten in den Store gesendet werden. Der Store verfügt über eine Methode
-	dispatch(), mit der wir eine Action in den Store dispatchen können. Aktionen werden von kompoenenten ausgelöst.
-
-6.	Mit reducer verändern wir den State, es ist eine Funktion die den aktuellen Zustand und die entreffende Aktion als Arg  bekommt. Es berechnet den neuen Zustand und
-	liefert zurück. Für jede Fallunterscheidung existiert ein Block, der in ein on() gekapselt ist.
-
-
  ######################################################################################################################################################################################
 
  Object type in TS
@@ -1736,7 +1782,7 @@ PERFORMANCE TUNING:
 		2	Überarbeiten page loading
 		3	UX design Überarbeiten
 		4.	trackBy for ngFor
-		5.  improving page load: lazy loading
+		5.  improving page load: lazy loading routes / using @defer blocks
         6. Signals
 
   1 A. https://angular.io/guide/pipes
@@ -1752,6 +1798,7 @@ PERFORMANCE TUNING:
 		Technisch gesehen, wir überlagern die zeitaufwendige Logic in das Pipe, wo es aber viel seltener durchgeführt wird. Damit kann man vermeiden,
 		dass in template expression Methode Dutzentmal vergebens aufgerufen wird.
 		zB. Wenn man auf ein button click und pure pipe nicht betroffen ist, dann wird es überhaupt nicht durchgeführt, wogegen bei not pure pipe wird es mehrmals neuberechnet.
+        Making a pipe unpure: pure: false.
 
 	  1. A. A. : weiterer Optimisierungsmöglichkeit ist die Chaching von Werten Pipes, so es ist nicht nötig neuzuberechnen wenn wird es schon mit dem gleichen Wert in der
 				Vergangenheit berechnet haben.
@@ -1805,7 +1852,7 @@ Lösungen:
         2.  und wir registrieren diesen Datei im angular.json
 
 
-
+ANGULAR 17
 #####################################################################################################################################################################################
 SIGNAL
 #####################################################################################################################################################################################
@@ -1825,7 +1872,7 @@ Signal ist eine Variable mit chnage Notification. ein reaktives primitive. Es ha
 #####################################################################################################################################################################################
 DEFER bLOCK
 #####################################################################################################################################################################################
-Ziel: lazay loading a content. Sollte es ein Komponent, Directive oder Pipe, ist es plaziert in einem @defer vblock, dann Angular ladet es basierend auf einer Kondition oder einen 
+Ziel: lezy loading eines Inhalts. Sollte es ein Komponent, Directive oder Pipe, ist es plaziert in einem @defer vblock, dann Angular ladet es basierend auf einer Kondition oder einen 
 Erreignis. => Leistungsoptimierung, 
 FONTOS : alapból a @defer lzay loadingolja a komponenst !!! Tehát, méh ha on immeditae van akkor is külön js filéban tölti be a komponenst !!
     1.  @defer(when isTrue) {.. // renderiert basierend auf einer Kkondition
@@ -1833,17 +1880,37 @@ FONTOS : alapból a @defer lzay loadingolja a komponenst !!! Tehát, méh ha on 
     3.  @placeholder {          // 
     4.  @error {                // wenn ein Error passiert während Laden
     5.  @defer(on immediate)    // ladet Komponente gelich - natürlich in einem separaten js Datei
-    6.  @defer(on interaction(trigger))  <button #trigger   // button click
+    6.  @defer(on interaction(trigger))  <button #trigger   // button click, user is interacting with an element
     7.  @defer(on timer(2000ms))
     8.  @defer(on viewport(trigger))
-
-
-
-#####################################################################################################################################################################################
-#####################################################################################################################################################################################
-
+    9.  @defer(on idle)         // browser is not doing any hevy task
+    10. @defer(on network)      // network is idle
+    11. @defer(when ) // using an expression that return a boolean
 
 #####################################################################################################################################################################################
+Control flow
+#####################################################################################################################################################################################
+@switch (accessLevel) {
+    @case ('admin') { <admin-dashboard/> }
+    @case ('moderator') { <moderator-dashboard/> }
+@default { <user-dashboard/> }
+}
+
+@if (loggedIn) {
+    The user is logged in
+} @else {
+    The user is not logged in
+}
+
+@for (user of users; track user.id) {
+    {{ user.name }}
+} @empty {
+    Empty list of users
+}
+
+#####################################################################################################################################################################################
+new lifecycle hhoks
+    afterRender( () => {});         // gerufen von dem Browser wenn Application gerendert ist.
 #####################################################################################################################################################################################
 
 #####################################################################################################################################################################################
