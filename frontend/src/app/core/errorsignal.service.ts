@@ -6,6 +6,7 @@ import {Injectable, signal} from "@angular/core";
 })
 export class ErrorsignalService {
 
+  // hasznalhatnank set et is es akkor a code alapjan minden bejyzes uique lenne es csak egyszer jelenne megcd
   errors = signal<MyError[]>([]);
 
   addError(myerror: MyError) {

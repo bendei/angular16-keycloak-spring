@@ -1,8 +1,8 @@
-import {AfterContentChecked, Component, inject, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, Signal, signal, ViewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO} from '../openapi-generated-sources';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
-import {lastValueFrom, Observable, of} from "rxjs";
+import {lastValueFrom, Observable, of, Subscribable} from "rxjs";
 import {map} from "rxjs/operators";
 import {KonnektorViewChildComponent} from "./konnektor-view-child.component";
 import {PureDatePipe} from "../pipes/pureDatePipe";
@@ -14,6 +14,7 @@ import {KonnektorRemoveComponent} from "./konnektor-remove/konnektor-remove.comp
 import {RouterModule} from "@angular/router";
 import {ErrorService} from "../core/error.service";
 import {NGXLogger} from "ngx-logger";
+import {toSignal} from "@angular/core/rxjs-interop";
 
 @Component({
   standalone: true,
@@ -25,8 +26,6 @@ import {NGXLogger} from "ngx-logger";
 
 })
 export class KonnektorViewComponent implements OnInit {
-
-  errorService = inject(ErrorService);
 
   private static readonly TIMEOUT_ERROR = '504';
   private static readonly ERROR_MSG = 'A non-timeout error occurred when fetching';
@@ -53,16 +52,19 @@ export class KonnektorViewComponent implements OnInit {
     }
   };
 
+  bendeOptionalChaning;
+
   pistike!: Bende;
 
   bendeClone: Bende;
   apu: Apu;
 
+ //hostNameTyped = toSignal(this.konnektorFilterForm.get('hostName')?.valueChanges, {initialValue: ''});
+
   @ViewChild(KonnektorViewChildComponent)
   private konnektorViewChildComponent!: KonnektorViewChildComponent;
 
   constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder) {
-    console.log("CREATED");
     this.bendeClone = {...this.bende, nevem: "enenen"};
     this.apu = {
       kora: 80,
@@ -73,11 +75,6 @@ export class KonnektorViewComponent implements OnInit {
       },
       sorozat: []
     };
-
-    this.isApu = this.apu instanceof Valami;
-    //this.logger.error("Your log message goes here error");
-    //this.logger.debug("Your log message goes here debug");
-    //this.logger.info("Your log message goes here info");
   }
 
   ngOnInit(): void {
@@ -88,9 +85,6 @@ export class KonnektorViewComponent implements OnInit {
     console.log('------ ' + pisti("pisti implementing function type interface"));
     console.log('------ ' + feri("feri implementing function type interface lambda"));
 
-    // deconstructing object properties
-    const {kora : korom} = this.apu;
-    console.log("deconstructing: " + korom);
   }
 
   public filterForm(): void {

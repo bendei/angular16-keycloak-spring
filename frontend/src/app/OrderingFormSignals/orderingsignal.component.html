@@ -1,14 +1,18 @@
 <div  class="card mt-3">
-
+{{valami}}
   <div class="card-body">
     <h5 class="card-title bg-body-tertiary">Type search classic</h5>
     <input type="text" class="form-control" placeholder="Type search" (input)="filterNames($event)">
 
     <ul>
-      @for(name of filteredNames ; track name) {
-        <li>{{name}}</li>
-
+      @if(filteredNames.length > 0) {
+        @for(name of filteredNames ; track name) {
+          <li>{{name}}</li>
+        }
+      } @else {
+        <li>No results</li>
       }
+
     </ul>
 
   </div>
@@ -89,3 +93,5 @@
 
     </div>
   </div>
+
+<signal-child></signal-child>

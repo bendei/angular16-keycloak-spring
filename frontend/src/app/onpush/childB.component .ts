@@ -16,13 +16,13 @@ export class ChildBComponent implements DoCheck, OnChanges {
 
   private _c2text = 'c2textem';
 
-  _szam: number;
+  _szam!: number;
   @Input()
   get szam(): number {   return  this._szam };
   set szam(sz: number) {this._szam = sz;  console.log("-----child B - set szam callled");}
 
 
-  _name: string;
+  _name!: string;
   @Input()
   get name(): string { return this._name; }
   set name(name: string) {

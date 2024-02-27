@@ -37,8 +37,8 @@ export class Cd2Component implements OnChanges, DoCheck, OnDestroy, OnInit, Afte
   @Input() routeParamOne = '';
   parentcounter: Counter = {count: 0};
 
-  @ViewChild('viewChildOnParent') viewChildOnParent: ElementRef;
-  @ViewChild((Cd2child1Component)) cd2child1Component: Cd2child1Component;
+  @ViewChild('viewChildOnParent') viewChildOnParent!: ElementRef;
+  @ViewChild((Cd2child1Component)) cd2child1Component!: Cd2child1Component;
 
   constructor(private observableService: ObservableService, private routeCommonService: RouteCommonService) {
     this.routeCommonServiceProperty = this.routeCommonService.commonServiceProperty;

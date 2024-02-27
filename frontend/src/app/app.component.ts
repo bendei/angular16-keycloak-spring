@@ -17,15 +17,15 @@ import {reject} from "lodash";
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  subs: Subscription;
+  subs!: Subscription;
 
    async ngOnInit() {
-      const prom$ = new Promise((resolve, reject) => {
+     /* const prom$ = new Promise((resolve, reject) => {
     //    resolve(2222);
         reject(new Error("hiba"));
-      });
+      });*/
 
-    prom$.then(
+    /*prom$.then(
       value => {
       console.log(value)
     },
@@ -51,7 +51,7 @@ export class AppComponent implements OnInit, OnDestroy {
      this.subs = obs2$.subscribe( (value) => console.log("subs1: " + value));
      this.subs = obs$.subscribe( (value) => console.log("subs2: " + value));
      this.subs = obs$.subscribe( (value) => console.log("subs3: " + value));
-
+*/
   }
 
   ngOnDestroy(): void {

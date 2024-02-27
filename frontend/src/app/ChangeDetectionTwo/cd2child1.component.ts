@@ -31,8 +31,8 @@ export class Cd2child1Component implements OnChanges, DoCheck, OnDestroy, OnInit
 
   private _nevem: string = "bende";
 
-  @Input() parentCounter: Counter;
-  @ContentChild("footer") projectedContent: ElementRef;
+  @Input() parentCounter!: Counter;
+  @ContentChild("footer") projectedContent!: ElementRef;
 
   get nevem(): string {
     console.log(" nevem proerty get - Cd2child1Component:" + this._nevem);

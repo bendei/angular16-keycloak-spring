@@ -1,6 +1,7 @@
-import {Component, computed, effect, OnInit, Signal, signal} from "@angular/core";
+import {ChangeDetectionStrategy, Component, computed, DoCheck, Signal, signal} from "@angular/core";
 
 import {FormsModule} from "@angular/forms";
+import {SignalChildComponent} from "./signalChild.component";
 
 const TAX = 0.3;
 
@@ -8,12 +9,24 @@ const TAX = 0.3;
   standalone: true,
   templateUrl: 'orderingsignal.component.html',
   selector: 'orderingsignal',
-  imports: [FormsModule]
+  imports: [FormsModule, SignalChildComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrderingSignalComponent {
+export class OrderingSignalComponent implements DoCheck {
 
   selectedQuantityForVehicle: ISelectedVehicle[] = [];  // we are storing qunatites in the IVehicle quantity property for computation
   selectedQuantity = 0;
+
+  _valami = 0;
+  set valami(value: number) {
+    console.log("valami setter called.");
+    this._valami =1;
+  }
+
+  get valami(): number {
+    console.log("valami getter called.");
+    return this._valami;
+  }
 
   subTotal = signal(0);
   total: Signal<number> = signal<number>(0);
@@ -26,24 +39,26 @@ export class OrderingSignalComponent {
   filteredNames: string[] = [];
 
   filterNames(event: Event) {
-    console.log(event.target);
     const elem = event.target as HTMLInputElement;
     const valueName = elem.value;
-    console.log(valueName);
-    this.filteredNames = this.names.filter((value)=> {return value.toLowerCase().startsWith(valueName.toLowerCase());});
+
+    if (valueName.length) {
+      this.filteredNames = this.names.filter((value) => {
+        return value.toLowerCase().startsWith(valueName.toLowerCase());
+      });
+    } else {
+      this.filteredNames = [];
+    }
   }
-
-
-
-
-
-
-
 
   vehicles: IVehicle[] = [];
 
   constructor() {
     this.loadVehicles();
+  }
+
+  ngDoCheck(): void {
+    console.log("OrderingSignalComponent: ngDoCheck() called.");
   }
 
   private loadVehicles() {

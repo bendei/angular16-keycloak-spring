@@ -17,7 +17,6 @@ export class Cd2child11Component implements OnChanges, DoCheck {
 
   counter = signal(0);
 
-
   constructor() {
     const inter = setInterval(() => {
       this.counter.update((val) => ++val);

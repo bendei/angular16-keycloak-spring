@@ -26,7 +26,7 @@ import {ErrorsignalService} from "./errorsignal.service";
                 <b>This message disappears in 4 sec</b>
         }
       <br>
-        Error from Signals
+        Error from Signals Service
         {{errorsignalService.errors()}}
 
         @if(errorsignalService.errors().length > 0) {
@@ -52,21 +52,14 @@ import {ErrorsignalService} from "./errorsignal.service";
 })
 export class TemplateComponent implements OnInit, OnDestroy {
 
-  errorService = inject(ErrorService);
+  private renderer = inject(Renderer2);
+  private errorService = inject(ErrorService);
   errorsignalService = inject(ErrorsignalService);
 
   errorMessage: MyError[] = [];
-  private subscription: Subscription;
+  private subscription!: Subscription;
 
-  @ViewChild("errorStrip") errorStrip: ElementRef;
-
-  constructor(private renderer: Renderer2) {
-    this.errorsignalService.addError({
-      code: 504,
-      message: "proba error",
-      statusText: " statuszka"
-    });
-  }
+  @ViewChild("errorStrip") errorStrip!: ElementRef;
 
   ngOnInit(): void {
     this.subscription = this.errorService.errors$.subscribe((data) => {
@@ -77,7 +70,7 @@ export class TemplateComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         this.errorsignalService.clearErrors();
         this.renderer.setStyle(this.errorStrip.nativeElement, "display", "none");
-      }, 4000);
+      }, 20000);
     });
   }
 

@@ -15,8 +15,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   routeParamOne = "44342";
   data = 0;
-  subscription: Subscription;
-  observableForAsyncPipe: Observable<number>;
+  subscription!: Subscription;
+  observableForAsyncPipe!: Observable<number>;
 
   constructor(private observableService: ObservableService, private changeDetectorRef: ChangeDetectorRef) {
   }

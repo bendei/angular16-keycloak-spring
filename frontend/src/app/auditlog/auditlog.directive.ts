@@ -11,7 +11,7 @@ export class AuditlogDirective implements DoCheck, OnChanges, OnInit {
 
   // host eleme által átadott parames
   @Input('auditlog') atadottPrimitive = '';
-  @Input('objectForDirective') objectForDirective: ObjectForDirective;
+  @Input('objectForDirective') objectForDirective!: ObjectForDirective;
 
   // hier wir haben ein directive class property, was wird an das Host Element class property binden und dann setzten wird seinen Wert
   @HostBinding('class') class = "fontuserItalic";

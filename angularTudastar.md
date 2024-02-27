@@ -32,6 +32,8 @@ https://medium.com/@toha.marko/angular-onpush-check-your-knowledge-on-a-simple-e
 https://blogs.halodoc.io/understanding-angular-change-detection-strategy/#:~:text=By%20default%2C%20angular%20will%20run,()%20has%20a%20new%20reference
 https://www.telerik.com/blogs/simplifying-angular-change-detection
 https://www.telerik.com/blogs/angular-basics-step-by-step-understanding-async-pipe
+//Ng Zone
+https://itnext.io/a-change-detection-zone-js-zoneless-local-change-detection-and-signals-story-9344079c3b9d
 // DoCheck
 https://www.tektutorialshub.com/angular/angular-component-life-cycle-hooks/#ngdocheck
 // functional interceptors
@@ -60,6 +62,8 @@ https://blog.angular-university.io/angular-signals/
 https://www.freecodecamp.org/news/angular-signals/
 https://hackernoon.com/a-guide-to-angular-signals-with-practical-use-cases-part-1
 https://hackernoon.com/a-guide-to-angular-signals-with-practical-use-cases-part-2
+// best practices und was man nicht machen sollte mit signals
+https://dev.to/this-is-angular/signals-the-do-s-and-the-dont-s-40fk
 // 4 ways to listen to events
 https://medium.com/claritydesignsystem/four-ways-of-listening-to-dom-events-in-angular-part-3-renderer2-listen-14c6fe052b59
 // error handling
@@ -116,6 +120,9 @@ https://www.samanthaming.com/tidbits/92-6-use-cases-of-spread-with-array/
 https://www.geeksforgeeks.org/lodash/
 // defer
 https://netbasal.com/a-comprehensive-guide-to-angulars-defer-block-468c74048df4
+// optional chaining , nullish coalescing
+https://blog.logrocket.com/optional-chaining-nullish-coalescing-typescript/#optional-chaining
+
 
 
 
@@ -241,11 +248,29 @@ DECORATOR
 Es ist eine Funktion, Mit Decorators können wir Klassen, Methoden und Eigenschaften dekorieren und damit Metadaten hinzufügen. Man erkennt einen Decorator stets am @-Zeichen
 zu Beginn des Namens.
 
+NON NULL ASSEERTION OPERATOR
+@ViewChild('viewChildOnParent') viewChildOnParent!: ElementRef;
+// tells the compiler, that the property will have a value at runtime for sure.
+
 OPTIONAL CHAINING
+https://blog.logrocket.com/optional-chaining-nullish-coalescing-typescript/#optional-chaining
+Ha nem használok ? operatort akkor Error-t dob az Angular, es ki sem értékeli az expressiont. Ha használom akkor undefinedet ad vissza, de nem hal le a expression, nem értékeli ki tovább
 Optional Chaining ermöglicht einen sicheren Zugriff auf verschachtelte Objekte, bei denen ein Teil des Objekts potenziell null oder undefined zurückliefert. if (foo?.bar?.baz)
-Dabei wertet TypeScript den Ausdruck Schritt für Schritt aus und bricht ab, sobald ein Objekt-Property null oder undefined liefert.
+Dabei wertet TypeScript den Ausdruck Schritt für Schritt aus und bricht ab und gibt undefined zurück, sobald ein Objekt-Property null oder undefined liefert.
 user?name -> wird nicht ausgewertet wenn user ist null, wirft aber Error wenn user ist undefined !!
 user?.doMyMethod?()
+
+    anstelle von: 
+    getFullNameLength(): number {
+        if (this.fullName === null || this.fullName === undefined) {
+        return -1;
+        } else {
+        return this.fullName.length;
+    }
+
+    getUppercaseFullname(): nullableUndefinedString {
+    return this.fullName?.toUpperCase() ?? 0;        // when fullName is defined than it return it uppercased, otherwise it returns undefined, aber mit nullish coalescing wir geben ein fallback Wert zurück
+    }
 
 NULLSIH COALESCING
  Nullish Coalescing: Es erlaubt die einfache Zuweisung von Rückfallwerten, für den Fall, dass eine Variable den Wert null oder undefined hat
@@ -1867,6 +1892,34 @@ Signal ist eine Variable mit chnage Notification. ein reaktives primitive. Es ha
     
     Wenn wir den Signal's Wert andern dann CD wird scheduled to run. 
     CD laeft nicht für alle Komponente sondern nur für das einzige komponent, wo signal gelesen wird. 
+
+Verwendungbesipiele:
+    !!!! Allgemein: wenn man anstelle von Observables Signals verwendet dannn CD laeuft nur für das Komponent, wo das Signal gelesen wird und nicht für alle Komponente ( CD.Default) oder für
+        den Komponenten Zweig nach oben (CD.OnPush)
+    !!!!
+    -   Error service zum Presentieren auf einem gemeinsamen Ort ( zB: intercepting http errors)
+    -   Form validation
+    -   Implementierung eines shopping carts
+    -   Signals kann form controll values representieren. d.H wenn wir ein Signal für ein input field verwenden, dann wird das Signal's Wert automatisch aktualisiert, wenn der Benutzer
+        den Wert des input fields ändert. (statt [(ngModel)]="name" verwenden wir name = signal('') und dann name.set('new value') oder name.update(ertek => ertek + 'new value'))
+        darüber hinaus wenn wir beim valueChanges/statusChanges : firstNameSignal = toSignal(this.profileForm.get('firstName').valueChanges, {initialValue: ''}); dann wird beim Eintippen in das Input Filed
+        nur CD für das Komponente ablaufen und nicht für das ganze Komponentenbaum. toSingal_> braucht man nicht händisch unsubscribieren. 
+
+// best practices und was man nicht machen sollte mit signals
+https://dev.to/this-is-angular/signals-the-do-s-and-the-dont-s-40fk
+
+SIGNAL INPUT:
+    anstelle von @Input, und so können wir uns onChanges(changes: SimpleCahnges) Method ersparen, wenn wir eine Nitifikation haben wollen,wenn der Wert des input aendert sich. 
+    Wenn wir die Wertaenderung haben wollen dann,:  
+        constructor() {
+            effect(() => {
+            console.log(`New value: ${this.mysignal()}`);   // dieses ist signal unabhaengig -> können alle signale beobachten
+            });
+        }
+    Properties:
+    -   required? d.h. wenn keine initial value dann wird es ein error geworfen: input.required<number>();
+    -   alias: ertek = input<number>({alias: 'lajoska'});  // a parentben: <child [lajoska]=valami>
+    -   transform: wir transformieren den Wert des signals bevor es emmittiert wird: ertek = input<number>({transform: (value: number) => value * 2});
 
 
 #####################################################################################################################################################################################
