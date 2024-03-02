@@ -1,4 +1,4 @@
-import {Component, OnInit, Signal, signal, ViewChild} from '@angular/core';
+import {Component, inject, OnInit, Signal, signal, ViewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO} from '../openapi-generated-sources';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
@@ -26,6 +26,9 @@ import {toSignal} from "@angular/core/rxjs-interop";
 
 })
 export class KonnektorViewComponent implements OnInit {
+
+  private readonly defaultService = inject(DefaultService);
+  private readonly formBuilder = inject(FormBuilder);
 
   private static readonly TIMEOUT_ERROR = '504';
   private static readonly ERROR_MSG = 'A non-timeout error occurred when fetching';
@@ -61,10 +64,12 @@ export class KonnektorViewComponent implements OnInit {
 
  //hostNameTyped = toSignal(this.konnektorFilterForm.get('hostName')?.valueChanges, {initialValue: ''});
 
+ //konnektorViewChildComponent = viewChild(KonnektorViewChildComponent);
+
   @ViewChild(KonnektorViewChildComponent)
   private konnektorViewChildComponent!: KonnektorViewChildComponent;
 
-  constructor(private readonly defaultService: DefaultService, private readonly formBuilder: FormBuilder) {
+  constructor() {
     this.bendeClone = {...this.bende, nevem: "enenen"};
     this.apu = {
       kora: 80,
@@ -84,7 +89,6 @@ export class KonnektorViewComponent implements OnInit {
     const feri: PistiFunction = (text: string) => {return text}
     console.log('------ ' + pisti("pisti implementing function type interface"));
     console.log('------ ' + feri("feri implementing function type interface lambda"));
-
   }
 
   public filterForm(): void {
@@ -98,7 +102,6 @@ export class KonnektorViewComponent implements OnInit {
 
   public clearForm(): void {
     this.konnektorFilterForm.reset();
-
     console.log("hostName: " + this.konnektorFilterForm.get('hostName')?.value);
   }
 

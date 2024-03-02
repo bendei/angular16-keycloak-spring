@@ -820,6 +820,7 @@ PROMISE:	https://javascript.info/promise-basics
 		-	Abfragen von grossen Datenmengen zur single Anzeigen
 
  NO unsubscribe from:
+                    -   async pipe
 					-   httpClient Observables
 					-	ActivatedRoute Observables like Routing parameters
 					-	Observable erstellt mit of(), from()
@@ -1920,6 +1921,17 @@ SIGNAL INPUT:
     -   required? d.h. wenn keine initial value dann wird es ein error geworfen: input.required<number>();
     -   alias: ertek = input<number>({alias: 'lajoska'});  // a parentben: <child [lajoska]=valami>
     -   transform: wir transformieren den Wert des signals bevor es emmittiert wird: ertek = input<number>({transform: (value: number) => value * 2});
+
+SIGNAL BASES / SIGNAL QUERIES:
+    -   childComponent = viewChild(ChildComponent / "myElementRef", {read: true, })
+                       = viewChild.required("mylabel"); // wenn es nicht existiert dann wird ein error geworfen
+            und dann wir haben einen Zugriff nicht vom afterViewChecked hook, sondern in dem effect( () => {this.childComponent}) hook, wo wir auf das Signal reagieren können. 
+
+
+    -   signalBase: ertek = signalBase(10);  // erstellt ein signal mit initial value
+    -   signalQuery: ertek = signalQuery(10); // erstellt ein signal mit initial value, aber es ist nicht reaktiv, d.h. wenn der Wert geaendert wird, dann wird kein CD ablaufen.
+    -   signalQuery: ertek = signalQuery(10, {reactive: true}); // erstellt ein signal mit initial value, und es ist reaktiv, d.h. wenn der Wert geaendert wird, dann wird CD ablaufen.
+    
 
 
 #####################################################################################################################################################################################

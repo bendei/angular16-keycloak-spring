@@ -1,5 +1,7 @@
 <div  class="card mt-3">
 {{valami}}
+  <br/>
+  {{folyam$ | async}}
   <div class="card-body">
     <h5 class="card-title bg-body-tertiary">Type search classic</h5>
     <input type="text" class="form-control" placeholder="Type search" (input)="filterNames($event)">

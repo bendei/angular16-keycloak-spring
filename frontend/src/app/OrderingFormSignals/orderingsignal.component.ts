@@ -2,6 +2,8 @@ import {ChangeDetectionStrategy, Component, computed, DoCheck, Signal, signal} f
 
 import {FormsModule} from "@angular/forms";
 import {SignalChildComponent} from "./signalChild.component";
+import {of} from "rxjs";
+import {AsyncPipe} from "@angular/common";
 
 const TAX = 0.3;
 
@@ -9,13 +11,15 @@ const TAX = 0.3;
   standalone: true,
   templateUrl: 'orderingsignal.component.html',
   selector: 'orderingsignal',
-  imports: [FormsModule, SignalChildComponent],
+  imports: [FormsModule, SignalChildComponent, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrderingSignalComponent implements DoCheck {
 
   selectedQuantityForVehicle: ISelectedVehicle[] = [];  // we are storing qunatites in the IVehicle quantity property for computation
   selectedQuantity = 0;
+
+  folyam$ = of("wwwww", "eeee");
 
   _valami = 0;
   set valami(value: number) {
