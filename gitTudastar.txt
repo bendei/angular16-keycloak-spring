@@ -1,0 +1,217 @@
+	Az Egit plugin nem tud alapból kapcsolódni a github accountomhoz, hiába adom meg neki a correktet:
+istvan_bende@yahoo.com	Patika72
+
+Megoldás: a github oldalán Personal Access Tokent generáltattam le és ezt használom az Eclipse-ben a password helyett:
+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
+
+1. account github
+personal Access Toke fr github: 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
+github:	istvan_bende@yahoo.com	/ pw= Patika72			 bendei72	bendep72
+
+2. account on github:
+bendeistvaneger@gmail.com username: egerke72	pw: Kakukk1972.
+personal access token: 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
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	https://www.atlassian.com/git/tutorials/syncing/git-push
+
+	jó kis cikkek: https://blog.angular-university.io
+
+	uupstream branchrol:
+	https://devconnected.com/how-to-set-upstream-branch-on-git/
+
+	vim editor:
+		quit vim - :q
+		save and quit - :wq
+
+
+0.	Comparing 2 branches: git diff main mindenfele
+
+0.A. Rebasing:
+	A rebase is what you do when you combine a commit or series of commits to a new commit. It is similar to merging in that it moves changes from one branch to another.
+	Rebasing allows you to rewrite the history of a Git repository. When you run a rebase operation, it merges the entire history of two branches into one.
+
+	 "mindenfele" branch against "master" branch, azaz a master branch időközben az estelegesen remote originből pull-ozott változtatásait át akarom
+	venni a "mindenféle" feature branchembe, hogy amikor majd aztán a mrege-gel ne legyen nagyon eltávolodva a kétféle branch.
+
+	git rebase [<upstream>] [<branch>]
+
+	-- rebasing "mindenfele branch" against "master branch"
+		or the same just defindes differetnly:
+	-- rebasing master onto mindenfele
+
+	ha a feature brancen állok:
+	git rebase master
+
+	ha masterben állok:
+	git rebase master mindenfele
+
+	git pull 					// on master branch, we update our local master with the remote repo
+	git checkout mindenfele		// changing to feature branch
+	git rebase   				// Incorporating commits of master into feature branch, mergeing histroy of master into feature
+		options:
+			-i : starts an interactive rebase
+			-continue: restart rebasing after merging confilcts
+			-abort: stop rebasing and reset HEAD to the original branch
+			upstream: branch against wo rebase our feature branch, by default the configured upstream of the curent branch
+
+	Sometimes following error comes: "There is no tracking information for the current branch":
+	upstream az main local branchem
+	Solution:
+				set up an up
+
+1.	 Egy üres foldert hozunk létre ahová a remote repo-t a gthubról le akarjuk húzni, majd ebbe a folderbe állva:
+		git init  -> inicializálja a git-et
+		( ha még nincsen a git globálisan a telepítés után inicializálva akkor: git config --global user.name "Bende István", git config --global user.email "...
+
+2.	Connecting my github repo with my local repo (wich is always named by git "master") A remote gyakorlatilag egy connectiont jelent egy adott
+		remote repositorihoz, ha ezt addoltuk akkor a git parancsok (pull, push ) stb ehhez a remote repohoz kötődnek)
+		Once you have a remote repo setup, you will need to add a remote repo url to your local git config, and set an upstream branch for your local branches.
+		The git remote command offers such utilitygit status
+		git remote add <reponame>(origin) https://github.com/bendei/proba.git
+
+3.  Checking repos:
+		git remote -> kilistázza milyen repok vannak
+
+4.	Lehúzzuk a remote repot magunkhoz a master branchünkbe.
+	git clone https://github.com/bendei/proba.git
+
+5.	 wechseln in das Ordner proba: cd proba
+
+5.	checking the content of the cloning:
+	git status
+
+	( .gitignore fájl amit a repomba kell rakni) ezt is addolni és commitálni kell)
+	( ha új fájlt hozok létre, az akkor még nem kerül a git alá, ehhez addolni és commitálni kell)
+	( vannak untracked files, amik a tilde vel vannak megjelőlve, és a mreging után jönnek létre, ezek a sikeres merge után megmaradnak:
+		vagy törlöm őket(esetleg előtte a repomat backupolom), vagy git clean -d -f commandal törlöm öket.) https://linuxize.com/post/how-to-remove-untracked-files-in-git/
+	-	how to untrack already tracked files:   https://www.studytonight.com/post/beginners-guide-to-gitignore-file-with-example
+	-	undoing commit and changes:   https://www.atlassian.com/git/tutorials/undoing-changes
+	-	merge confilcts, undoing merge:   https://git-scm.com/book/en/v2/Git-Tools-Advanced-Merging
+	-	telling git not to track files: https://www.atlassian.com/git/tutorials/undoing-changes/git-rm
+	-	listing repo/branch content: git ls-files // kapcsolok: https://git-scm.com/docs/git-ls-files (remote repot nem lehet a gittel browselni)
+	-	listing all commits: git log --reflog
+	-   comparing files in two branches: git diff branch1 branch2 elso.txt
+	-	stashing: git stash -a  ez a untrackedeket is stashingeli, visszatöltjük a stashedet(legutolsaót) git stash pop
+	- 	remote URL-jet kapjuk: git remote show myremote
+
+	// UNDO COMMIT ON REMOTE,  Visszaállitás az előző commitra stb:
+	1. we have staged but not commited yet and want to unstage: git reset
+	2. ha van egy "1.4" es message commitunk de eltoltuk és vissza akarunk állnio az 1.1 es commitra:
+		A. reset commanddal a 1.4 commitot töröljük és visszaáll a HEAD a 1.1 -re.
+			a. git log --oneline  -> ezzel kilistázzuk a commitok azonosítóját, pl az 1.1 azonositója: bb23
+			b. git reset bb23	-> ezzel töröltük a 1.4 commitot a láncból és visszaállt a HEAD a 1.1-re
+			c.  a fájlokban azonban még a 1.4 es tartalm van ezért a Source Controll panelon a Changes részben a Discard all changes-t nyomjuk és akkor a fájlok tartalma visszaáll a 1.1 commitra
+		B.	revert, amikor az 1.4 commitot nem töröljü, hanem egy új commitot hozunk létre és megmarad a 1.4 is (macerás mert conflict lesz a revertálandó fájlokban amiket kézzel kell feloldani)
+			a. git log --oneline  -> ezzel kilistázzuk a commitok azonosítóját, pl az 1.1 azonositója: bb23
+			b.	sok conflict jön a megváltozott fájlokból, ezeket kézzel kell feloldani, majd add és commit. A commit message lesz az új commit messageje.
+	3.  how to undo changes: ( https://www.earthdatascience.org/workshops/intro-version-control-git/undoing-things/)
+		A: before they’ve been staged (you haven’t used git add yet to add or stage them): git checkout src/app/book/book-details/book-details.component.html , aztán Save All -> discard  Changes
+		B. after they’ve been staged with git add but not commited:
+			git reset HEAD src/app/book/book-details/book-details.component.html  --ezután a fájl még tartalmazza a törölni kivánt változásokat de most unstaged letesztelni
+			igy a fenti "A" esettel visszaállithatjuk.
+		C. after they’ve been committed to git:
+
+
+	-- megnézni hogy a Hotfix branch és a mster branchünk között mi a különbség:( afetch és status nem jó erre)
+		git diff master Hotfix1
+
+6.  Aenderungen machen in dem elso.txt Datei mit vim:
+	Wir sind jetzt in master branch
+	vim elso.txt , dann vim auf edit mode schalten: Esc und "w" aendern, dann speichern und exit: Esc , : in unten einschreiben "wq"
+
+7. master branch mit remote repo synchroniseren:
+	git fetch
+	git status
+
+	es schreibt: A. changes not staged for elso.txt .... modified elso.txt: wir wollen deises pushen auf die remote
+				 B. .elso.txt.un~ diese sind für git nötig, nach dem merge kann man löschen ( de ha akarjuk megtartani azt is lehet)
+
+8.	staging : git add elso.txt -> so markieren wir das Datei zum commiten (git add . az összes fájlt stageli)
+	commit : git commit elso.txt -m "elso commitim" -> Aenderungen in master repo übernommen
+	(FONTOS!! Amig a fájlt nem addoltuk és commitáltuk addig a váltuás mindkét branchben megjelenik, ha addotuk a hotfixhez akkor abban lesz a változás a masterben meg már nem)
+	az add és committal a változásokat az egyik kiválasztott branchez rendeljük hozzá!!!!!!
+
+9.	Aenderungen im master auf remote repo schicken: git push
+
+Ha egy hotfix branchen akarunk dolgozni és nem a masterbe, amibe nem illik):
+	https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging
+	https://www.atlassian.com/git/tutorials/syncing/git-push
+
+
+listing commits on remote repo: git log <remote name> (origin)
+
+szituáció: van e master/main local branch-ünk (ezeb elvileg nem dolgozunk, hanem ez reendszeritn csak a remote repo pull / push-ra használjuk). A pull is egy merge valojában, azaz a remoteot belemergeljük a localba.
+Kell egy hotfix amit ha kész akkor teszt és ha az issikeres akkor
+mergelem a masterrel majd. Mielőtt azonban a remotra a main/mastert push-olnám, meg kell nézni, hogy van - azopta Rolandtól commit és ha van akkor pull, és azzal is letesztelni hogy fut-e a hotfix mrge.
+Ha igen akkor lehet pusholni a remotra. Figyelni kell rá, hogy amelyik branchben állok ( git status-al megnézni) akkor a git branch valami command abból a brancsből csinál
+egy újat. Azaz ha master branchből  csinálunk egy barnch A-t majd ebben változtatunk egy fájlon és nem mergeljük még vissza a A-t a mainbe, hanem csinálunk egy branch AA-t,
+akkor a main nem tartalmazza a fájl modosításait, de a branch A és AA igen.!!! Arra nincs lehetőség hogy ha kész a branch A és pullozom a remotot a mainbe és ki akarom próbálni hoyg
+
+
+Hiba jelenségek:
+A. a remote: myremote a localison meg master ben vagyok és a köv adom ki: git diff myremote master, erre jön a hibaüzenet:
+	"There is no tracking information for the current branch. Please specify which branch you want to merge with."
+	=> git remote -v, kiderülhet hogy két azonos(pull és push) remote van ez ha külön a pull és push akkor rendben van.
+	Megoldás: git diff myremote/master master
+
+B. git pull => hibaüzenet: "There is no tracking information for the current branch.
+							Please specify which branch you want to merge with.
+							See git-pull(1) for details.
+							git pull <remote> <branch>"
+	erre: git pull 	https://github.com/bendei/AngularWithPrimeNG.git
+	erre: You have unmerged paths.
+			(fix conflicts and run "git commit")
+			(use "git merge --abort" to abort the merge)
+  Megoldás: ez esetben jobb egég a fájlon->accept all incoming. Save filé. Majd commit, majd:  git merge --abort, majd fetch és status. Ekkor nincsen se conflict se change.
+
+C. git diff tavoli master
+	és a git remote -v:		tavoli  https://github.com/bendei/AngularWithPrimeNG.git (fetch)
+							tavoli  https://github.com/bendei/AngularWithPrimeNG.git (push)
+	HIBA: "fatal: ambiguous argument 'tavoli': unknown revision or path not in the working tree.
+		  Use '--' to separate paths from revisions, like this: 'git <command> [<revision>...] -- [<file>...]' If you wish to set tracking information for this branch you can do so with:"
+	Megoldas: git stash, git pull tavoli/master master, git stash pop, git diff tavoli/master master
+
+
+-------------------------------
+Új primitiv dir-t egy fájlall akarunk létrehozni és feltolni a remotre:
+0.	A github-on https://github.com/new oldalon létrehozunk egy új repot, ez mots egy üres repo amit meg akarok tölteni már létező tartalommal
+1.	mkdir hero
+2. git init
+3. create elso.txt
+4. git add elso.txt
+5.	git commit elso.txt -m "elso"
+6.	git remoe add remotehero https://github.com/bendei/hero.git
+7.	git push -u remotehero master
+
+Új angular projekt létrehoz és feltolom a githubra
+0.	A github-on https://github.com/new oldalon létrehozunk egy új repot, ez mots egy üres repo amit meg akarok tölteni már létező tartalommal
+1.	új angular project: ng new ketto, ez már a gitignore-t is tartalmazza, azaz a git ebben a mappábban inicializálva van
+2.	beleállok ebben a dirbe: git remote add remoteketto https://github.com/bendei/angegy.git
+3.  git push -u remoteketto master
+
+Új ang project majd a VS Codeból tolom fel a githubra:
+0.	A github-on https://github.com/new oldalon létrehozunk egy új repot, ez mots egy üres repo amit meg akarok tölteni már létező tartalommal
+1.	új angular project: ng new ketto, ez már a gitignore-t is tartalmazza, azaz a git ebben a mappábban inicializálva van, nem kell küldön Dir létrehozni!
+2.	VS Code -> Open Folder
+3.	add remote: https://github.com/bendei/harom.git
+4. push to (kiválasztoma remote nevét)
+
+Meglévő angular projektet akarok a github-on egy új repoba tenni:
+0.	A github-on https://github.com/new oldalon létrehozunk egy új repot, ez mots egy üres repo amit meg akarok tölteni már létező tartalommal
+1.  A projektet tartalmazó mappában: git init, git config --global user.name "Bende István", git config --global user.email
+3.  Megnyitom a mappát VS Code-ban
+4.	git remote ot adok hozzá: a url a github oldalán leszedett repo cime (https://github.com/bendei/AngularPrimeNG.git), neve meg legyen: remoteAngPrime
+5.	Push to  itt a remotot kiválasztom
+
+Vadi új projektet hozunk létre és azt tesszük fel a remote github-ra.
+0.	A github-on https://github.com/new oldalon létrehozunk egy új repot, ez mots egy üres repo amit meg akarok tölteni már létező tartalommal
+1.  dir létrehozása: HeroApp
+2.	angular project létrehozása: ng new hero
+3.	git inicializálása: git init, git config --global user.name "Bende István", git config --global user.email
+4.	VS Codeban: remote hozzáadása: https://github.com/bendei/hero.git, nve legyen: remotehero
+
+Ez egy próba commit a githubról direkt
+
+

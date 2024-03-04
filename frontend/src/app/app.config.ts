@@ -21,16 +21,16 @@ export const appConfig: ApplicationConfig = {
     provideRouter(APP_ROUTES, withComponentInputBinding()),                         //
 
     provideHttpClient(withInterceptors([myErrorInterceptor, corsInterceptor])),            // configures HttpClient Service with functional Interceptor (ang 16 style)
-    {provide: ErrorHandler, useClass: GlobalErrorHandler},                          // also registered with the root injector
+   // {provide: ErrorHandler, useClass: GlobalErrorHandler},                          // also registered with the root injector
     {provide: RouteCommonService, useClass: RouteCommonService},                              // registering service for used by a group of child components commonly for data shareing
-    {provide: ObservableService, useClass: ObservableService},
+   // {provide: ObservableService, useClass: ObservableService},
    // {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},      // registering class-based old style interceptor
 
   // COMMENT OUT IF WANT TO RUN APP IN CHOME
     //{provide: KeycloakService, useClass: KeycloakService},
     //{provide: APP_INITIALIZER, useFactory: initializer, multi: true, deps: [KeycloakService]},
 
-    // mock server API backend provider
+    // mock server API backend provider, ez kell mert itt döl el hogy mock vagy real backendet hivunk meg
     {provide: DefaultService, useClass: environment.apiService},
     // importing ngx-logger module's providers
     importProvidersFrom(LoggerModule.forRoot({

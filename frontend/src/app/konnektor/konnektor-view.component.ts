@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, Signal, signal, viewChild, ViewChild} from '@angular/core';
+import {Component, inject, OnInit, Signal, signal, viewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO} from '../openapi-generated-sources';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
@@ -54,10 +54,6 @@ export class KonnektorViewComponent implements OnInit {
       return "myarg:" + myarg;
     }
   };
-
-  bendeOptionalChaning;
-
-  pistike!: Bende;
 
   bendeClone: Bende;
   apu: Apu;
