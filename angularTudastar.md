@@ -1925,7 +1925,7 @@ SIGNAL INPUT:
 SIGNAL BASES / SIGNAL QUERIES:
     -   childComponent = viewChild(ChildComponent / "myElementRef", {read: true, })
                        = viewChild.required("mylabel"); // wenn es nicht existiert dann wird ein error geworfen
-            und dann wir haben einen Zugriff nicht vom afterViewChecked hook, sondern in dem effect( () => {this.childComponent}) hook, wo wir auf das Signal reagieren können. 
+            und dann wir haben einen Zugriff nicht vom afterViewChecked hook, sondern in dem effect( () => {this.childComponent().increment()}) hook, wo wir auf das Signal reagieren können. 
 
 
     -   signalBase: ertek = signalBase(10);  // erstellt ein signal mit initial value

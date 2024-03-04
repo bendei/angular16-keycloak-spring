@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, Signal, signal, ViewChild} from '@angular/core';
+import {Component, inject, OnInit, Signal, signal, viewChild, ViewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO} from '../openapi-generated-sources';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
@@ -64,10 +64,7 @@ export class KonnektorViewComponent implements OnInit {
 
  //hostNameTyped = toSignal(this.konnektorFilterForm.get('hostName')?.valueChanges, {initialValue: ''});
 
- //konnektorViewChildComponent = viewChild(KonnektorViewChildComponent);
-
-  @ViewChild(KonnektorViewChildComponent)
-  private konnektorViewChildComponent!: KonnektorViewChildComponent;
+ konnektorViewChildComponent = viewChild(KonnektorViewChildComponent);
 
   constructor() {
     this.bendeClone = {...this.bende, nevem: "enenen"};
@@ -210,7 +207,7 @@ export class KonnektorViewComponent implements OnInit {
   }
 
   public useViewChild() {
-  this.konnektorViewChildComponent.incrementUseViewChild();
+  this.konnektorViewChildComponent()?.incrementUseViewChild();
   }
 }
 
