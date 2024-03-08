@@ -1,5 +1,5 @@
 import {HttpInterceptorFn} from "@angular/common/http";
-import {catchError, throwError} from "rxjs";
+import {catchError, of, throwError} from "rxjs";
 import {inject} from "@angular/core";
 import {ErrorService, MyError} from "../core/error.service";
 import {ErrorsignalService} from "../core/errorsignal.service";
@@ -23,7 +23,8 @@ export const myErrorInterceptor: HttpInterceptorFn = (req, next) => {
         if (errorsignalService) errorsignalService.addError(myError);
       }
 
-     return throwError(() => error);
+     //return throwError(() => error);
+      return of();
     })
   );
 

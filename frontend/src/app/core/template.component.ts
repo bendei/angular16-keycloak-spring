@@ -10,8 +10,9 @@ import {RouterLinkWithHref, RouterOutlet} from "@angular/router";
 import {FooterComponent} from "./footer.component";
 import {NavigationComponent} from "./navigation.component";
 import {ErrorService, MyError} from "./error.service";
-import {Subscription} from "rxjs";
+import {catchError, filter, from, Observable, of, Subscription, throwError} from "rxjs";
 import {ErrorsignalService} from "./errorsignal.service";
+import {map} from "rxjs/operators";
 
 @Component({
   standalone: true,
@@ -61,7 +62,52 @@ export class TemplateComponent implements OnInit, OnDestroy {
 
   @ViewChild("errorStrip") errorStrip!: ElementRef;
 
+
   ngOnInit(): void {
+    console.log("TemplateComponent ngOnInit() called");
+
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    const user: UserInterface = {
+      id: '1',
+      name: 'John',
+      age: 9,
+      getMessage: () => "wwwww"
+
+    };
+
+    const DATA = [ {
+      id: '1',
+      name: 'John',
+      age: 9,
+      getMessage: () => "wwwww"
+      },
+      {
+        id: '2',
+        name: 'Bende',
+        age: 22,
+        getMessage: () => "wwwww"
+
+      }
+    ];
+
+   from([1, 2, 3, 4, 5]).pipe(map(num => num * 10)).subscribe((res) => console.log(res));
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
     this.subscription = this.errorService.errors$.subscribe((data) => {
       this.errorMessage = data;
       if(this.errorStrip) {   // kell mert a display:none-nal ki is epitjük a DOM-bol, igy ez még nem létezik
@@ -74,11 +120,27 @@ export class TemplateComponent implements OnInit, OnDestroy {
     });
   }
 
+
+
+
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
-
-
 }
+
+
+interface UserInterface {
+  id: string,
+  name: string,
+  age: number,
+  getMessage: () => string
+}
+interface ProfileInterface {
+  name: string,
+  profileUrl: string,
+  isActive: boolean
+}
+
+

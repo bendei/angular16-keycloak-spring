@@ -149,9 +149,10 @@ export class KonnektorViewComponent implements OnInit {
       const allKonnektors$ = this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created);
       this.konnektors = await lastValueFrom(allKonnektors$);
     } catch(error) {
+      console.log("KonnektorViewComponent ERROR caught in loadKonnektors()");
       if (error.status != KonnektorViewComponent.TIMEOUT_ERROR) {
-        console.log("itt jön");
-        console.error(KonnektorViewComponent.ERROR_MSG, error);
+        console.log("KonnektorViewComponent.TIMEOUT_ERROR", error);
+        // itt lehet specifikusan lekezelin, pl popup business errorhoz
       }
     }
     this.loaded = true;

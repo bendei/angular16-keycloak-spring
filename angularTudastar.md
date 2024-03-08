@@ -11,7 +11,7 @@ https://www.tektutorialshub.com/angular/replaysubject-behaviorsubject-asyncsubje
 https://www.jsowl.com/solve-the-error-ts2532-object-is-possibly-undefined-in-typescript/?utm_content=cmp-true
 // threads in javascript
 https://www.telerik.com/blogs/angular-basics-introduction-processes-threads-web-ui-developers
-// @Input
+// @Input -> deprecated since v17
 https://blog.angular-university.io/angular-input/
 // @ViewChild
 https://www.tektutorialshub.com/angular/understanding-viewchild-viewchildren-querylist-in-angular/
@@ -122,6 +122,8 @@ https://www.geeksforgeeks.org/lodash/
 https://netbasal.com/a-comprehensive-guide-to-angulars-defer-block-468c74048df4
 // optional chaining , nullish coalescing
 https://blog.logrocket.com/optional-chaining-nullish-coalescing-typescript/#optional-chaining
+// routes, nyagyon jo egyszerű leirás a standalone és routeshoz
+https://www.angulararchitects.io/blog/routing-and-lazy-loading-with-standalone-components/
 
 
 
@@ -215,7 +217,10 @@ Mit einem normalen String in einfachen Anführungszeichen ist es nicht möglich,
 Backticks, keine zu nutzen. Anführungszeichen Ein Template-String wird mit schrägen `Hochkommata` (auch Accent grave oder Backtick) eingeleitet und beendet, nicht mit
 Anführungszeichen. Der String kann sich schließlich über mehrere Zeilen erstrecken und endet erst beim schließenden Backtick. Template strings erlauben
 STRING INTERPOLATION: wir können Expressions (Ausdrücke) in das String einbetten.
-Interpolatin {{}} innherhalb von template string (backticks)
+Interpolatin {{}} innherhalb von template string (backticks):
+    getValami() {
+    return `${this.name} is `
+    }
 
 ARROW FUNKTION = Lambda Ausdruck
 Eine Arrow-Funktion ist eine Kurzschreibweise für eine normale function() in JavaScript. Auch die Bezeichnung Lambda-Ausdruck ist verbreitet.
@@ -252,7 +257,7 @@ NON NULL ASSEERTION OPERATOR
 @ViewChild('viewChildOnParent') viewChildOnParent!: ElementRef;
 // tells the compiler, that the property will have a value at runtime for sure.
 
-OPTIONAL CHAINING
+OPTIONAL CHAINING / elvis operator
 https://blog.logrocket.com/optional-chaining-nullish-coalescing-typescript/#optional-chaining
 Ha nem használok ? operatort akkor Error-t dob az Angular, es ki sem értékeli az expressiont. Ha használom akkor undefinedet ad vissza, de nem hal le a expression, nem értékeli ki tovább
 Optional Chaining ermöglicht einen sicheren Zugriff auf verschachtelte Objekte, bei denen ein Teil des Objekts potenziell null oder undefined zurückliefert. if (foo?.bar?.baz)
@@ -304,8 +309,15 @@ function getCode(obj: Person) {
  als Type Guard:  if (typeof money == "string")
 
  Enum is a set of named constants:
- ENUM TYPEN:
-	string enums: enum VehcileType {Car="Car",...
+ ENUM TYPEN: fast gleiche Syntax wie Interface, aber mit enum keyword. Enum ist ein spezieller Typ, der eine Sammlung von konstanten Werten enthält. 
+	string enums: 
+    enum StatusEnum {
+        ACTIVE = 'active'
+    }
+Verwendung? man definiert eine Set von Konstanten und verwendet es überall einheitlich in der Applikation
+const isActive = (status: StatusEnum): boolean => {
+  return status === StatusEnum.ACTIVE;
+};
 	numeric enums: enum VehcileType { Car, // Typescript weist automatisch numerische Werte zu. startend mit 0;  oder:  Car=2,
 	hetero enums: enum VehcileType { Car="C", Plane=1, ..
 wenn ein enum const ist, dann wird es nicht transpiled , sondern werden die Werte direkt befüllt in transpiled code.
@@ -941,7 +953,7 @@ Zb: user editiert form Felder und bei jedem Aenderung wird ein backend Aufruf st
  und welche wird suspendiert etc?:
 
 concatMap: save Operations werden sekvenziell , nacheinander durchgeführt, wenn 2. wird schneller als das 1. durchgeführt, dann 2. wird warten. Reihenfolge der Observables result
-           lieferung ist konstant. Zeitlichen Reihenfolge.
+           lieferung ist konstant. Zeitlichen Reihenfolge.  Zweite Observable wird nicht subscribiert, bis das ertse completed ist.
 
 mergeMap: hier werden Observables nicht sequentiell durchgeführt, sondern für allen wird abboniert und wie sie durchgeführt werden, so werden ihre Werte gleich genommen, ohne auf ein
 	vorige Observable zu warten. Össze-vissza hozhatják vissza az adatokat.
@@ -997,57 +1009,42 @@ Zwei Typen von Errorbehandlungen:
 
 		Strategien zur Abfangen Errors:
 
-		-  Mit der catchError Operator (empfaent ein Observable und returns auch ein Observable!), worin man es gleich behandelt oder
-			mit throwError weiterwirft. Ein Observale liefert keine Daten mehr wenn error erflogt, aber wir können nochmals auf das Observable abbonieren: retryWhen, delayWhen
+        A:  in dem catchError operator wir fangen den error ab und geben ein fallback value zurück, so braucht man im observer keine error handler callback, weil es kriegt ein empty array zurück.
+            const usersArray$ = of(DATA).pipe(
+                map(users =>  {
+                throw new Error("hahaha");
+                //users.map(user => user.age)
+            }),
+            catchError((err) => {
+                console.log("error: " + err);
+                return of([]);          // wir kreiren einen observable
+                })
+            );
 
-				https$.pipe(
-					catchError(
-						A.: err => of([])
-						B.: err => throwError(err)
-						)
-				)
-				.subscribe(
-					res => console.log('HTTP response', res),
-					err => console.log('HTTP Error', err),
-					() => console.log('HTTP request completed.')
-				);
+            usersArray$.subscribe(
+              {
+              next: (data) => console.log(data),
+                //error: (err) => console.log(err),
+              }
 
-		-	Errors in der komponenten innerhald bder subscribe Methode behandelt:
-			let observer = {
-						  next: (response: any) => console.log("next:", response),
-						  error: (err: any) => this.errorObject = err // verpackt in HttpErrorResponse
-							 }
-			this.restDS.get404StatusCode().subscribe( observer );
+        B:  in dem catchError operator wir fangen den error ab und werfen ihn weiter, so dass wir in der Komponenten beim subscribieren ein error handler callback auch implementieren sollen
 
-
-			this.http.get<repos[]>(this.baseURL + 'usersY/' + userName + '/repos')
-				  .pipe(
-					catchError( err => {
-					  console.log('error caught in service')
-					  console.error(err);
-
-					  //Handle the error here
-					  // 1. "Catch and replace strategy": we return a fallback value; error subscriber callback method will never be called, and Observable completes!!!
-							of([])
-
-					  // 2. rethrowing error, error callback can handle it again later in the chain:
-							console.log('Handling error locally and rethrowing it...', err);
-							return throwError(err);
-
-					// we can use finalize operator, das immer durchgeführt wird.
-					finalize(() => console.log("first finalize() block executed")),
-			 		})
-				  )
-
-			// wenngleich error in service abgfenagen und teilweise behandelt wird, kann sein dass die error im service mit trhowError Funktion weitergeworfen sollte, damit man
-			in der Komponenten ein alert popup oder was aehnliches dem User anzeigt.
-
-		-	in den Komponenten, mit error callback von dem subscribe Methode, drawback we can not return a falback value if error comes:
-			  (error => {
-					  if (isClientError(error)) {
-						...doSomething...
-					  }
-					})
+             const usersArray$ = of(DATA).pipe(
+                    map(users =>  {
+                    throw new Error("hahaha");
+                    //users.map(user => user.age)   // braucht ma err nicht abhandeln
+                }),
+                catchError((err) => {
+                    console.log("error: " + err);
+                    return throwError(err)      // erstellt einen Observable
+                    })
+                );
+    
+                usersArray$.subscribe(
+                  {
+                  next: (data) => console.log(data),
+                  error: (err) => console.log(err),     // muss man error abhandeln
+                  }
 
 		-  allgemein (globally)  in Interceptoren: dieses ist die beste Lösung, andernfalls sollten wir in Komponenten/Services repetitive code schreiben, besser alles in Interceptor
 			auslagern. HttpInterceptor ist ein Service die erstellen und registrieren global in dem root Module. Dieses faengt alle eingehende und ausgehende Requests.
@@ -1932,10 +1929,13 @@ SIGNAL BASES / SIGNAL QUERIES:
     -   signalQuery: ertek = signalQuery(10); // erstellt ein signal mit initial value, aber es ist nicht reaktiv, d.h. wenn der Wert geaendert wird, dann wird kein CD ablaufen.
     -   signalQuery: ertek = signalQuery(10, {reactive: true}); // erstellt ein signal mit initial value, und es ist reaktiv, d.h. wenn der Wert geaendert wird, dann wird CD ablaufen.
     
+SIGNAL MODEL:
 
+
+The signal-based Components, will be more concise in terms of life-cycle hook, only the following from known life-cycle will remain : ngOnInit/ngOnDestroy
 
 #####################################################################################################################################################################################
-DEFER bLOCK
+DEFER bBOCK
 #####################################################################################################################################################################################
 Ziel: lezy loading eines Inhalts. Sollte es ein Komponent, Directive oder Pipe, ist es plaziert in einem @defer vblock, dann Angular ladet es basierend auf einer Kondition oder einen 
 Erreignis. => Leistungsoptimierung, 
@@ -1978,6 +1978,18 @@ new lifecycle hhoks
     afterRender( () => {});         // gerufen von dem Browser wenn Application gerendert ist.
 #####################################################################################################################################################################################
 
+Injectable(provided: root)  -> ha csak a lazy parts ban használjuk akkor ez is lazy loaded lesz!!
+Wenn wir routes lazy laden, dann ein environment injector wird für das Route erstellt.
+
+APP_INITIALIZER: es ist ein Token, der representiert eine Funktion, welche ausgeführt wird wenn die Applikation ist initialisiert.
+Es ermöglicht, bestimmte Operationen durchzuführen bevor  die Applikation völlig startet, zB. Laden von Konfigurationen vom Endpoint, 
+Aufsetzen von Aplikationspezifische Settings, Initialisierung von keyCloak Service.
+    {provide: APP_INITIALIZER, useFactory: initializer, multi: true, deps: [KeycloakService]
+
+ENVIRONMENT_INITIALIZER: 
+
+
+Dynamischer import: loadChildren: () => import('dddd').then(m => m.ModuleName) // lazy loading, import gibt ein Promise zurück, das resolves n ein Objekt, das alle seine export hat.
 #####################################################################################################################################################################################
 #####################################################################################################################################################################################
 

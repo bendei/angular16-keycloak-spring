@@ -13,6 +13,7 @@ import {environment} from "../environments/environment";
 import {DefaultService} from "./openapi-generated-sources";
 import {LoggerModule, NgxLoggerLevel} from "ngx-logger";
 import {myErrorInterceptor} from "./interceptors/myerror.interceptor";
+import {NAVIGATION_ROUTES} from "./core/navigation.routing";
 
 // diese Interface declares eine Array von providers, die für root component und alle seine Kinder zur Verfügung stehen sollen
 export const appConfig: ApplicationConfig = {

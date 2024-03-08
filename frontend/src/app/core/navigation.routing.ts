@@ -18,10 +18,11 @@ export const NAVIGATION_ROUTES: Routes = [
     component: TemplateComponent,
     //canActivate: [navigationGuard],
     providers: [RouteCommonService],
+
     children: [
       {
         path: 'konnektor-view',
-        component: KonnektorViewComponent,
+        loadComponent: () => import('../konnektor/konnektor-view.component').then(e => e.KonnektorViewComponent)
       },
       {
         path: "auditlog",
