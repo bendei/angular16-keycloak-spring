@@ -1,14 +1,24 @@
 
+property szintaxis: class és enum = jellel, interface es type : tal
+
+
 "this" in js
 https://www.freecodecamp.org/news/the-this-keyword-in-javascript/
+1. Obejtumban magára az objektum példányára mutat
+2. Class példányban magára a class példányra mutat
+3. Ha a component class on kivul (lambda / function) -> undefined
+4. Componenten belul (lambda/function) -> component instance, with all its members accessable
+5. 
 
-this in lambda Fukntionen referenziert auf das aussere Context:
+_this_ in lambda Fukntionen referenziert auf das aussere Context:
 1. wenn in einem Component:
    let mymethod = (): void => {
     console.log('ezezezeze: ' + this.); // this referenziert auf das Component
    }
 
-2. nicht in dem component selbst aber in dem gleichen ts file: undefined 
+2. nicht in dem component selbst aber in dem gleichen ts file: undefined
+
+3. in einem js file _> Window object
 
 3. in einem ts file: 
 
@@ -16,13 +26,14 @@ const user: UserInterface = {
   id: '1',
   getMessage: () => {
     return user.id;   // referenziert auf das aussere Context:
+    return this.age // ez is működik
   }
 
   getMessage: function() {
   return this.id;  // ha a this-t egy objektumon belül használjuk, akkor az objektumra mutat és elérhetjük vele azpropertiket és a metódusait
 };
  
-// ha functionban hivjuk meg akkor a window objektumra mutat: 
+// ha standalone functionban hivjuk meg akkor a window objektumra mutat: 
   function test() {
     console.log('this in a function', this);
   }
@@ -103,12 +114,19 @@ const users$ = of(DATA);
 )
 
 .................................................................................................................................................................................................................
+// ez object type chcking nem működik, mert a type csak a compile time-ban működik, de a runtime-ban nem
 
-
-
-
+type State = SuccessState | FailedState;
+  const getState = (state: State):string => {
+    if (state instanceof SuccessState) {  // ez nem műx, mert runtime nincs ilyen type
+    ...
+ehelyett: 
+  if ((state as SuccessState).state === StateEnum.SUCCESS) {
+    return StateEnum.SUCCESS;
+  }
 .................................................................................................................................................................................................................
-
+never keyword: alle Methoden werden beendet, eine Ausnahme ist, wenn wir eine Methode haben, die nie beendet wird, zB: throw new Error('error');
+In diesem einzigen Fall können wir den never als return type verwenden.
 
 
 

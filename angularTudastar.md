@@ -167,11 +167,41 @@ INTERFACE
 #######################################################################################################################################################################################
 Object type:
 Instanz erstellen (Interface Type):
-1. von interface Typ:
-	const error: Error = {
-      name: "pisti error",
-      message: "pisti message"
-    };
+
+
+interface UserInterface {
+    age: number,
+    name?: string,
+    getMsg(): void,     // bei Methoden NUR das Sygnature angeben, nicht die implementation !!!!!
+    getMsg: () => {},
+    getMsg2(nm: string): string,
+    getMsg3: (nm: string) => {
+        console.log(nm);
+    }
+}
+Instanzieren:
+  let user: UserInterface = {
+    age: 22,
+    name: "wwwww",
+    getMsg(): void {
+        console.log(`${this.age}`); // ` nelkül nem megy !!
+        let ez = this.age;
+        console.log(ez);
+    },
+    vagy... getMsg: () => {},
+    
+    // sima method declaration style
+    getMsg2(nm: string): string {
+        return `${nm}`;
+    },
+    // lambda style
+    getmsg2: (text: string) => text + "hahaha"  // lamdba styleban nem ferünk hozzá a interface propertijeihez!!
+    
+
+getMsg3: (nm: string) => void   // lambda style
+};
+
+
    2. Klasse-Typ:
        let ez: Pista = {
            name: "bende"
@@ -212,7 +242,7 @@ export declare interface SimpleChanges {
 let ht: string[]: SimpleChange;
 
 
-TEMPLATE-STRINGS
+_TEMPLATE-STRINGS_
 Mit einem normalen String in einfachen Anführungszeichen ist es nicht möglich, einen Text über mehrere Zeilen anzugeben. TEMPLATE-STRINGS im Code
 Backticks, keine zu nutzen. Anführungszeichen Ein Template-String wird mit schrägen `Hochkommata` (auch Accent grave oder Backtick) eingeleitet und beendet, nicht mit
 Anführungszeichen. Der String kann sich schließlich über mehrere Zeilen erstrecken und endet erst beim schließenden Backtick. Template strings erlauben
@@ -222,25 +252,28 @@ Interpolatin {{}} innherhalb von template string (backticks):
     return `${this.name} is `
     }
 
-ARROW FUNKTION = Lambda Ausdruck
+_ARROW FUNKTION_ = Lambda Ausdruck
 Eine Arrow-Funktion ist eine Kurzschreibweise für eine normale function() in JavaScript. Auch die Bezeichnung Lambda-Ausdruck ist verbreitet.
 Die Definition einer anonymen function() verkürzt sich damit elegant zu einem Pfeil =>. Erhält die Funktion genau ein Argument, können
 die runden Klammern auf der linken Seite sogar weggelassen wer. Der  rechtsseitige den. Ausdruck dient als Rückgabewert. Auch die geschweiften Klammern auf der rechten Seite können
 eingespart werden: Lässt man die Klammern weg, wird das Ergebnis des rechtsseitigen Ausdrucks als Rückgabewert für die Funktion verwendet.
 Wir müssen also kein return-Statement verwenden.
 
-SPREAD OPERATOR / oder zum klonen : Object.assing(target, source)
+_SPREAD OPERATOR_ / oder zum klonen : Object.assing(target, source)
 Praktisch verwenden wir den Spread-Operator vor allem, um Objekte und Arrays zu klonen. const copy = { ...myObject, year: 2020 }; ( Gleichheitszeichen) kopieren. »Klonen«
  wir also auf diese Weise ein Objekt, das eine Instanz einer Klasse ist, so werden nur die Eigenschaften kopiert, nicht aber die klasseneigenen Methoden. Die inhaltliche Verbindung
 mit der Klasse geht verloren, und es wird lediglich eine flache Kopie (engl. SHALLOW COPY) erzeugt. Es wird stets nur die obere Ebene eines Objekts ko
 piert. Tiefere Zweige eines Objekts oder Arrays müssen wir zunächst mit der Spread-Syntax einzeln klonen und anschließend neu zusammenbauen. Wird
 diese Aufgabe zu kompliziert, sollten wir auf eine Bibliothek zurückgreifen, die eine Deep Copy erzeugt, sodass wir das Objekt gefahrlos verändern können.
 Oder lodash cloneDeep methode verwenden.
+    const ujobj = {...regiObj, ujproperty: "pistike"};
 
-REST OPERATOR: sollte man eine variirbare anzahl von Argumente in eine Funktion eingeben, so verwendet man (...) Rest operator, dessen Wert man als array verwenden kann.
+_REST OPERATOR_: sollte man eine variirbare anzahl von Argumente in eine Funktion eingeben, so verwendet man (...) Rest operator, dessen Wert man als array verwenden kann.
 schaut gleich aus wie spread operator.
+const m = {...userObjekt, ...pistiObjekt};
+const arrayem = [...arrayOne, ...arrayTwo, ...arrayThree];
 
-DESTRUKUTRIERENDE ZUWEISUNG
+*DESTRUKUTRIERENDE ZUWEISUN*G
 Destrukturierende Zuweisungen: Wenn wir einzelne Eigenschaften eines Objekts extrahieren und in Variablen schreiben möchten, so müssen wir die Variablen zuerst an
 legen und dann mit den Werten aus dem Objekt befüllen. Mit der Destrukturierung lässt sich dieser Code auf eine Zeile verkürzen: Die Objekt Variablen werden automatisch angelegt und mit
 den gleichnamigen Eigenschaften aus dem Objekt befüllt.
@@ -249,7 +282,7 @@ let {objPropertyName1: newProp1, objPropertyName2: newProp2} = ObjektInstanzdenw
 let { neve } = pista;	-> wir extrahieren den neve property in dem pista Objekt;  wenn wir den gleichen Variablennamen erhalten wollen.
 oder: const {smcbCard, hbaCard, egkCard, gsmcktCard, gsmckCard, unknownCard} = this.cardTypeForm.getRawValue();
 
-DECORATOR
+_DECORATOR_
 Es ist eine Funktion, Mit Decorators können wir Klassen, Methoden und Eigenschaften dekorieren und damit Metadaten hinzufügen. Man erkennt einen Decorator stets am @-Zeichen
 zu Beginn des Namens.
 
@@ -257,7 +290,7 @@ NON NULL ASSEERTION OPERATOR
 @ViewChild('viewChildOnParent') viewChildOnParent!: ElementRef;
 // tells the compiler, that the property will have a value at runtime for sure.
 
-OPTIONAL CHAINING / elvis operator
+_OPTIONAL CHAINING / elvis operator_
 https://blog.logrocket.com/optional-chaining-nullish-coalescing-typescript/#optional-chaining
 Ha nem használok ? operatort akkor Error-t dob az Angular, es ki sem értékeli az expressiont. Ha használom akkor undefinedet ad vissza, de nem hal le a expression, nem értékeli ki tovább
 Optional Chaining ermöglicht einen sicheren Zugriff auf verschachtelte Objekte, bei denen ein Teil des Objekts potenziell null oder undefined zurückliefert. if (foo?.bar?.baz)
@@ -272,18 +305,21 @@ user?.doMyMethod?()
         } else {
         return this.fullName.length;
     }
-
-    getUppercaseFullname(): nullableUndefinedString {
-    return this.fullName?.toUpperCase() ?? 0;        // when fullName is defined than it return it uppercased, otherwise it returns undefined, aber mit nullish coalescing wir geben ein fallback Wert zurück
+    const getlength = (obj: UserInterface) => {
+        return obj.name?.length ?? -1;  // ha nincsen name akkor a name undefined és akkor a Nullish coalescing miatt a fallback value -1 jön vissza.
     }
 
-NULLSIH COALESCING
+    getUppercaseFullname(): nullableUndefinedString {
+        return this.fullName?.toUpperCase() ?? 0;        // when fullName is defined than it return it uppercased, otherwise it returns undefined, aber mit nullish coalescing wir geben ein fallback Wert zurück
+    }
+
+_NULLSIH COALESCING_
  Nullish Coalescing: Es erlaubt die einfache Zuweisung von Rückfallwerten, für den Fall, dass eine Variable den Wert null oder undefined hat
  let bar = foo ?? 'backup'; vagy ?? mymethod()
 
 in einer Template können wir den selector (host) element mikt den folgenden css selector zugreifen :host ; und mit :host(.focus) können wir sogar ein focus CSS-Klasse zuweisen.
 
-INTERSECTION TYPE:
+_INTERSECTION TYPE BEI KLASSEN_:
 Mit itersection Typ kombinieren wir 2 oder mehrere type in einem. Der resultierender Typ wird alle Propertys aller Typen beinhalten.
 interface Person {  name: string;  age: number;}
 interface Student {  studentCode: string;  division: string}
@@ -303,22 +339,38 @@ function getCode(obj: Person) {
     obj.code();
   }
 
- INSTANCEOF:
+TS besteht aus: Sprache selbst, TS compiler, Language Service (code coloring, code completition stb)
+
+ _READONLY_:  instanziert man ein Object und versichert dass seine Properties readnoly sind.
+    let user: Readonly<User> = {...};
+
+  String / Boolean / Number literals: einfache primitive Werte die TS zu den properties zuordnet.
+        const foo = false;
+    oder..
+       type state = 'egy' | 'ketto'  -> literal type
+
+ _INSTANCEOF_:
  instanceOf liefert den Typ von Objeckt Typen zurück
- typeof liefert den Typ von primitiv Typen zurück; wenn der Typ Person ist, dann liefert es object zurück und nicht Person
+ _typeof_ liefert den Typ von primitiv Typen zurück; wenn der Typ Person ist, dann liefert es object zurück und nicht Person.
+ if(st instanceof StateOne) ==>> interface es type nicht funktioniert, weil dises sind nur typescript consrtucts und runtime existieren keine type oder interfaces in javascript!!!
  als Type Guard:  if (typeof money == "string")
 
  Enum is a set of named constants:
- ENUM TYPEN: fast gleiche Syntax wie Interface, aber mit enum keyword. Enum ist ein spezieller Typ, der eine Sammlung von konstanten Werten enthält. 
+ _ENUM_ TYPEN: fast gleiche Syntax wie Interface, aber mit enum keyword. Enum ist ein spezieller Typ, der eine Sammlung von konstanten Werten enthält. 
 	string enums: 
     enum StatusEnum {
         ACTIVE = 'active'
     }
+if ("active" === Statusenum.ACTIVE) -> true
 Verwendung? man definiert eine Set von Konstanten und verwendet es überall einheitlich in der Applikation
 const isActive = (status: StatusEnum): boolean => {
   return status === StatusEnum.ACTIVE;
 };
-	numeric enums: enum VehcileType { Car, // Typescript weist automatisch numerische Werte zu. startend mit 0;  oder:  Car=2,
+	numeric enums: enum VehcileType { 
+        Car, // Typescript weist automatisch numerische Werte zu. startend mit 0;  oder:  Car=2,
+    }
+    ..dann: if (0 === VehicleTyp.Car) -> true
+
 	hetero enums: enum VehcileType { Car="C", Plane=1, ..
 wenn ein enum const ist, dann wird es nicht transpiled , sondern werden die Werte direkt befüllt in transpiled code.
 
@@ -327,26 +379,48 @@ COMMA OPERATOR: es bewertet die Operand von links nach rechts:
 	let y = 10;
 	x = (x++, y++, x+y)	-> x == 13
 
-VARIABLE SCOPES in TypeScript (mit LET keyword):
+_VARIABLE SCOPES_ in TypeScript (mit LET keyword):
 	- Global scope: definiert außerhalb von Funktion/Klasse oder code block; erreichbar von überall.
 	- Function / class scope: definiert in einer Funktion / Klasse; errichbar dann in der Funktion oder in der Klasse ( class-scoped sind erriechbar in der class-method auch).
 	- Local (= block) scope: deklariert in einem code-block. Code block ist mit {} geschweiften Klammern begrenzt, zB. if/try/catch/while/for
 
-VAR keyword ist eine Ausnahme: nur global und function scope, d.h. deklariert in einem block so wird es scoped in the enclosing function.
+_VAR_ keyword ist eine Ausnahme: nur global und function scope, d.h. deklariert in einem block so wird es scoped in the enclosing function.
 
-CONST: muss beim Deklaration gleci ein initial Wert haben. Scopes: global, block.
+_CONST_: muss beim Deklaration gleci ein initial Wert haben. Scopes: global, block.
 
 In Angular Klasseneigenschaften (class property) sind standardmäßig class scoped, dürfen nicht mit let deklariert werden, ebensowenig dürfen sie mit const auch nicht  deklariert w.
 Const keyword kann man in Klassenmethoden und außerhalb der Klasse verwenden.
 
-TUPLE type Variable kann multiple datatypes enthalten:
+_TUPLE_ type Variable kann multiple datatypes enthalten, Tuple ist  ein Array und es kann mehrere datatypes enthalten im gegensath zum Array. kann man array Methoden verwenden. Sein prototype is Array.:
 	var user: [number, string, boolean];	// deklariert man tuple variable
 	user = [50, 'bende', true]; // Inizialisierung von tuple variable
   Zugreifen auf Tuples Elemente:
 	user[0] -> 50
   Hinzufügen nueses Element zum Tuple:
     user.push(50, 'sss', false);
-  Tuple ist wie ein Array, kann man array Methoden verwenden. Sein prototype is Array.
+  
+9
+_type_ in TS: mit type wird definieren den Form unseres date; interface : wir definieren den Struktur unseres Objekts - ein interface ist immer ein objekt!!
+wir können type anstelle von interface verwenden, umgekhrt aber nicht. type and interface sind interchangeable.
+In javascript wir haben keine type und interface types, die wir in ts files definierrt haben!!!
+    type can be anything a: primitive types or objects
+    type Zokni = string;
+    let z1: zokni = "csikos";
+    type User = {...};
+
+_Intersction type_:
+    type User = {name: string};
+    type Admin = User & {isOk: boolean};   // Admin type is an intersction type, weil es besteht aus einem anderen type und das eigentlich eigene type definition.
+    igy is lehet:
+        let ezeze: {name: string} = {name: "www"} : definiáljuk az objektum propertijeit on the fly, aztán példányositjuk is egyből. Ez egyfajta short form
+    const adm: Admin = {name: "eeee", isOk: true};
+
+_never_ keyword: ein funktion wird immer vollstaendig ausgeführt, eine Ausnahme ist: wenn es wirft einen Error Objekt, in diesem Fall wir signalisieren dieses mit never:
+    const foo =  (): never {
+        throw new Error();
+    }
+
+_tsc_ src/main.ts --outfile build.js   -> wir transpile ts file
 
 #######################################################################################################################################################################################
 Complete Angular Tutorial For Beginners
@@ -954,6 +1028,7 @@ Zb: user editiert form Felder und bei jedem Aenderung wird ein backend Aufruf st
 
 concatMap: save Operations werden sekvenziell , nacheinander durchgeführt, wenn 2. wird schneller als das 1. durchgeführt, dann 2. wird warten. Reihenfolge der Observables result
            lieferung ist konstant. Zeitlichen Reihenfolge.  Zweite Observable wird nicht subscribiert, bis das ertse completed ist.
+           Wenn wir mehrere Observables haben, die nacheinander durchgeführt werden sollen, dann verwenden wir concatMap. 
 
 mergeMap: hier werden Observables nicht sequentiell durchgeführt, sondern für allen wird abboniert und wie sie durchgeführt werden, so werden ihre Werte gleich genommen, ohne auf ein
 	vorige Observable zu warten. Össze-vissza hozhatják vissza az adatokat.
@@ -981,11 +1056,12 @@ SUBJECT:
         -   Es ist hot observable: es starten Werte zu emmitieren ohne auf Subcriber zu warten.
         -   Es ist ein Observer auch: mit next, error, complete callback Funktionen, also er kann auf ein Observable lauschen, und so Werte zu bekommen ( kann also als ein Bridge funktioneieren).
         Typen: 
-            BehaviorSubject: braucht einen Anfangswert, speichert den aktuellen Wert und emmitierts es dem neuem Subscribers. D.h. observer bekommt den letzten aktuellen Wert noch, aber wenn er nach
-                            complete() subscribiert dann schon nix.
+            BehaviorSubject: braucht einen Anfangswert (kann Zb ein leeeres Array sein), speichert den aktuellen Wert und emmitierts es dem neuem Subscribers. D.h. observer bekommt den letzten aktuellen Wert noch, aber wenn er nach
+                            complete() subscribiert dann schon nix. Wir können immer den letzten Wert abfragen mit behaviourSubject$.getValue() abfrgaen, die es immert speicher. (plain Subject speichert es nicht)
+Subject vs BehS: Behs muss ein initial Wert haben, und es emittiert immer den letzten Wert dann auch wenn Subscribers "verspaetet" abonniert haben."
             ReplaySubject:
             AsyncSubject:
-
+            combineLatest(): https://dev.to/this-is-angular/understanding-rxjs-use-cases-part-i-2mfb
 
 #######################################################################################################################################################################################
 ERRORHANDLING: error handling
@@ -1873,9 +1949,14 @@ Lösungen:
                                     "secure": false
                                 }
         2.  und wir registrieren diesen Datei im angular.json
-
+    Für Prod: in der Backend API wir verwenden @CrossOrigin("http://localhost:4200")
 
 ANGULAR 17
+###################################################################################################################################################################################
+###################################################################################################################################################################################
+##################################################################################################################################################################################
+###################################################################################################################################################################################
+###################################################################################################################################################################################
 #####################################################################################################################################################################################
 SIGNAL
 #####################################################################################################################################################################################
@@ -1906,8 +1987,10 @@ Verwendungbesipiele:
 // best practices und was man nicht machen sollte mit signals
 https://dev.to/this-is-angular/signals-the-do-s-and-the-dont-s-40fk
 
-SIGNAL INPUT:
-    anstelle von @Input, und so können wir uns onChanges(changes: SimpleCahnges) Method ersparen, wenn wir eine Nitifikation haben wollen,wenn der Wert des input aendert sich. 
+SIGNAL INPUT: input Methode
+    anstelle von @Input, und so können wir uns onChanges(changes: SimpleCahnges) Method ersparen, wenn wir eine Nostifikation haben wollen,wenn der Wert des input aendert sich. 
+    user = input.required<User>({alias: 'felhasznalo'});
+
     Wenn wir die Wertaenderung haben wollen dann,:  
         constructor() {
             effect(() => {
@@ -1988,8 +2071,15 @@ Aufsetzen von Aplikationspezifische Settings, Initialisierung von keyCloak Servi
 
 ENVIRONMENT_INITIALIZER: 
 
+#####################################################################################################################################################################################
+#####################################################################################################################################################################################
 
 Dynamischer import: loadChildren: () => import('dddd').then(m => m.ModuleName) // lazy loading, import gibt ein Promise zurück, das resolves n ein Objekt, das alle seine export hat.
+
+inject method:
+private renderer2 = inject(Renderer2, {optional: true});        // skipself, optional, self, host
+
+
 #####################################################################################################################################################################################
 #####################################################################################################################################################################################
 

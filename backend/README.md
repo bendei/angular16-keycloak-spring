@@ -34,6 +34,8 @@ https://swagger.io/docs/specification/describing-parameters/
 ---------------------------------------------------------------------------------------------------------
 ## Database
 
+gyors és jo felkészules sqlből: https://www.w3schools.com/sql/sql_like.asp
+
 backend uses H2 database, datas are persisted on the filesystem
 
 ## h2 console im browser:

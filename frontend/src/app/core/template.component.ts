@@ -10,7 +10,18 @@ import {RouterLinkWithHref, RouterOutlet} from "@angular/router";
 import {FooterComponent} from "./footer.component";
 import {NavigationComponent} from "./navigation.component";
 import {ErrorService, MyError} from "./error.service";
-import {catchError, filter, from, Observable, of, Subscription, throwError} from "rxjs";
+import {
+  BehaviorSubject,
+  catchError,
+  filter,
+  from,
+  interval, merge,
+  Observable,
+  of,
+  Subscription,
+  take,
+  throwError
+} from "rxjs";
 import {ErrorsignalService} from "./errorsignal.service";
 import {map} from "rxjs/operators";
 
@@ -38,7 +49,6 @@ import {map} from "rxjs/operators";
           }
         }
       <br>
-
       </div>
         <router-outlet></router-outlet>
     </div>
@@ -64,48 +74,30 @@ export class TemplateComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    console.log("TemplateComponent ngOnInit() called");
-
-
-
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    const user: UserInterface = {
-      id: '1',
-      name: 'John',
-      age: 9,
-      getMessage: () => "wwwww"
 
+   const u1: UserInterface = {
+      id: "1",
+      name: "Pisti",
+      age: 23,
+      getMessage: () => "Hello"
     };
+  const u2: UserInterface = {
+    id: "2",
+    name: "Maki",
+    age: 2,
+    getMessage: () => "Hello"
+  };
+  const columns = ["name", "id", "age" ];
+  const users: UserInterface[] = [u1, u2];
+  const result = users.map((user) => {
+    return columns.map((col) => user[col]);
+  });
 
-    const DATA = [ {
-      id: '1',
-      name: 'John',
-      age: 9,
-      getMessage: () => "wwwww"
-      },
-      {
-        id: '2',
-        name: 'Bende',
-        age: 22,
-        getMessage: () => "wwwww"
-
-      }
-    ];
-
-   from([1, 2, 3, 4, 5]).pipe(map(num => num * 10)).subscribe((res) => console.log(res));
-
-
+console.log(result)
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
 
 
     this.subscription = this.errorService.errors$.subscribe((data) => {
@@ -120,16 +112,12 @@ export class TemplateComponent implements OnInit, OnDestroy {
     });
   }
 
-
-
-
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
 }
-
 
 interface UserInterface {
   id: string,
@@ -143,4 +131,48 @@ interface ProfileInterface {
   isActive: boolean
 }
 
+const prof: ProfileInterface = {
+  name: "John",
+  profileUrl: "www",
+  isActive: true
+};
+
+
+type ID = string;
+type User = {
+  id: ID,
+  age: number,
+  getValami: () => string
+};
+
+class DuplaValami implements UserInterface {
+  id = "wewqe";
+  name = "eweweeeeee";
+  age = 23;
+
+  getMessage(): string {
+    return "qqq"
+  }
+}
+
+const enum StateEnum {
+  SUCCESS = "success",
+  FAILED = "failed"
+}
+
+type SuccessState = {
+  state: StateEnum.SUCCESS,
+  message: "succ"
+}
+type FailedState = {
+  state: StateEnum.FAILED,
+  message: "fail"
+}
+type State = SuccessState | FailedState;
+const getState = (state: State):string => {
+  if ((state as SuccessState).state === StateEnum.SUCCESS) {
+    return StateEnum.SUCCESS;
+  }
+  return "";
+}
 

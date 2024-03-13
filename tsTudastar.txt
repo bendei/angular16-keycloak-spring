@@ -36,7 +36,7 @@ multiline:
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 conversions:
-
+JS és TS
 manual:
     1. let szam = Number("22");
     2. let szam: number = 33;
@@ -49,10 +49,15 @@ STRING CONVERSION:  Occurs when we output something. Can be performed with Strin
     value = '1' + true;
     console.log(value)  // Output "1true"
 
-NUMERIC CONVERSION: happens in mathematical functions and expressions automatically:
-    1. let szamma: number = +"22";  //unary operator, simply converts string into number;
-    2. let osszeg: number = 22 + "22"; -> 44 as number
+NUMERIC CONVERSION: csak a JS ben, mert a TS static typed es nem enged hülyeséget, happens in mathematical functions and expressions automatically:
+    1. let szamma: number = +"22";  //TS ben is jo, unary operator, simply converts string into number;
+    2. let osszeg: number = 22 + "22"; -> 44 as number, TS ben nem megy
     3. let szam: number = Number("22"); -> Number("ww2") -> NaN
+
+    TS:
+    let szam:number = 2;
+    let szam1 = szam + "33";    // TS: output "233", mert implicite a tipusa string
+    ha viszont: let szam1: number = szam + "22" -> type string is not assignable to type number!
 
 JS:
     value = '2' - '1';
@@ -74,7 +79,6 @@ TS:
     value = '2' / 1;
     console.log(value); // Output 2
 
- or Number("22"): NaN;
 					undefined -> NaN
 					null -> 0
 					true/false -> 1/0
@@ -123,7 +127,8 @@ NULLISH COALESCING: ??
 		let sz = szam ?? 22;
 		alert(sz);
 	}
-	call(); ha a method nem kap parametert, akkor az arg undefined lesz és ezért lefut a kód
+	JS: call(); ha a method nem kap parametert, akkor az arg undefined lesz és ezért lefut a kód és "" ir ki
+	TS: compile time error ,mert kötelező a szam parameter
 
 	2. We can also use a sequence of ?? to select the first value from a list that isn’t null/undefined
 		let firstName = null;
@@ -390,6 +395,7 @@ CLASS:
 	}
 <<<<< objektum példány létrehozása class definitionbol:
 
+TS:
 	class Valami {
       payload: string;
       nev: string;
@@ -399,6 +405,23 @@ CLASS:
         this.nev = n;
       }
     }
+
+  JS:
+  class Valami {
+        constructor(p: string, n: string) {
+          this.payload = p;     //JS ben nem kell deklarálni a változokat előre, megteszi a js magától is !!!
+          this.nev = n;
+        }
+        getPayload() {return this.payload);}
+      }
+
+     with prototypes (old js):
+     var Ember = function(payload, nev) {
+        this.payload = payload;
+        this.name = name;
+     }
+     Ember.prototype.methodom = function (){};
+
     let obs: Observable<Valami> = of(new Valami("www", "eee"));
 
 <<<<<< objektum példány létrehozása interfaceből:
@@ -409,7 +432,9 @@ CLASS:
     let obsInter: Observable<Kakukk> = of({payload: "interpayload", nev: "internev"});
 
 <<<<<
+----------------------------------------------------------------------------------------------------------------------------------
 
+prototype
 minden objektnek van egy prototype-ja amiből öröklődik,
 let em = new Ember();
 
@@ -423,6 +448,7 @@ let em = new Ember();
 		}
 instanceof: checking the object's type, also traverses the prototype chain
 user?.name ha a user undefined akkor error jön
+----------------------------------------------------------------------------------------------------------------------------------
 
 MIXIN:  mixin (belemixeljuk valamibe)is a class containing methods that can be used by other classes without a need to inherit from it.In other words, a mixin provides methods
  that implement a certain behavior, but we do not use it alone, we use it to add the behavior to other classes. Merging methods and properties
@@ -633,7 +659,129 @@ Interfaces can describe different types in ts.
 ----------------------------------------------------------------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------------------------------------------------------------
+removing duplicate elements in an array of objects:
 
+const remove3 = (arr: Array<UserInterface>) => {
+  let foundElements: UserInterface[] = [];
+  for (let user of arr) {   // vagy: arr.forEach( (u) => {
+    let found = foundElements.find((us) => us.name === user.name);
+    if (!found) {
+      foundElements.push(user);
+    }
+  }
+  return foundElements;
+}
+----------------------------------------------------------------------------------------------------------------------------------
+sorting array of primitives:  arr.sort( (a,b) => a > b ? 1 : -1);  a sort metódus az eredeti arrayt modosítja!!
+sorting objects: arr.sort( (a: UserInterface, b: UserInterface) => {
+                      const na1 = a.name.split(" ")[0];
+                      const na2 = b.name.split(" ")[0];
+                      return na1 > na2 ? 1 : -1
+                     } );
+----------------------------------------------------------------------------------------------------------------------------------
+count occurance of the smallest element in an array of numbers:
+const occur = () => {
+  const arr = [1,1,2,3,5,7,7,3,1,2];
+  arr.sort((a,b) => a > b ? 1 : -1);
+  // vagy: const minValue = Math.minValue(...arr)
+  const minEl = arr[0];
+};
+
+----------------------------------------------------------------------------------------------------------------------------------THIS
+convert all word first letter to uppercase:
+const titelize = (text: string) => {
+  let newArr = text.toLowerCase().split(" ").map( (word) => {
+    const newChar = word.charAt(0).toUpperCase();
+    return  newChar + word.slice(1);
+  });
+  console.log(newArr.join(" "));
+}
+vagy:
+const titelize = (text: string) => {
+  let newArr = text.toLowerCase().split(" ").map( (word) => word.charAt(0).toUpperCase() + word.slice(1))
+}
+----------------------------------------------------------------------------------------------------------------------------------THIS
+  this.convertDate("12:10AM");
+    this.convertDate("5:00AM");
+    this.convertDate("12:33PM");
+    this.convertDate("01:59PM");
+    this.convertDate("11:8PM");
+    this.convertDate("10:02PM");
+
+  }
+
+  convertDate = (text: string) => {
+    const textLower = text.toLowerCase();
+    let hour = textLower.split(":")[0];
+    let min = textLower.split(":")[1];
+
+    if (textLower.endsWith("am")) {
+      hour = hour === "12" ? "00" : hour;
+    } else if (textLower.endsWith("pm")) {
+      hour = hour === "12" ? hour : (Number(hour) + 12).toString()
+    }
+    //hour = hour.length === 1 ? "0" + hour : hour;
+    min = min.length === 1 ? "0" + min : min;
+    min = min.slice(0,2);
+    console.log(`hour: ${text} - ${hour}:${min}`);
+  };
+  ----------------------------------------------------------------------------------------------------------------------------------
+Replace params in an url:
+
+  const url = "/posts/:postId/comments/:commentId";     // ahol a postID-t a to értékével kell lecserlni generikus módon
+  this.convertUrl(url, [{from: "postId", to: "1"},{from: "commentId", to: "2"}]);
+  }
+
+  convertUrl = (url: string, replacers: {from: string, to: string}[]): string => {
+      let replacableUrl = url;
+      replacers.forEach( (replacer) => {
+        const from = replacer["from"];
+        const to = replacer["to"];
+        replacableUrl = replacableUrl.replace(from, to);
+        replacableUrl = replacableUrl.replaceAll(":", "");
+        console.log("replacableUrl: " + replacableUrl);
+        return replacableUrl;
+      });
+    }
+----------------------------------------------------------------------------------------------------------------------------------
+Convert backend errors to frontend  validation messages:ű
+   const backendErrors = {
+      email: {
+        errors: [
+          {message: "Can't be blank"}
+        ]
+      },
+      password: {
+        errors: [
+          {message: "Must contain symbols in different case"},
+          {message: "Must be at least 8 symbols length"},
+        ]
+      },
+      passwordConfirmation: {
+        errors: [
+          {message: "Must match with password"}
+        ]
+      }
+    }
+    // Result array of strings:
+    // [
+    // "Email: Can't be blank",
+    // "Password: Must contain symbols in different case, Must be at least
+
+    // "PasswordConfirmation: Must match with password"
+    // ]
+tovalidationMsg = (backendErrors: {email: {errors: {message: string}[]}, password: {errors: {message: string}[]}, passwordConfirmation: { errors: {message: string}[]}  }): void => {
+    let text = "";
+    for (let backError in backendErrors) {
+      text = text.concat(backError).concat(": ");
+      const errorsArr = backendErrors[backError];
+      errorsArr.errors.forEach((msg) => {
+        console.log("msg: " + msg);
+        text = text.concat(msg.message).concat(", ");
+      })
+    }
+    console.log("Text: " + text);
+  };
 
 
 

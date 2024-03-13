@@ -1,4 +1,14 @@
-import {AfterViewChecked, Component, DoCheck, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
+import {
+  AfterViewChecked,
+  Component,
+  DoCheck,
+  effect,
+  input,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges
+} from "@angular/core";
 import {User} from "./cd.component";
 
 
@@ -7,73 +17,27 @@ import {User} from "./cd.component";
   selector: "cdchild",
   templateUrl: "./cdchild.component.html"
 })
-export class CdchildComponent implements OnInit, OnChanges, DoCheck, AfterViewChecked {
+export class CdchildComponent {
 
-  private _count = 0;
-  private _userSet!: User;
-  private olduser!: User;
-
-  @Input() szam!: number;
-
-  @Input() user!: User;
-
-  @Input()
-  set counterInputPropertySetter(counter: number) {
-    this._count = counter;
-    console.log("##### CHILD set method based counter: " + this._count);
-  }
-  get counterInputPropertySetter(): number {
-    return this._count;
-  }
-
-  @Input()
-  set userSet(usr: User) {
-    this._userSet = usr;
-    console.log("##### CHILD userSet: " + this._userSet.name);
-  }
-  get userSet() {
-    return this._userSet;
-  }
+  szam = input<number>();
 
   constructor() {
-    console.log("##### CHILD ---constructor");
+    effect(() => {
+      this.szamlalo(this.szam());
+    })
+
+
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // console.log("-----CdchildComponent -" + JSON.stringify(changes));
+  szamlalo = (szam: number | undefined) : void => {
+    console.log("input effect(): " + szam);
+  };
 
-    for (let propName in changes) {
 
-      if (propName == 'szam') {
-        console.log("##### CHILD --ngOnChanges -- propertyName: " + propName + " previousValue: " + changes[propName].previousValue
-          + " currentValue: " + changes[propName].currentValue);
-      }
-     /* if (propName == 'user') {
-        console.log("--CdchildComponent--ngOnChanges -- propertyName: " + propName + " previousValue: " + changes[propName]?.previousValue?.name
-          + " currentValue: " + changes[propName]?.currentValue?.name);
-        if (this.olduser?.name !== this.user.name) {
-          console.log("--CdchildComponent--ngOnChanges -- old user.name:" + this.olduser?.name + ", new username: " + this.user.name);
-        }
-      }*/
-    }
-  }
-
-  // checking data binding type Object/array
-  ngDoCheck(): void {
-      if (this.olduser?.name !== this.user.name) {
-        console.log("##### CHILD --ngDoCheck user.name changed -- old user.name:" + this.olduser?.name + ", new username: " + this.user.name);
-        this.olduser.name = this.user.name;
-      } else {
-        console.log("##### CHILD --ngDoCheck user.name NOT changed");
-      }
-  }
-
-  ngOnInit(): void {
-    this.olduser = {...this.user};
-  }
-
-  ngAfterViewChecked(): void {
-    console.log("##### CHILD ----ngAfterViewChecked (gets called after EVERY CD cycle!)");
-  }
 
 }
+
+
+
+
+

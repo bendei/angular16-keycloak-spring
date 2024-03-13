@@ -1,24 +1,32 @@
 import {
-  AfterViewChecked,
-  AfterViewInit,
   Component,
-  DoCheck,
-  ElementRef, Input,
+  ElementRef, inject,
   NgZone,
-  OnChanges,
   Renderer2,
-  SimpleChanges,
   ViewChild
 } from "@angular/core";
-import {of} from "rxjs";
 import {CdchildComponent} from "./cdchild.component";
 import {ObservableService} from "../core/observable.service";
 import {RouteCommonService} from "../core/route.common.service";
 
-export interface User {
+export interface User {name: string, age?: number}
+
+export interface StateOne  {
+  name: string
+};
+interface StateTwo  {
   name: string;
-  age?: number;
 }
+type State = StateOne | StateTwo;
+
+let myt: [number, string, string];
+
+
+type Egy = {
+  name: string
+};
+
+type Ketto = {age: number} & Egy;
 
 @Component({
   standalone: true,
@@ -26,27 +34,20 @@ export interface User {
   templateUrl: './cd.component.html',
   imports: [CdchildComponent]
 })
-export class CdComponent implements OnChanges, DoCheck, AfterViewInit, AfterViewChecked {
+export class CdComponent {
+  private renderer2 = inject(Renderer2, {host: true});
+  private routeCommonService = inject(RouteCommonService);
+
   counterInputPropertySetter = 0;
   text = 'text';
-  _szam = 22;
+  szam = 22;
   routeCommonServiceProperty = 0;
 
-  private unlistener!: () => void;
-
-  public get szam(): number {
-    console.log('PARENT -------szam getter: ' + this._szam);
-    return this._szam;
-  }
-  public set szam(sz: number) {
-    console.log('PARENT -------szam setter: ');
-    this._szam = sz;
-  }
 
   @ViewChild("movingArea", {static: false})
   public movingArea!: ElementRef;
 
-  user : User = {
+  user: User = {
     name: 'bende',
   };
 
@@ -55,15 +56,78 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewInit, AfterView
     age: 50
   }
 
-  constructor(private renderer2: Renderer2, private ngZone: NgZone, private observableService: ObservableService, private routeCommonService: RouteCommonService) {
-    this.routeCommonServiceProperty = this.routeCommonService.commonServiceProperty;
-
+  constructor() {
     // a setTimout is triggerelni a DC-t ezért lefut az egesz DC :)
-    setTimeout( () => {
+    setTimeout(() => {
       console.log("timeout");
       //this.conversions();
       //this.myoperators();
     }, 2000);
+
+
+
+
+    const backendErrors = {
+      email: {
+        errors: [
+          {message: "Can't be blank"}
+        ]
+      },
+      password: {
+        errors: [
+          {message: "Must contain symbols in different case"},
+          {message: "Must be at least 8 symbols length"},
+        ]
+      },
+      passwordConfirmation: {
+        errors: [
+          {message: "Must match with password"}
+        ]
+      }
+    }
+
+    this.tovalidationMsg(backendErrors);
+    // Result
+// [
+// "Email: Can't be blank",
+// "Password: Must contain symbols in different case, Must be at least
+
+// "PasswordConfirmation: Must match with password"
+// ]
+
+  }
+
+  tovalidationMsg = (backendErrors: {email: {errors: {message: string}[]}, password: {errors: {message: string}[]}, passwordConfirmation: { errors: {message: string}[]}  }): void => {
+    const adatArr = Object.entries(backendErrors);
+    adatArr.forEach( ( entry) => {
+      const propertyName = entry[0];
+      const propertyValue = entry[1];
+      console.log(propertyName);
+      propertyValue.errors.forEach( (msgObj) => {
+        console.log(msgObj.message);
+      })
+    })
+
+// array of the properties of an object, key is the property name, value is the properties value
+    let ember = {
+      name: "pisti",
+      age: 34,
+      arr: [1,2,3],
+      obj: {
+        elso: "a",
+        masodik: "m"
+      }
+    };
+
+    console.log("ember: " + Object.entries(ember));
+    console.log("ember: " + Object.entries(ember)[0][1]);
+
+  };
+
+
+
+  clickToIcrementInputSzam(): void {
+    this.szam++;
   }
 
   incrementRouteCommonServiceProperty() {
@@ -72,81 +136,34 @@ export class CdComponent implements OnChanges, DoCheck, AfterViewInit, AfterView
   }
 
 
-  // hooks
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log("PARENT ---- ngOnChanges - for primitive types");
-  }
-
-  ngDoCheck(): void {
-    console.log("PARENT ---- ngDoCheck (gets called after EVERY CD cycle!) - for object types");
-  }
-
-  ngAfterViewInit(): void {
-    console.log("Parent - ngAfterViewInit - lauft bim ");
-  }
-
-  ngAfterViewChecked(): void {
-    console.log("PARENT ----ngAfterViewChecked (gets called after EVERY CD cycle!)");
-  }
-
-
-  public changeSzamNameInputProperty(): void {
-    console.log("PARENT ---- button klikked");
-    this.szam = ++this.szam;  // ha itt nem változtatom akkor a OnChange
-    this.user.name = this.user.name + this.szam;
-  }
-
-  public changeChildInputWithSetter(): void {
-    ++this.counterInputPropertySetter;
-    this.userSet.age = 111;
-  }
-
-
   public kiir() {
-    console.log('PARENT------ kiir() ');
+    //console.log('PARENT------ kiir() ');
     return "kiir";
   }
 
-  public attachCoursorMovoeHandler(): void {
-    this.unlistener = this.renderer2.listen(this.movingArea.nativeElement, "mousemove", event => {
-      console.log(`----running outside ngZone-- ${event.clientX}, Mouse Y: ${event.clientY}`);
-    });
-  }
-
-  public removeCoursorMovoeHandler(): void {
-    if (this.unlistener) {
-      this.unlistener();
-    }
-  }
-
-  public runOutsideAngularNgZone(): void {
-    this.removeCoursorMovoeHandler();
-    this.ngZone.runOutsideAngular(() => {
-      this.attachCoursorMovoeHandler();
-    });
-  }
-
-  public runInsideAngularNgZone(): void {
-    this.ngZone.run(() => {
-      this.attachCoursorMovoeHandler();
-    });
-  }
-
-  private conversions(): void {
-    let szam: any = "22";
-    let value: number = szam - 11 ;
-   // console.log(value);
- }
-
-  private myoperators(): void {
-    const sorozat = of([1,2,3,4,5,6]);
-    sorozat.subscribe({
-        next: (v) => console.log('------ ' + v),
-        complete: () =>  console.log('------ completed')
-      }
-    );
-  }
-
-
+  kakukk = () => {
+    console.log(this.szam);
+  };
 }
+
+const merge = (ar1, ar2) => {
+  return ar1.concat(ar2);
+};
+
+interface UserInterface {
+  name: string,
+  age: number,
+  kiir(): void
+}
+
+const User: UserInterface = {
+  name: "wwww",
+  age: 33,
+  kiir(): void {}
+}
+
+
+
+
+
+
