@@ -782,6 +782,26 @@ tovalidationMsg = (backendErrors: {email: {errors: {message: string}[]}, passwor
     }
     console.log("Text: " + text);
   };
+--------------------------------------------------------------------------------------------------------
+REDUCE: gyakorlatilag objektumok eseten az array elemeit egyetlen elemre (objektum tipus) szűkítjük le.
+- select object with the highest price in an array:
+
+ const items = [
+      { name: 'Apple', price: 1 },
+      { name: 'Orange', price: 2 },
+      { name: 'Mango', price: 3 },
+    ];
+
+  let res = items.reduce((aggr, item) => {
+   return aggr.price > item.price ? aggr : item;
+  }
+-- longest name string:
+const totalPrice = items.reduce((ag ,item) => {
+      return ag.length > item.name.length ? ag : item.name;
+    }, "")      // FONTOS : itt a "" au initial vauet adja meg, amivel a ag-t tipusat is definiáljuk! tehát ha objektumra akarunk redukálni akkor object type, ha numberre akkor egy szam ertek,
+    ha string akkor meg egy string!!!
+   ---
+   -----------------------------------------------------------------------------------------------------
 
 
 

@@ -8,25 +8,9 @@ import {
 import {CdchildComponent} from "./cdchild.component";
 import {ObservableService} from "../core/observable.service";
 import {RouteCommonService} from "../core/route.common.service";
+import {Observable, of} from "rxjs";
+import {Cdservice} from "./cdservice";
 
-export interface User {name: string, age?: number}
-
-export interface StateOne  {
-  name: string
-};
-interface StateTwo  {
-  name: string;
-}
-type State = StateOne | StateTwo;
-
-let myt: [number, string, string];
-
-
-type Egy = {
-  name: string
-};
-
-type Ketto = {age: number} & Egy;
 
 @Component({
   standalone: true,
@@ -37,6 +21,7 @@ type Ketto = {age: number} & Egy;
 export class CdComponent {
   private renderer2 = inject(Renderer2, {host: true});
   private routeCommonService = inject(RouteCommonService);
+  private readonly cdService = inject(Cdservice);
 
   counterInputPropertySetter = 0;
   text = 'text';
@@ -47,16 +32,10 @@ export class CdComponent {
   @ViewChild("movingArea", {static: false})
   public movingArea!: ElementRef;
 
-  user: User = {
-    name: 'bende',
-  };
 
-  userSet: User = {
-    name: 'pisti',
-    age: 50
-  }
 
-  constructor() {
+
+ constructor() {
     // a setTimout is triggerelni a DC-t ezért lefut az egesz DC :)
     setTimeout(() => {
       console.log("timeout");
@@ -66,63 +45,32 @@ export class CdComponent {
 
 
 
+    const items = [
+      { name: 'Apple', price: 1 },
+      { name: 'Orange', price: 2 },
+      { name: 'Mango', price: 3 },
+    ];
 
-    const backendErrors = {
-      email: {
-        errors: [
-          {message: "Can't be blank"}
-        ]
-      },
-      password: {
-        errors: [
-          {message: "Must contain symbols in different case"},
-          {message: "Must be at least 8 symbols length"},
-        ]
-      },
-      passwordConfirmation: {
-        errors: [
-          {message: "Must match with password"}
-        ]
+
+   callBackendWithPromise();
+
+    this.callBackendObservable().subscribe(
+      result => {
+        console.log(result);
       }
+    );
+
+  this.cdService.getAllKonnektors().subscribe(
+    {
+      next: (result) => { console.table(result)},
+      error: (error) => console.log("Error componenben: " + error.status),
+      complete: () => console.log("Observable completetd")
     }
+  );
 
-    this.tovalidationMsg(backendErrors);
-    // Result
-// [
-// "Email: Can't be blank",
-// "Password: Must contain symbols in different case, Must be at least
 
-// "PasswordConfirmation: Must match with password"
-// ]
+};
 
-  }
-
-  tovalidationMsg = (backendErrors: {email: {errors: {message: string}[]}, password: {errors: {message: string}[]}, passwordConfirmation: { errors: {message: string}[]}  }): void => {
-    const adatArr = Object.entries(backendErrors);
-    adatArr.forEach( ( entry) => {
-      const propertyName = entry[0];
-      const propertyValue = entry[1];
-      console.log(propertyName);
-      propertyValue.errors.forEach( (msgObj) => {
-        console.log(msgObj.message);
-      })
-    })
-
-// array of the properties of an object, key is the property name, value is the properties value
-    let ember = {
-      name: "pisti",
-      age: 34,
-      arr: [1,2,3],
-      obj: {
-        elso: "a",
-        masodik: "m"
-      }
-    };
-
-    console.log("ember: " + Object.entries(ember));
-    console.log("ember: " + Object.entries(ember)[0][1]);
-
-  };
 
 
 
@@ -141,29 +89,47 @@ export class CdComponent {
     return "kiir";
   }
 
-  kakukk = () => {
-    console.log(this.szam);
-  };
+  callBackendObservable(): Observable<UserInterface[]> {
+    return of(userArr).pipe(
+
+    );
+  }
+
 }
 
-const merge = (ar1, ar2) => {
-  return ar1.concat(ar2);
-};
 
 interface UserInterface {
   name: string,
   age: number,
-  kiir(): void
 }
 
-const User: UserInterface = {
+export const User: UserInterface = {
   name: "wwww",
   age: 33,
-  kiir(): void {}
 }
 
+const userArr = [{name: "bende", age: 33},{name: "pisti", age: 23},{name: "feri", age: 55},{name: "kati", age: 43}];
+
+const callBackendWithPromise = async () => {
+  try {
+    let result = await backendWithPromise();
+    console.log(result);
+  } catch (error) {
+    console.log("promise error: " + error)
+  }
+};
 
 
+
+const backendWithPromise = (): Promise<UserInterface> => {
+  return new Promise((resolve, reject) => {
+    resolve(User);
+  })
+
+
+
+
+}
 
 
 

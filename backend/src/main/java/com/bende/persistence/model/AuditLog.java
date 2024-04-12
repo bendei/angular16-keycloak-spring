@@ -19,14 +19,14 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "AUDIT_LOG")
+@Table(name = "AUDITLOG")
 public class AuditLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "USER")
+    @Column(name = "USR")
     private String user;
 
     @NotNull
@@ -38,7 +38,7 @@ public class AuditLog {
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime timestamp;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+   @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "KONNEKTORID")
     private Konnektor konnektor;
 
@@ -58,9 +58,9 @@ public class AuditLog {
         this.id = id;
     }
 
-    public Konnektor getKonnektor() {
+   /* public Konnektor getKonnektor() {
         return konnektor;
-    }
+    }*/
 
     public LocalDateTime getTimestamp() {
         return timestamp;
@@ -70,9 +70,9 @@ public class AuditLog {
         this.timestamp = timestamp;
     }
 
-    public void setKonnektor(final Konnektor konnektor) {
+    /*public void setKonnektor(final Konnektor konnektor) {
         this.konnektor = konnektor;
-    }
+    }*/
 
     public UserActionType getUserAction() {
         return userAction;

@@ -137,7 +137,7 @@ Aztán ng serve ezt a hibát irta ki: Error: Failed to initialize Angular compil
 
 Checking node version: npm version
 
-Arrays:
+_Arrays_:
   1. Using square brackets. This method is similar to how you would declare arrays in JavaScript.
      let fruits: string[] = ['Apple', 'Orange', 'Banana'];
   2. Using a generic array type, Array<elementType>.
@@ -150,7 +150,7 @@ An array in TypeScript can contain elements of different data types using a gene
 or:
   let values: Array<string | number> = ['Apple', 2, 'Orange', 3, 4, 'Banana'];
 
-KLONING OBJECTS:
+_KLONING OBJECTS_:
 1. shallow copy, no methods copy
   The Object.assign() method copies all enumerable own properties from one or more source objects to a target object
   const target = { a: 1, b: 2 };
@@ -163,7 +163,7 @@ KLONING OBJECTS:
 3. lodash deep copy
 
 #######################################################################################################################################################################################
-INTERFACE
+_INTERFACE_
 #######################################################################################################################################################################################
 Object type:
 Instanz erstellen (Interface Type):
@@ -232,10 +232,10 @@ instanzieren interface type object (object literal stilusban):
 name: 'bende'};    // szemben a objektummal:  pista: User = new ('bende');
 	vagy ha array: let pistikek: User[] = [];
 
-TEMPLATE-SYNTAX _> Angular erweiter html syntax mit folgenden Ausdrücken: interpolation {{componentProperty}}, template strings, safe-navigator-operator (?), property binding,
+_TEMPLATE-SYNTAX_ _> Angular erweiter html syntax mit folgenden Ausdrücken: interpolation {{componentProperty}}, template strings, safe-navigator-operator (?), property binding,
 	event binding,  2-way binding, #Elementreferenzen, Direktiven, *Strukturdirektiven, Attributdirektiven, Pipes
 
-HAHSHATBLE in ts: (nem más mint egy string k
+_HAHSHATBLE_ in ts: (nem más mint egy string k
 export declare interface SimpleChanges {
 [propName: string]: SimpleChange;3
 }
@@ -905,17 +905,15 @@ PROMISE:	https://javascript.info/promise-basics
 		-	Form submission.
 		-	Abfragen von grossen Datenmengen zur single Anzeigen
 
- NO unsubscribe from:
+ NO unsubscribe from:  (Promise konnen nicht unsubscribiert werden)
                     -   async pipe
 					-   httpClient Observables
 					-	ActivatedRoute Observables like Routing parameters
 					-	Observable erstellt mit of(), from()
- Must unsubscribe:
+ Must unsubscribe:  
 					-   from  manually created Observables
 					-	FormGroup observables like form.valueChanges and form.statusChanges
 					-	Observables of Renderer2 service like renderer2.listen
-
-
 
 	private userSubscription: Subscription;
 
@@ -929,8 +927,14 @@ PROMISE:	https://javascript.info/promise-basics
 	  this.userSubscription.unsubscribe()
 	}
 
-    ERSTELLUNG VON PROMISE:
+****************************
+    ERSTELLUNG VON PROMISE:  FONTOS: kettő függvényt (barmi lehet a nevük) definiálunk a Promise constructoban és ezeket hivjuk meg aszerint hibát dobjon, vagy lefusson !!!
         1.  const myPromise = new Promise((resolve, reject) => {
+                resolves("eredmény"),
+                reject(new Error("hiba");
+            }
+
+    VAGY:
             setTimeout(() => {
                     resolve('I have resolved');
                 }, 1000);
@@ -960,6 +964,25 @@ PROMISE:	https://javascript.info/promise-basics
                 });    
     }
 
+    CONSUMING PROMISE:    then(callback 1 for resolved state, callback 2 for rejected state)
+    syntax von then():  // 1. argument is a function that runs when a result comes back, 2. argument is a function that runs when an error happens, und kriegt den Error objekt
+    // FONTOS !!! Mindegy milyen nevet adunk a lambda függvényeknek!! Egyszerűen csak két függvényt defeiniálunk!!
+
+      promise.then(
+            function(result) { }, vagy: result => {}        // a callback functionok sorrendje a fontos
+            function(error) { }   vagy error => {}  
+            );
+    
+        // Consuming Funktion kann mit then() registriert werden. Mindegy milyen nevet adunk a lambda függvényeknek!! Egyszerűen csak két függvényt defeiniálunk!!
+        // resolve runs the first function in .then
+        promise.then(
+            result => alert(result), // shows "done!" after 1 second    // first argument runs when promise resolves und bekommt den result
+            error => alert(error) // doesn't run                        // second argument runs when promise rejects, und bekommt den Error objekt
+        );
+        // sind wir nur in errors interessiert: promise.catch()
+        // .finally( () => {})
+************************
+
     ERSTELLUNG VON OBSERVABLES:
        1.  const obs$ = new Observable((observer) => {
             observer.next(1111);
@@ -969,6 +992,14 @@ PROMISE:	https://javascript.info/promise-basics
         });
 
      2.    const obs2$ = of(1,2,3,4,5,6);
+
+    this.cdService.getAllKonnektors().subscribe(    // FONTOS::: next, error, completet mefadni ha nem csak a resultra vagyunk kiváncsiak
+    {
+      next: (result) => { console.table(result)},
+      error: (error) => console.log("Error componenben: " + error.status),
+      complete: () => console.log("Observable completetd")
+    }
+);
 
 
 Async vor dem function: der Methode gibt immer ein Promise zurück, d.h. Rückgabewert wird immer als ein resolved Promise eingehüllt.
@@ -1001,20 +1032,7 @@ await lässt javascript warten bis Promise settled wird und einen Wert zurückli
     setTimeout(() => resolve("done!"), 1000);
     });
     
-        syntax von then():
-            promise.then(
-            function(result) { },
-            function(error) { }
-            );
-    
-        // Consuming Funktion kann mit then() registriert werden.
-        // resolve runs the first function in .then
-        promise.then(
-            result => alert(result), // shows "done!" after 1 second    // first argument runs when promise resolves
-            error => alert(error) // doesn't run                        // second argument runs when promise rejects
-        );
-        // sind wir nur in errors interessiert: promise.catch()
-        // .finally( () => {})
+   
 
 RxJS Operators:
 
@@ -1093,7 +1111,7 @@ Zwei Typen von Errorbehandlungen:
             }),
             catchError((err) => {
                 console.log("error: " + err);
-                return of([]);          // wir kreiren einen observable
+                return of([]);          // FONTOS!! valamit kell visszaadnunk vagy egy Observablet vagy errort wir kreiren einen observable
                 })
             );
 

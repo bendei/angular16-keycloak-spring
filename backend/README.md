@@ -76,7 +76,14 @@ https://springframework.guru/exception-handling-in-spring-boot-rest-api/
 
 https://www.toptal.com/java/spring-boot-rest-api-error-handling
 
----------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------
+### VALIDATING REST INCOMING PARAMS AND REQUEST BODY
+https://medium.com/@tericcabrel/validate-request-body-and-parameter-in-spring-boot-53ca77f97fe9
+
+## viladiáló constraintes / függveények
+https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-builtin-constraints
+
+-------------------------------
 ## Testing
 
 ## Mockito methods:

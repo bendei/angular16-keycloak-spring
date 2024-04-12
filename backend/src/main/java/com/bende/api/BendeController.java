@@ -1,16 +1,24 @@
 package com.bende.api;
 
+import com.bende.api.model.AuditLogDTO;
+import com.bende.api.model.AuditLogMessageDTO;
+import com.bende.api.model.KonnektorDTO;
+import com.bende.persistence.model.AuditLog;
 import com.bende.persistence.model.Konnektor;
 import com.bende.persistence.repos.KonnektorRepository;
 import com.bende.service.AuditlogService;
 import com.bende.service.KonnektorService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("http://localhost:4200")
@@ -23,7 +31,7 @@ public class BendeController {
     @Autowired
     KonnektorRepository konnektorRepository;
 
-//    @Autowired
+ //   @Autowired
 //    AuditlogService auditlogService;
 
 
@@ -55,11 +63,109 @@ public class BendeController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-
-
     }
 
+    /*
+            {
+          "hostName": "Ut anim amet",
+          "id": -84692202,
+          "serialNumber": "in",
+          "firmwareVersion": "anim occaecat",
+          "hardwareVersion": "ad commodo dolor laboris null",
+          "active": true,
+          "created": "1979-10-10T01:49:02.832Z",
+          "validUntil": "1952-08-01T21:51:34.148Z",
+          "auditlogs": [
+            {
+              "id": 72173173,
+              "user": "elit aute mollit aliquip",
+              "konnektor": -46315735,
+              "userAction": "DELETE_USER",
+              "timestamp": "2004-07-17T21:16:48.072Z"
+            },
+            {
+              "id": -30674681,
+              "user": "tempor incididunt non est",
+              "konnektor": 42190360,
+              "userAction": "USER_LOGIN",
+              "timestamp": "2005-08-01T15:28:50.273Z"
+            }
+          ]
+        }
+     */
+    @PostMapping(path = "/konnektors",consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin("http://localhost:4200")
+    public ResponseEntity<Void> createKonnektor(@Valid @RequestBody KonnektorDTO konnektor) {
+        konnektorRepository.save(BendeController.convertKonnektorDto(konnektor, null));
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping(path = "konnektors/{konnektorId}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin("http://localhost:4200")
+    public ResponseEntity<KonnektorDTO> updateKonnektor(@Valid @PathVariable String konnektorId, @Valid @RequestBody KonnektorDTO dto) {
+        Konnektor konn = convertKonnektorDto(dto, konnektorId);
+        Konnektor updated = konnektorService.updateKonnektor(konn);
+        return ResponseEntity.ok(convertKonnektor(updated));
+    }
+
+    @DeleteMapping(path = "konnektors/{konnektorId}")
+    @CrossOrigin("http://localhost:4200")
+    public ResponseEntity<Void> deleteKonnektor(@PathVariable String konnektorId) {
+        // successfuly deleted 200
+        konnektorService.deleteKonnektor(Long.parseLong(konnektorId));
+        return new ResponseEntity<>(HttpStatus.OK);
+
+        // already delete 210
+    }
+
+
+    private static Konnektor convertKonnektorDto(KonnektorDTO dto, String konnektorId) {
+        Konnektor konn = new Konnektor();
+        if (konnektorId != null) {
+            konn.setId(Long.parseLong(konnektorId));
+        }
+        konn.setHostname(dto.getHostName());
+        konn.setSerialNumber(dto.getSerialNumber());
+        konn.setFirmwareVersion(dto.getFirmwareVersion());
+        konn.setHardwareVersion(dto.getHardwareVersion());
+        konn.setActive(dto.getActive());
+        konn.setCreated(dto.getCreated());
+        return konn;
+    }
+
+    private static KonnektorDTO convertKonnektor(Konnektor ko) {
+        KonnektorDTO dto = new KonnektorDTO();
+        dto.setId(ko.getId().intValue());
+        dto.setHostName(ko.getHostname());
+        dto.serialNumber(ko.getSerialNumber());
+        dto.setFirmwareVersion(ko.getFirmwareVersion());
+        dto.setHardwareVersion(ko.getHardwareVersion());
+        dto.setActive(ko.isActive());
+        dto.setCreated(ko.getCreated());
+        dto.setValidUntil(ko.getValidUntil());
+
+       /* if (ko.getAuditlogs() != null && !ko.getAuditlogs().isEmpty()) {
+            List<AuditLogDTO> lista = ko.getAuditlogs().stream().map(au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
+            dto.setAuditlogs(lista);
+        }*/
+
+        return dto;
+    }
+
+    private static AuditLogDTO convertToAuditLogDTO(AuditLog log) {
+        AuditLogDTO dto = new AuditLogDTO();
+        dto.setId(log.getId().intValue());
+        dto.setUser(log.getUser());
+        /*if (log.getKonnektor() != null) {
+            dto.setKonnektor(log.getKonnektor().getId().intValue());
+        }*/
+        dto.setUserAction(AuditLogMessageDTO.valueOf(log.getUserAction().name()));
+        dto.setTimestamp(log.getTimestamp());
+        return dto;
+    }
 
    /* @Override
     @ApiOperation("auditlogs to a given konnektor")
@@ -89,13 +195,7 @@ public class BendeController {
         }
     }
 
-    @Override
-    @ApiOperation(" delete auditlog")
-    @CrossOrigin("http://localhost:4200")
-    public ResponseEntity<Void> deleteAuditlog(final String auditlogId) {
-        auditlogService.deleteAuditlog(Long.parseLong(auditlogId));
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+
 
     private void createNewAuditLog(AuditLogDTO dto, Konnektor konnektor) {
         AuditLog log = new AuditLog();
@@ -155,14 +255,6 @@ public class BendeController {
     }
 
     @Override
-    @ApiOperation("")
-    @CrossOrigin("http://localhost:4200")
-    public ResponseEntity<Void> createKonnektor(KonnektorDTO konnektor) {
-        konnektorRepository.save(BendeController.convertKonnektorDto(konnektor, null));
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    @Override
     @ApiOperation("filtering konnektors")
     @CrossOrigin("http://localhost:4200")
     public ResponseEntity<List<KonnektorDTO>> getAllKonnektors(String hostname, String serialNumber, String firmwareVersion, String hardwareVersion, LocalDateTime created) {
@@ -171,14 +263,6 @@ public class BendeController {
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
-    @Override
-    @ApiOperation("updating konnektors - PUT")
-    @CrossOrigin("http://localhost:4200")
-    public ResponseEntity<Void> updateKonnektor(String konnektorId, KonnektorDTO dto) {
-        Konnektor konn = convertKonnektorDto(dto, konnektorId);
-        konnektorService.updateKonnektor(konn);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 
     @Override
     @ApiOperation("updating konnektor hostname - PATCH")
@@ -196,17 +280,7 @@ public class BendeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-   private static AuditLogDTO convertToAuditLogDTO(AuditLog log) {
-        AuditLogDTO dto = new AuditLogDTO();
-        dto.setId(log.getId().intValue());
-        dto.setUser(log.getUser());
-        if (log.getKonnektor() != null) {
-            dto.setKonnektor(log.getKonnektor().getId().intValue());
-        }
-        dto.setUserAction(AuditLogMessageDTO.valueOf(log.getUserAction().name()));
-        dto.setTimestamp(log.getTimestamp());
-        return dto;
-    }
+
 
     private static AuditLog convertToAuditLog(AuditLogDTO dto, Konnektor konnektor) {
         AuditLog log = new AuditLog();
@@ -220,37 +294,8 @@ public class BendeController {
         return log;
     }
 
-    private static Konnektor convertKonnektorDto(KonnektorDTO dto, String konnektorId) {
-        Konnektor konn = new Konnektor();
-        if (konnektorId != null) {
-           konn.setId(dto.getId().longValue());
-        }
-        konn.setHostname(dto.getHostName());
-        konn.setSerialNumber(dto.getSerialNumber());
-        konn.setFirmwareVersion(dto.getFirmwareVersion());
-        konn.setHardwareVersion(dto.getHardwareVersion());
-        konn.setActive(dto.getActive());
-        konn.setCreated(dto.getCreated());
-        return konn;
-    }
 
-    private static KonnektorDTO convertKonnektor(Konnektor ko) {
-        KonnektorDTO dto = new KonnektorDTO();
-        dto.setId(ko.getId().intValue());
-        dto.setHostName(ko.getHostname());
-        dto.serialNumber(ko.getSerialNumber());
-        dto.setFirmwareVersion(ko.getFirmwareVersion());
-        dto.setHardwareVersion(ko.getHardwareVersion());
-        dto.setActive(ko.isActive());
-        dto.setCreated(ko.getCreated());
-        dto.setValidUntil(ko.getValidUntil());
 
-        if (ko.getAuditlogs() != null && !ko.getAuditlogs().isEmpty()) {
-            List<AuditLogDTO> lista = ko.getAuditlogs().stream().map( au -> BendeController.convertToAuditLogDTO(au)).collect(Collectors.toList());
-            dto.setAuditlogs(lista);
-        }
 
-        return dto;
-    }
 */
 }

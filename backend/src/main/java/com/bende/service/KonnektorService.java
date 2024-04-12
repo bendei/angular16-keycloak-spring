@@ -19,7 +19,7 @@ public interface KonnektorService {
 
     List<Konnektor> filterKonnektors(String hostname, String serialNumber, String firmwareVersion, String hardwareVersion, LocalDateTime created);
 
-    void updateKonnektor(Konnektor konn);
+    Konnektor updateKonnektor(Konnektor konn);
 
     void updateKonnektorHostname(Long id, String hostname);
 
