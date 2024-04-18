@@ -1,29 +1,42 @@
 import {
-  Component,
+  Component, computed, DoCheck,
   ElementRef, inject,
-  NgZone,
-  Renderer2,
+  NgZone, OnChanges, OnDestroy, OnInit,
+  Renderer2, signal, SimpleChanges,
   ViewChild
 } from "@angular/core";
 import {CdchildComponent} from "./cdchild.component";
 import {ObservableService} from "../core/observable.service";
 import {RouteCommonService} from "../core/route.common.service";
-import {Observable, of} from "rxjs";
+import {BehaviorSubject, Observable, of, Subscription} from "rxjs";
 import {Cdservice} from "./cdservice";
+import {result} from "lodash";
+import {SimpleService} from "./simple.service";
+import {Event} from "@angular/router";
 
+const userArr = [{name: "bende", age: 33},{name: "pisti", age: 23},{name: "feri", age: 55},{name: "kati", age: 43}];
+const items = [
+  { name: 'Apple', price: 1 },
+  { name: 'Orange', price: 2 },
+  { name: 'Mango', price: 3 },
+];
+
+const users = [{id: 1, name: 'egy'},{id: 2, name: 'ketto'},{id: 3, name: 'harom'}];
+const statuses = [{id: 1, isActive: true}, {id: 2, isActive: true}, {id: 3, isActive: false}]
 
 @Component({
   standalone: true,
   selector: 'cd',
   templateUrl: './cd.component.html',
-  imports: [CdchildComponent]
+  imports: [CdchildComponent],
 })
-export class CdComponent {
-  private renderer2 = inject(Renderer2, {host: true});
+export class CdComponent implements  DoCheck {
+
   private routeCommonService = inject(RouteCommonService);
   private readonly cdService = inject(Cdservice);
 
-  counterInputPropertySetter = 0;
+
+
   text = 'text';
   szam = 22;
   routeCommonServiceProperty = 0;
@@ -33,46 +46,8 @@ export class CdComponent {
   public movingArea!: ElementRef;
 
 
-
-
  constructor() {
-    // a setTimout is triggerelni a DC-t ezért lefut az egesz DC :)
-    setTimeout(() => {
-      console.log("timeout");
-      //this.conversions();
-      //this.myoperators();
-    }, 2000);
-
-
-
-    const items = [
-      { name: 'Apple', price: 1 },
-      { name: 'Orange', price: 2 },
-      { name: 'Mango', price: 3 },
-    ];
-
-
-   callBackendWithPromise();
-
-    this.callBackendObservable().subscribe(
-      result => {
-        console.log(result);
-      }
-    );
-
-  this.cdService.getAllKonnektors().subscribe(
-    {
-      next: (result) => { console.table(result)},
-      error: (error) => console.log("Error componenben: " + error.status),
-      complete: () => console.log("Observable completetd")
-    }
-  );
-
-
-};
-
-
-
+ }
 
   clickToIcrementInputSzam(): void {
     this.szam++;
@@ -83,22 +58,21 @@ export class CdComponent {
     this.routeCommonServiceProperty = this.routeCommonService.commonServiceProperty;
   }
 
-
   public kiir() {
-    //console.log('PARENT------ kiir() ');
     return "kiir";
   }
 
-  callBackendObservable(): Observable<UserInterface[]> {
-    return of(userArr).pipe(
+  ngOnChanges(changes: SimpleChanges): void {
+   console.log("ngOnChanges");
+  }
 
-    );
+  ngDoCheck(): void {
+    console.log("ngDoCheck");
   }
 
 }
 
-
-interface UserInterface {
+export interface UserInterface {
   name: string,
   age: number,
 }
@@ -108,28 +82,12 @@ export const User: UserInterface = {
   age: 33,
 }
 
-const userArr = [{name: "bende", age: 33},{name: "pisti", age: 23},{name: "feri", age: 55},{name: "kati", age: 43}];
-
-const callBackendWithPromise = async () => {
-  try {
-    let result = await backendWithPromise();
-    console.log(result);
-  } catch (error) {
-    console.log("promise error: " + error)
-  }
-};
-
-
-
-const backendWithPromise = (): Promise<UserInterface> => {
-  return new Promise((resolve, reject) => {
-    resolve(User);
-  })
 
 
 
 
-}
+
+
 
 
 

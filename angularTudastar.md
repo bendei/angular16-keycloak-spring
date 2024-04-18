@@ -58,10 +58,13 @@ https://www.w3schools.com/js/js_promise.asp
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
 https://www.syncfusion.com/blogs/post/angular-promises-vs-observables.aspx/amp
 // signal
+// nagyon jó leirás általánosságban: signals with arrays/objects / etc !
 https://blog.angular-university.io/angular-signals/
 https://www.freecodecamp.org/news/angular-signals/
 https://hackernoon.com/a-guide-to-angular-signals-with-practical-use-cases-part-1
 https://hackernoon.com/a-guide-to-angular-signals-with-practical-use-cases-part-2
+// signal query (viewChild/contentChild)
+https://angular.io/guide/signal-queries
 // best practices und was man nicht machen sollte mit signals
 https://dev.to/this-is-angular/signals-the-do-s-and-the-dont-s-40fk
 // 4 ways to listen to events
@@ -124,7 +127,8 @@ https://netbasal.com/a-comprehensive-guide-to-angulars-defer-block-468c74048df4
 https://blog.logrocket.com/optional-chaining-nullish-coalescing-typescript/#optional-chaining
 // routes, nyagyon jo egyszerű leirás a standalone és routeshoz
 https://www.angulararchitects.io/blog/routing-and-lazy-loading-with-standalone-components/
-
+// routes params, query params, matrix params
+https://www.danywalls.com/learn-route-parameters-in-angular-with-example
 
 
 
@@ -149,6 +153,8 @@ An array in TypeScript can contain elements of different data types using a gene
   let values: (string | number)[] = ['Apple', 2, 'Orange', 3, 4, 'Banana'];
 or:
   let values: Array<string | number> = ['Apple', 2, 'Orange', 3, 4, 'Banana'];
+
+const userArr = [{name: "bende", age: 33},{name: "pisti", age: 23},{name: "feri", age: 55},{name: "kati", age: 43}];
 
 _KLONING OBJECTS_:
 1. shallow copy, no methods copy
@@ -530,6 +536,10 @@ jedes Module kann eigene Routenkonfigurtion module haben. Deklarierte Bestandtei
  das BrowserModule. Kind-Module müssen stattdessen das CommonModule einbinden Es wird immer AppModule genannt. Im Root-Modul werden die Routen mit RouterModule.forRoot() registriert,
  in allen anderen Modulen wird RouterModule.forChild() verwendet.
 
+route registrierung:
+    1. Root module:  imports: [RouterModule.forRoot(routes)]
+    2. in anderen modulen:  imports: [RouterModule.forChild(routes)]
+
 Root Routing Module Definition:
 @NgModule({
     imports: [RouterModule.forRoot(routes)]	-> dieses erstellt ein Module, konfiguriert mit dem Pfaden,
@@ -700,7 +710,10 @@ Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade
 	Schritte um Router zu verwenden:
 	- Routen konfigurieren: Pfad - Komponente: diese Zuordnung ist die Routendefinition, es ist ein Object : { path: 'mypath', component: MyComponent }. Diese RoDefinitionen werden
 		in einem array von Typ Routes festgelegt = routesArray, sie werden in einem separaten Datei definiert.
+***********************************
+MODULE-STYLE
 
+Ha a root moduleban akarjuk a routpokat regisztrálni:
 	- forRoot(): outing module einbauen:
 		In simplen Fall: diese routesArray wird in dem root-Module importiert:
 			@NgModule({
@@ -709,6 +722,7 @@ Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade
 
 			})
 
+Ha egy feature modulban :
 	- forChild(): Für die Navigation wird ein separater Rouer-definition Datei erstellt, und in dem navigations-feature module mit RouterModule.forChild() importiert. 	Und vwerwenden
 	  RouterModule.forChild(array) in feature router modules, forChild erstellt aber keinen RoutingService Objekt, sondern werden die Routes (Pfad-component
 	  Definitionen mit dem Routingservice registriert, die mit forRoot erstellt wurden.)
@@ -716,7 +730,7 @@ Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade
 	- lazyLoading: geht es um lazy loaded module: routing module für der jeweiligen feature-Module wird im Routing-Definition Objekt mit loadChildren.. property importiert.
       also RoutenDefinition : {path: '..', anstelle von 'component' loadChildren: () => import("./nyomonkovetes/shared/nyomonkovetes-routing.module").then(i => i.NyomonkovetesRoutingModule)},}
 	  erstellen wir wiederum ein array of Route Types, wo path: book ist und anstatt component:
-
+STANDALONE
 	Mit standalone:
 		Anstelle RouteDefinitionen mit forRoot() in root/feature Module zu registrieren:
 		in app.routing.ts definieren wir eine Array von Routes ( mit möglicher loadChildren/loadComponent für lazy loading), die man in app.config.ts mit provideRouter(APP_ROUTES) Function 
@@ -731,25 +745,19 @@ Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade
 
 	ROUTENPARAMETER:  ':id',{ path:'mypath/component: MyComponent } => <a routerLink="/myPath/42">Link auf 42</a> , Zum Auslesen von Parametern (veraltete) bietet der Router die Klasse
 	ActivatedRouteSnapshot, die Auskunft über die gerade aktivierte Route und den  Zustand des Routers gibt.
+**********************************
+STANDALONE COMPONENT STYLE
 
 Routing with SD standalone components:
 standalone-componetns-v1.pdf
 
 Da keine Module mehr verwendet werden, wir werden kine RouterModule mit Routes Array Konfigurieren und diese in Modules laden. Anstetten Routes werden in main.ts konfiguriert: 
 
-LOGGER SERVERSIDE
 in main.ts:
     A.: 
         wir können routes und providers dirkt im main.ts Datei angeben:  
         bootstrapApplication(AppComponent, {	// standalone component, was bootstrapped wird
           providers: [
-            importProvidersFrom(HttpClientModule), // importing providers from modules usually, régen LoggerModule.forRoot({ ...
-            most: importProvidersFrom(LoggerModule.forRoot({
-                    serverLoggingUrl: '/api/logs',
-                    level: NgxLoggerLevel.DEBUG,
-                    serverLogLevel: NgxLoggerLevel.ERROR
-                    })
-        
             // we add routes to the bootstrapApplication configuration
             // wir können child rourtes oder auch einzelne Komponente auch lazy loaden
             provideRouter([
@@ -760,11 +768,19 @@ in main.ts:
                                                       // we set loadChildren property to a dynamic function, we import the file dynamically,
                                                       // when the file/with Routes inside is loaded, we have can load/pull in our routes definitions
                 },
+                    path: 'navigation',
+                    children: [routes definitionen]     // loading child routes eagerly
+                    providers: [],                      // mit SD alle Route können eigene Injector haben. Also ein gemeinsames Injector und damit ein gemeinsames Service für alle children Komponente.
+                                                        // D.h. wir können alle Routes mit providers array versehen
+                    data: [],                           // additional data can be defined here to be used in the component
+                    outlet: "",                         // ebben az outletben renderelődik majd meg a comp.
+                    redirectTo: "",                     // ide redirektálunk
+                    resolve: []                         //
+                },
                 {
                   path: 'navigationerror',
                   component: NavigationErrorComponent  // loading component eagerly
                   resolve: [GetDataFrombackend] // resolve property is used to load data before the component is loaded
-        
                 },
                 {path: '',    						   // lazy loading single standalone component
                   loadComponent: ()=> import('./app/core/welcome.component').then(e => e.WelcomeComponent)
@@ -777,8 +793,8 @@ in main.ts:
 
     B.:
             Oder in app.routing.ts und app.config.ts:
-    https://www.angulararchitects.io/blog/the-refurbished-httpclient-in-angular-15-standalone-apis-and-functional-interceptors/
-            Anstelle RouteDefinitionen mit forRoot() in root/feature Module zu registrieren:
+            https://www.angulararchitects.io/blog/the-refurbished-httpclient-in-angular-15-standalone-apis-and-functional-interceptors/
+            Anstelle RouteDefinitionen mit forRoot() in root und forChild() feature Module zu registrieren:
             in app.routing.ts definieren wir eine Array von Routes ( mit möglicher loadChildren/loadComponent für lazy loading), die man in app.config.ts mit provideRouter(APP_ROUTES) Function
             verwenden, um die Router zu registrieren. Diese app.config.ts wird dann im main.ts als paramter im bootstrapApplication(config) verwendet.
 
@@ -912,6 +928,7 @@ PROMISE:	https://javascript.info/promise-basics
 					-	Observable erstellt mit of(), from()
  Must unsubscribe:  
 					-   from  manually created Observables
+                    -   interval, timer
 					-	FormGroup observables like form.valueChanges and form.statusChanges
 					-	Observables of Renderer2 service like renderer2.listen
 
@@ -981,6 +998,11 @@ PROMISE:	https://javascript.info/promise-basics
         );
         // sind wir nur in errors interessiert: promise.catch()
         // .finally( () => {})
+
+    RESOLVING 2 OR MORE PROMISES PARALELL:
+     Promise.all([Promise.users, PROMISE_STATES]).then( ([users, states]) => {}) 
+
+
 ************************
 
     ERSTELLUNG VON OBSERVABLES:
@@ -1711,6 +1733,34 @@ Angular DI Framework:
 https://www.tektutorialshub.com/angular/how-dependency-injection-resolution-works-in-angular/
 	Auflösung der Abhängigkeit: (= der Instanz einer Abhängigkeit ist auf dem level wo das Provider registriert ist = das ist der scope der Service, innerhalb ser Komponent/Module
 			Baumes)
+FONTOS: ahol a dependency registriert lesz, azon a szinten vagy a tree-ben lentebb érhető:
+    Regisztrálás itt történik:
+            1.  a module/component/dircetive/pipe metadata objektmuában, pl:
+                @Component({provider: [
+                    {MyService} // ez egy Kurzform für {provide: MyService, provider: MyService}
+                    {provide: 'APIURL', useValue: 'http://locall...' vagy useClass: ValamiClass}
+                ]})
+                Így az adott dependency ezen illetve a child szintjen érhetőek el                
+            2. Self-registering serivce: tree-shakeble service -> thus globally injectable
+                @Injectable(provided: root})
+           
+    Mindkét esetben a servicet használhatjuk kétféle keéépen:
+            1. constructor parameter:
+                constructor(@Self private service: ServiceKlasseName)
+                constructor(provide = "service", useClass = ServiceKlassename,
+                            provide = 'String_Token_Name' useValue = "hahaha")
+        
+            2. inject metódus használatával:
+                 private readonly cdService = inject(Cdservice);
+
+        Wo sucht der Injektor nach dem dependency?:
+            @Self() Dekorator instruirt den Angular, dass es nur in der Lokalinjector sucht. @SkipSelf instruiert um in der Eltern oder oberhalb zu suchen. Diese sind
+            Konstruktor-Parameter Dekoratoren.            
+            @SkipSelf: Consumer deklariert eine Abhängigkeit auf eigener Ebene, wir sollen aber anstelle von diesem die Parents Provider verwenden.            
+            @Optional: wird kein Exception geworfen wennn kein Provider gefunden wird, aber das Kompoenent soll prüfen, ob es null ist.
+
+
+
 			  Injector sucht mit diesem Token (=Konstruktor-Parameter) nach einem Provider in der provider array (wir sprechen hier über Provider, weil wir registrieren
 			  dependecies mit providers  in der module/directive/component). Findet ein Provider, dann schauet es nach ob ein Instanz der Abhängigkeit schon vorhanden ist.
 			  Wenn existiert dann injiziert es diesen Instanz in das  Komponent, wenn noch nicht dann erstellt eines und injiziert es danach.
@@ -1740,7 +1790,7 @@ Tree-shakable providers:
 	providedIn=platfrom . gleiche Insatnz wird in allen Applikation verteilt.
 
 	Ansonsten wir können alle schon in den Modulen verwendeten Einstellungen im TS providers verwenden; zb: wir wollen ein service in DepinjModule declarieren:
-		@Injectable({}
+		@Injectable({
 				providedIn: DepinjModule,
 				useClass: DepinjModule // hier unnötig, weitere Optionen useExisting, useValue
 			})
@@ -1765,12 +1815,6 @@ Auflösung der Abhaengigkeiten einer Komponent:
 Angular versucht den Instanz der Abhängigkeit erst der Injector der jeweiligen komponente finden. Wenn es nicht findet, dann geht es eine level oben und sucht den Instanz
 in der Injector der Eltern-Komponente. Findet es nicht einmal in der Rootkomponent's Injector, dann wechselt es auf das Modulinjector Hierarchie und versucht es dort zu finden.
 
-@Self() Dekorator instruirt den Angular, dass es nur in der Lokalinjector sucht. @SkipSelf instruiert um in der Eltern oder oberhalb zu suchen. Diese sind
-Konstruktor-Parameter Dekoratoren.
-
-@SkipSelf: Consumer deklariert eine Abhängigkeit auf eigener Ebene, wir sollen aber anstelle von diesem die Parents Provider verwenden.
-
-@Optional: wird kein Exception geworfen wennn kein Provider gefunden wird, aber das Kompoenent soll prüfen, ob es null ist.
 
 Wenn ein Komponent hat providers metadata: [mySerivce], dann jeder Instanz der Komponent hat sein eigenes Service Instanz. (Service instanz nur mit @Injectable(empty) )
 
@@ -1952,7 +1996,9 @@ Anstelle von real backend API, wir installieren server-json npm package, erstell
 die es bei Request zurückgibt. Je nach prod oder dev environment wir tauschen das data source service für real remote backend API = defalut.service.ts mit MockSeervice service aus, 
 die dann diesen server-json backend server aufruft.
     Starten server-json mit mock data:  son-server --watch mockdata.json --port 3000
-    -    im environment.ts:    apiService: MockService
+    -    im environment.ts:    
+            apiService: MockService
+            apiUrl: 'http://localhost:3000/konnektors', 
     -   im app.config.ts:  {provide: DefaultService, useClass: environment.apiService}
 je nach Befehle: ng serve / build --configuration=dev/prod wird der reale mock service und API aufgerufen.
 
@@ -1970,6 +2016,15 @@ Lösungen:
     Für Prod: in der Backend API wir verwenden @CrossOrigin("http://localhost:4200")
 
 ANGULAR 17
+
+STANDALONE Koomponente:
+- standalone: true, im Konfigurations Objekt angeben.
+- SD werden in keinem Module im declaration property deklariert. Traditional komp gehört einem Module und kann nur da verwendet werden, SD hingegen kann überall spielen.
+- SD importiert alle seine Importierte Teile (Komponente, Directive, Pipes NgModules) in eigenem import: [] Property, und wird dazu keine NgModule mehr gebraucht: SD ist sein eigenes Module auch.
+- child SD wird vom parent SD in seinem import: [] importiert, und nicht in declaration mehr angegeben. Also SD gehört keinem Module mehr.
+- SD kann bootsrapped werden, mit bootsrapAppplication( BootsrappableSD, ...) in main.ts
+
+
 ###################################################################################################################################################################################
 ###################################################################################################################################################################################
 ##################################################################################################################################################################################
@@ -1979,14 +2034,32 @@ ANGULAR 17
 SIGNAL
 #####################################################################################################################################################################################
 Signal ist eine Variable mit chnage Notification. ein reaktives primitive. Es hat immer einen Wert, synchron.
+Vorteile des Signals:
+    - Wir werden benachritgit, wenn ein Signal Wert geaendert wird, wogegen mit plain values there is no way to get notified.
+    - Signal értékeit ne módositsuk közvetlenul, hanem a set/update functionnal, különben az effect/computed nem müködik , nem signalizál a signal.
+    - Signal csak akkor signalisiiert, wenn es bekommt einen neuen Weert, dazu verwendet er === operator. (also wenn wir mehrmals den signal wert mt dem gleichen Wert überschreiben -> kein signalisierung.
+    - to make deep comparioson: {
+            equal: (a, b) => {
+            return a.id === b.id && a.title == b.title;
+            },
+            }
+when defining effects or computed signals, be careful when reading the value of source signals inside conditional blocks
+when using array or object signals, avoid mutating the signal value directly
+
     quantity = signal(10);                                          // Erstellt und inizialisiert ein Signal = signal constructor function, kann parametisiert werden
     let ertek = quantity();                                         // Wert Auslesen
-    this.quantity.set(11);                                          // Wert ändern den Wert, indem wir es überschreiben mit dem neuen wert
+    this.quantity.set(11);                                          // Geben einen neuen Wert dem Signal, und benachritigt (notifies) den Consumer gleich, it set (by Object/array type a new Instanz!!!
     this.quantity.update( (ertek) => ertek * 2)                     // update nimmt den aktuellen Wert und macht etwas damit, array.filter
-    totlaPrice = computed( () => this.price() * this.quantity();    // wenn ein Signals Wert hängt von dem Wert anderer Signale: änderts sich der wert einers Signals dann wird totalPrice Signal 
-                                                                        neukalkuliert.
-    effect(() => console.log(this.selectedVehicle()));              // wird jedesmal ausgeführt, wenn signals Wert änderts sich (darf den Wert nicht ändern)
-    
+    totlaPrice = computed( () => this.price() * this.quantity();    // derived Signal., dessen wert aendert sich wenn einer der signal in seinem body andertsich. Theát ha egy olyan signal értéke
+                                                                    // változik, amit nem használunk/referálunk a computedben arra nem lesz újra  computed !! -> szupi change detection alternativa!!
+                                                                    //    neukalkuliert. : Hier werden wir ebenfalls benachritgit wenn ein signals wert aendert sich, und wird der derived signal wert
+                                                                    // neuberechnet, also im gegensatz zu effect hier kriegt man ebenfalls ein signal.
+                                        //FONTOS: a effect function egyszer mindig lefut! A source signalnak MINDIG meg kell hivosódnia már az első if ágban is; ugyanakkor a source signal változhat dinamikusan!!
+    effect(() => console.log(this.selectedVehicle()));              // effect function wird jedesmal ausgeführt, wenn signals Wert änderts sich (darf den Wert nicht ändern), Verwendung: wenn ich wie ein Logik ausführen,
+                                                                    // nachdem ein Signalwert geaendert wurde -> 
+                                                                    // benutze effect(): logging, machen wir etwas mit dem signal wert (saving to db).
+        // FONTOS: effect en belül nem szabad siganl értékét változtatni-> inifite loop.
+    computed vs effect: a computed maga is egy signal, mig az efect egy mtódus amivel valamit csinálunk/reagálunk a signal változásra, de nincsen szükségünk külön szignálra.
     Wenn wir den Signal's Wert andern dann CD wird scheduled to run. 
     CD laeft nicht für alle Komponente sondern nur für das einzige komponent, wo signal gelesen wird. 
 
@@ -2004,23 +2077,21 @@ Verwendungbesipiele:
 
 // best practices und was man nicht machen sollte mit signals
 https://dev.to/this-is-angular/signals-the-do-s-and-the-dont-s-40fk
-
+----------------------------------------------------------------------------------------------------------
 SIGNAL INPUT: input Methode
-    anstelle von @Input, und so können wir uns onChanges(changes: SimpleCahnges) Method ersparen, wenn wir eine Nostifikation haben wollen,wenn der Wert des input aendert sich. 
+---------------------------------------------------------------------------------------------------------------
+    anstelle von @Input, und so können wir uns onChanges(changes: SimpleCahnges) Method ersparen, wenn wir eine Notifikation haben wollen,wenn der Wert des input aendert sich. 
     user = input.required<User>({alias: 'felhasznalo'});
 
     Wenn wir die Wertaenderung haben wollen dann,:  
-        constructor() {
-            effect(() => {
-            console.log(`New value: ${this.mysignal()}`);   // dieses ist signal unabhaengig -> können alle signale beobachten
-            });
-        }
+            effect(() => {  console.log(`New value: ${this.mysignal()}`);   });
     Properties:
     -   required? d.h. wenn keine initial value dann wird es ein error geworfen: input.required<number>();
     -   alias: ertek = input<number>({alias: 'lajoska'});  // a parentben: <child [lajoska]=valami>
     -   transform: wir transformieren den Wert des signals bevor es emmittiert wird: ertek = input<number>({transform: (value: number) => value * 2});
-
+----------------------------------------------------------------------------------------------------------
 SIGNAL BASES / SIGNAL QUERIES:
+--------------------------------------------------------------------------------------------------------------
     -   childComponent = viewChild(ChildComponent / "myElementRef", {read: true, })
                        = viewChild.required("mylabel"); // wenn es nicht existiert dann wird ein error geworfen
             und dann wir haben einen Zugriff nicht vom afterViewChecked hook, sondern in dem effect( () => {this.childComponent().increment()}) hook, wo wir auf das Signal reagieren können. 
@@ -2029,9 +2100,9 @@ SIGNAL BASES / SIGNAL QUERIES:
     -   signalBase: ertek = signalBase(10);  // erstellt ein signal mit initial value
     -   signalQuery: ertek = signalQuery(10); // erstellt ein signal mit initial value, aber es ist nicht reaktiv, d.h. wenn der Wert geaendert wird, dann wird kein CD ablaufen.
     -   signalQuery: ertek = signalQuery(10, {reactive: true}); // erstellt ein signal mit initial value, und es ist reaktiv, d.h. wenn der Wert geaendert wird, dann wird CD ablaufen.
-    
+----------------------------------------------------------------------------------
 SIGNAL MODEL:
-
+----------------------------------------------------------------------------------------------------
 
 The signal-based Components, will be more concise in terms of life-cycle hook, only the following from known life-cycle will remain : ngOnInit/ngOnDestroy
 

@@ -18,11 +18,12 @@ export const APP_ROUTES: Routes = [
     path: '',
     component: TemplateComponent,
     //canActivate: [navigationGuard],
-    providers: [RouteCommonService],
+    providers: [RouteCommonService],  // common service useable by all child components
     children: [
       {
         path: 'konnektor-view',
-        loadComponent: () => import('../app/konnektor/konnektor-view.component').then(e => e.KonnektorViewComponent)
+        loadComponent: () => import('../app/konnektor/konnektor-view.component').then(e => e.KonnektorViewComponent),
+        data: {title: 'goiodgri'}
       },
       {
         path: "auditlog",

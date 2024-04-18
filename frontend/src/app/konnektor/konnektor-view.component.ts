@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, Signal, signal, viewChild} from '@angular/core';
+import {Component, inject, Input, OnInit, Signal, signal, viewChild} from '@angular/core';
 import {DefaultService, KonnektorDTO} from '../openapi-generated-sources';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastService} from "../toast/toast.service";
@@ -36,6 +36,10 @@ export class KonnektorViewComponent implements OnInit {
   readonly headerHeight = 50;
   readonly rowHeight = 50;
 
+
+  @Input("title") titleData;
+
+
   loaded = false;
   konnektorFilterForm!: FormGroup;
   konnektors: KonnektorDTO[] = [];
@@ -63,6 +67,8 @@ export class KonnektorViewComponent implements OnInit {
  konnektorViewChildComponent = viewChild(KonnektorViewChildComponent);
 
   constructor() {
+    console.log("titleData:" + this.titleData);
+
     this.bendeClone = {...this.bende, nevem: "enenen"};
     this.apu = {
       kora: 80,

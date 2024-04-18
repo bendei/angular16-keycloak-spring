@@ -4,7 +4,21 @@
 
 CD child component template
 <div style="border: dot-dash #7C2EDD">
-  szam: {{szam}}
+  szamInput: {{szamInput()}}
+  <br/>
+
+
+  @for(user of usersArr(); track user.name) {
+    {{user.age}}
+    {{user.name}}
+  }
+  <br/>
+  Using signal:
+  <input type="text" [value]="nulladikSignal()" />
+  <input type="text" (keyup)="firstSignalChanged($event)" />
+  <input type="text" (keyup)="secondSignalChanged($event)" />
+  Mezők összege: {{computedSignal()}}
+  <br/>
   <br/>
 </div>
 <hr>

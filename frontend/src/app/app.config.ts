@@ -19,7 +19,8 @@ import {NAVIGATION_ROUTES} from "./core/navigation.routing";
 export const appConfig: ApplicationConfig = {
   // registering providers with the root injector
   providers: [
-    provideRouter(APP_ROUTES, withComponentInputBinding()),                         //
+    provideRouter(APP_ROUTES, withComponentInputBinding()),      // withComponentInputBinding: ActivatedRoutes wird seit 16 nicht verwendet, sondern mit @Input
+                                                                // um route parameters zu lesen
 
     provideHttpClient(withInterceptors([myErrorInterceptor, corsInterceptor])),            // configures HttpClient Service with functional Interceptor (ang 16 style)
    // {provide: ErrorHandler, useClass: GlobalErrorHandler},                          // also registered with the root injector
