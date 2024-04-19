@@ -1,12 +1,12 @@
 import {
-  AfterViewChecked,
+  AfterViewChecked, booleanAttribute,
   Component, computed,
   DoCheck,
-  effect, inject,
+  effect, EventEmitter, inject,
   input,
   Input,
   OnChanges,
-  OnInit, signal,
+  OnInit, Output, signal,
   SimpleChanges
 } from "@angular/core";
 import {User} from "./cd.component";
@@ -46,10 +46,16 @@ export class CdchildComponent implements OnInit, DoCheck {
     return elso + masodik;
   });
 
+  @Output() childEvent: EventEmitter<string> = new EventEmitter<string>();
+
 
   constructor() {
 
     console.log("simpleService:" + this.simpleService.simpleSzam);
+  }
+
+  emitChildEvent(): void {
+    this.childEvent.emit("payload received");
   }
 
   ngOnInit(): void {

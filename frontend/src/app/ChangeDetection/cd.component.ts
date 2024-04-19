@@ -1,8 +1,9 @@
 import {
+  AfterViewInit,
   Component, computed, DoCheck,
   ElementRef, inject,
   NgZone, OnChanges, OnDestroy, OnInit,
-  Renderer2, signal, SimpleChanges,
+  Renderer2, signal, SimpleChanges, viewChild,
   ViewChild
 } from "@angular/core";
 import {CdchildComponent} from "./cdchild.component";
@@ -30,11 +31,12 @@ const statuses = [{id: 1, isActive: true}, {id: 2, isActive: true}, {id: 3, isAc
   templateUrl: './cd.component.html',
   imports: [CdchildComponent],
 })
-export class CdComponent implements  DoCheck {
+export class CdComponent implements  DoCheck, AfterViewInit, OnInit {
 
   private routeCommonService = inject(RouteCommonService);
   private readonly cdService = inject(Cdservice);
 
+  spanRef = viewChild<ElementRef<HTMLSpanElement>>("spanRef");
 
 
   text = 'text';
@@ -47,6 +49,30 @@ export class CdComponent implements  DoCheck {
 
 
  constructor() {
+
+ }
+
+  reactToChildEvent(event: string): void {
+   console.log(event);
+  }
+
+ ngOnInit() {
+   const elem = this.spanRef();
+   if(elem) {
+     elem.nativeElement.innerText = "kakaukk ngOnInit";
+   }
+ }
+
+  ngAfterViewInit(): void {
+
+  }
+
+
+ changeViewChildText(): void {
+   const elem = this.spanRef();
+   if(elem) {
+     elem.nativeElement.innerText = "kakaukk changeViewChildText";
+   }
  }
 
   clickToIcrementInputSzam(): void {
@@ -69,6 +95,8 @@ export class CdComponent implements  DoCheck {
   ngDoCheck(): void {
     console.log("ngDoCheck");
   }
+
+
 
 }
 

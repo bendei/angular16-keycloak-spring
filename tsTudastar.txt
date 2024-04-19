@@ -182,10 +182,12 @@ with LAMBDA:
 
  FUNCTION DECLARATION: normál funkction can be called before declared, cos javascript looks for global function declarations, creates them and than calles them.
 
- CLUSURE:
+ CLUSURE: Closures are essential for handling callbacks and asynchronous operations.
  A closure is a function that has access to its outer function scope even after the outer function has returned. This means a closure can remember and access variables and arguments
  of its outer function even after the function has finished.
+ MINDIG létrejön egy closure , ha egy functont definiálunk (nem csak inner functionoknál)
 
+ez jo: https://www.geeksforgeeks.org/closure-in-javascript/?ref=header_search
  https://blog.bitsrc.io/a-beginners-guide-to-closures-in-javascript-97d372284dda
 
 
@@ -196,7 +198,7 @@ with LAMBDA:
 									// tehát: a let count = getCounter(), (és nem a normális function expression: let count = getCounter; ) végrehajtja a
 									// outer function-t, ami egy külső function definitiont ad vissza: innentől kezdve a let count variable egy function expression
 									// a function ez()-re.
-		return counter++;
+		return counter++;   // itt a ez function "closes over" the outer functions's counter variable
 	  }
 	}
 	let count = getCounter();	// as we call getCounter() it return the inner function ez that we store in the count variable ->
@@ -204,13 +206,41 @@ with LAMBDA:
 	console.log(count());  // 0
 	console.log(count());  // 1
 	console.log(count());  // 2
+----- 1  : itt a kulso function hivja a belsot function ezert a kk = kulso; megy a () nelkül is
+function kulso() {
+		let kv = "kávé";
 
-EXECUTION CONTEXT
+		function belso() {
+			console.log(kv);
+			return kv;
+		}
+		belso();
+	}
+
+   let kk = kulso;
+   kk();
+-----2 : kiirja "külsö"", mert a kk() azaz akulso() meghivodik, de a belso() -t senki sem hivja meg,
+DE ha let kk = kulso(); akkor kiirja hogy "kávé". Miét? mert akkor a let kk = kulso(); meghivja a külsöt ami returns a belső functiont, amit meg mar mi a kk() val hivunk meg
+function kulso() {
+		let kv = "kávé";
+        console.log("kulso")
+
+		function belso() {
+			console.log(kv);
+			return kv;
+		}
+		return belso;
+	}
+
+   let kk = kulso;
+   kk();
+
+EXECUTION CONTEXT = az a kontextus amiben az aktuális function végrehajtódik,
 An execution context is an abstract environment where the JavaScript code is evaluated and executed. When the global code is executed, it’s executed inside the global execution context,
 and the function code is executed inside the function execution context. There can only be one currently running execution context (Because JavaScript is single threaded language),
 which is managed by a stack data structure known as Execution Stack or Call Stack. The currently running execution context will be always on the top of the stack, and when the
 function which is currently running completes, its execution context is popped off from the stack and the control reaches to the execution context below it in the stack.
-LEXICAL ENVIRONMENT
+LEXICAL ENVIRONMENT = az a environment amiben az adott execution kontextushoz tartozó variablékat tárolja a js runtime
 Every time the JavaScript engine creates an execution context to execute the function or global code, it also creates a new lexical environment to store the variable defined
 in that function during the execution of that function. LE has 2 components: Environment recortd for holding variables, function arguments etc, and a pointer to the parent LE.
 in the above example the LE for outer function will not removed because it is referenced by the LE of the inner function so function ez has access and increments its variable.
@@ -246,6 +276,8 @@ A.
 	alert(test); // true, the variable lives after if
 
 B.
+Jo eljátszani a var ral: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/var
+
 	function sayHi() {
 	  if (true) {
 		var phrase = "Hello";
@@ -255,8 +287,8 @@ B.
 	}
 
 sayHi();
-alert(phrase); // ReferenceError: phrase is not defined
-
+// működik, mert a var function vagy global scoped
+de ha let phrase = "Hello" -> alert(phrase); // ReferenceError: phrase is not defined
 
 let var const
 for (var i = 0; i < 5; i++) {

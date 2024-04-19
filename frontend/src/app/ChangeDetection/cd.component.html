@@ -2,7 +2,10 @@ PARENT
 
 {{szam}}
 <br/>
-string interpolation with method expression: {{kiir()}}
+<span #spanRef>
+  string interpolation with method expression: {{kiir()}}
+</span>
+<input type="button" (click)="changeViewChildText()">
 <br/>
 userarr:
 
@@ -11,4 +14,4 @@ routeCommonServiceProperty service property's value  {{routeCommonServicePropert
 <br>
 
 <button (click)="clickToIcrementInputSzam()"> click to insrement szam input for the child</button>
-<cdchild [szamInput]="szam" #child></cdchild>
+<cdchild (childEvent)="reactToChildEvent($event)" [szamInput]="szam" #child></cdchild>

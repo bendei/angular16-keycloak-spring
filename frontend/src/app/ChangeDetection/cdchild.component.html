@@ -13,6 +13,9 @@ CD child component template
     {{user.name}}
   }
   <br/>
+
+  <button (click)="emitChildEvent()">Output</button>
+
   Using signal:
   <input type="text" [value]="nulladikSignal()" />
   <input type="text" (keyup)="firstSignalChanged($event)" />

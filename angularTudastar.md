@@ -1459,9 +1459,8 @@ VIEWCHILD (Decorator): (View bezieht sich auf das Template) (Shadow DOM) wird ve
 
 VC liefert das erste passende Element zurück.
  Wird auf Kompoenenten-Property verwendet, hat 2 Argumente: Selector (string, Typescript Type, wie Komponente Klassenname oder Function), Konfigurationsobjekt:
-	static -> Es definiertiert, wann im Lebenszyklus der Komponente die Query ausgewertet wird.
-				True: aufgelöst wenn der View inizialisiert ist.
-			  False: aufgelöst beim jeder change detection , sollte verwendet werden wenn child renderiert dynamically.
+	static -> true: viewChild erreichbar in ngOnInit(), und ngAfterViewInit()
+           -> false: nur beim ngAfterViewInit()
     read   -> wenn selector definiert mehrere Elelemnte von
 			  verschiedenen Typen, dann mit read property können wir einen auswaehlen.
 Use cases:
@@ -2034,6 +2033,7 @@ STANDALONE Koomponente:
 SIGNAL
 #####################################################################################################################################################################################
 Signal ist eine Variable mit chnage Notification. ein reaktives primitive. Es hat immer einen Wert, synchron.
+!!!!computed signals und effect() können ngOnInit() und ngOnChanges() ersetzten!!!
 Vorteile des Signals:
     - Wir werden benachritgit, wenn ein Signal Wert geaendert wird, wogegen mit plain values there is no way to get notified.
     - Signal értékeit ne módositsuk közvetlenul, hanem a set/update functionnal, különben az effect/computed nem müködik , nem signalizál a signal.
@@ -2078,7 +2078,7 @@ Verwendungbesipiele:
 // best practices und was man nicht machen sollte mit signals
 https://dev.to/this-is-angular/signals-the-do-s-and-the-dont-s-40fk
 ----------------------------------------------------------------------------------------------------------
-SIGNAL INPUT: input Methode
+SIGNAL INPUT: input Methode, readonly signals
 ---------------------------------------------------------------------------------------------------------------
     anstelle von @Input, und so können wir uns onChanges(changes: SimpleCahnges) Method ersparen, wenn wir eine Notifikation haben wollen,wenn der Wert des input aendert sich. 
     user = input.required<User>({alias: 'felhasznalo'});
@@ -2086,16 +2086,40 @@ SIGNAL INPUT: input Methode
     Wenn wir die Wertaenderung haben wollen dann,:  
             effect(() => {  console.log(`New value: ${this.mysignal()}`);   });
     Properties:
-    -   required? d.h. wenn keine initial value dann wird es ein error geworfen: input.required<number>();
+    -   required? d.h. required inputs können keinen default value haben
     -   alias: ertek = input<number>({alias: 'lajoska'});  // a parentben: <child [lajoska]=valami>
     -   transform: wir transformieren den Wert des signals bevor es emmittiert wird: ertek = input<number>({transform: (value: number) => value * 2});
-----------------------------------------------------------------------------------------------------------
-SIGNAL BASES / SIGNAL QUERIES:
---------------------------------------------------------------------------------------------------------------
-    -   childComponent = viewChild(ChildComponent / "myElementRef", {read: true, })
-                       = viewChild.required("mylabel"); // wenn es nicht existiert dann wird ein error geworfen
-            und dann wir haben einen Zugriff nicht vom afterViewChecked hook, sondern in dem effect( () => {this.childComponent().increment()}) hook, wo wir auf das Signal reagieren können. 
+-------------------------------------------------------------------------------------------
+SIGNAL OUTPUT
+-------------------------------------------------------------------------------------------------------
 
+
+
+----------------------------------------------------------------------------------------------------------
+SIGNAL BASED QUERIES:
+--------------------------------------------------------------------------------------------------------------
+Mit view/contentChild Funktionen können wir (query=) von dem component her child components/directives/DOm elemente referenzieren.
+Sie sind erreichbar in ngOnInit(), und ngAfterViewInit(). 
+
+**view query** : referenzieren components eigene Template/oder child component
+        spanElem = viewChild<ElementRef<HTMLSpanElement>>("refName", {read: } ),
+Verwendung: effect( () => {this.childComponent().increment()})
+Pl.:    -  
+    1. childComponent = viewChild(ChildComponent / "myElementRef", {read: true, })
+                       = viewChild.required("mylabel"); // mit required entechiden wir ob angular ein error wirft wenn das element nicht gefunden wurde. wenn es nicht existiert dann wird ein error geworfen
+            und dann wir haben einen Zugriff nicht vom afterViewChecked hook, sondern in dem effect( () => {this.childComponent().increment()}) hook, wo wir auf das Signal reagieren können. 
+    2.     Ha ilyen van:
+            <child-comp>
+            <child-comp>
+            <child-comp>
+            akkor: childComponensek = viewChildren<ChildComponent>(ChildComponent);
+    3.  referezieren auf ein span:
+        spanRef = viewChild.required<ElementRef<HTMLSpanElement>>("spanRef");
+        jetzt der Wert des Signals ist ein HTMLSpanElement ist !
+       Überschreiben span text:
+        this.spanRef().nativeElement.innerText = "wwww";
+
+**content query:** contentChild: referenziert man was zwischen den component's host tag ist
 
     -   signalBase: ertek = signalBase(10);  // erstellt ein signal mit initial value
     -   signalQuery: ertek = signalQuery(10); // erstellt ein signal mit initial value, aber es ist nicht reaktiv, d.h. wenn der Wert geaendert wird, dann wird kein CD ablaufen.
@@ -2103,6 +2127,8 @@ SIGNAL BASES / SIGNAL QUERIES:
 ----------------------------------------------------------------------------------
 SIGNAL MODEL:
 ----------------------------------------------------------------------------------------------------
+
+
 
 The signal-based Components, will be more concise in terms of life-cycle hook, only the following from known life-cycle will remain : ngOnInit/ngOnDestroy
 
