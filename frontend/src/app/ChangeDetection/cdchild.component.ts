@@ -9,7 +9,7 @@ import {
   OnInit, Output, signal,
   SimpleChanges
 } from "@angular/core";
-import {User} from "./cd.component";
+import {User, UserInterface} from "./cd.component";
 import {SimpleService} from "./simple.service";
 
 

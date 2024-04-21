@@ -138,6 +138,7 @@ Miután npm install -g typescript@latest --save  , globálisan a npm-el install�
 futtassam a npm install-t itt a Intellij ben és akkor updateli magát és eltűnik a piros is.
 Aztán ng serve ezt a hibát irta ki: Error: Failed to initialize Angular compilation - The Angular Compiler requires TypeScript >=4.9.3 and <5.2.0 but 5.3.3 was found instead.
 -> visszadowngradeltem a tsc-t 5.1.3 -re: npm install -g typescript@5.1.3
+angular upgrading: ng update @angular/core@17.3
 
 Checking node version: npm version
 

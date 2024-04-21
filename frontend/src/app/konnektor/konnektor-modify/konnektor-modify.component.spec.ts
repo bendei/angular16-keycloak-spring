@@ -91,6 +91,7 @@ describe('KonnektorModifyComponent', () => {
     defaultServiceSpy.updateKonnektor.and.returnValue(errResponse);
     whenSaveKonnektor();
     tick(); // KELL EZ A KURVA TICK KÜLÖNBEN PROMISE REJECTION NEM MŰX
+    // @ts-ignore
     expect(toastServiceSpy.error).toHaveBeenCalled();
   }));
 
