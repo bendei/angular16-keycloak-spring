@@ -1,3 +1,7 @@
+
+MINDENFLE TÉMA:
+https://angular-university.io/
+
 server// Complete Angular Tutorial For Beginners
 https://www.tektutorialshub.com/angular-tutorial/#component-communication
 
@@ -59,6 +63,8 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
 https://www.syncfusion.com/blogs/post/angular-promises-vs-observables.aspx/amp
 // signal
 // nagyon jó leirás általánosságban: signals with arrays/objects / etc !
+https://blog.angular-university.io/angular-signals/
+// mire kell vigyázni computed() nél:
 https://blog.angular-university.io/angular-signals/
 https://www.freecodecamp.org/news/angular-signals/
 https://hackernoon.com/a-guide-to-angular-signals-with-practical-use-cases-part-1
@@ -2047,22 +2053,22 @@ Vorteile des Signals:
 when defining effects or computed signals, be careful when reading the value of source signals inside conditional blocks
 when using array or object signals, avoid mutating the signal value directly
 
-    quantity = signal(10);                                          // Erstellt und inizialisiert ein Signal = signal constructor function, kann parametisiert werden
-    let ertek = quantity();                                         // Wert Auslesen
-    this.quantity.set(11);                                          // Geben einen neuen Wert dem Signal, und benachritigt (notifies) den Consumer gleich, it set (by Object/array type a new Instanz!!!
-    this.quantity.update( (ertek) => ertek * 2)                     // update nimmt den aktuellen Wert und macht etwas damit, array.filter
-    totlaPrice = computed( () => this.price() * this.quantity();    // derived Signal., dessen wert aendert sich wenn einer der signal in seinem body andertsich. Theát ha egy olyan signal értéke
-                                                                    // változik, amit nem használunk/referálunk a computedben arra nem lesz újra  computed !! -> szupi change detection alternativa!!
-                                                                    //    neukalkuliert. : Hier werden wir ebenfalls benachritgit wenn ein signals wert aendert sich, und wird der derived signal wert
-                                                                    // neuberechnet, also im gegensatz zu effect hier kriegt man ebenfalls ein signal.
-                                        //FONTOS: a effect function egyszer mindig lefut! A source signalnak MINDIG meg kell hivosódnia már az első if ágban is; ugyanakkor a source signal változhat dinamikusan!!
-    effect(() => console.log(this.selectedVehicle()));              // effect function wird jedesmal ausgeführt, wenn signals Wert änderts sich (darf den Wert nicht ändern), Verwendung: wenn ich wie ein Logik ausführen,
-                                                                    // nachdem ein Signalwert geaendert wurde -> 
-                                                                    // benutze effect(): logging, machen wir etwas mit dem signal wert (saving to db).
-        // FONTOS: effect en belül nem szabad siganl értékét változtatni-> inifite loop.
-    computed vs effect: a computed maga is egy signal, mig az efect egy mtódus amivel valamit csinálunk/reagálunk a signal változásra, de nincsen szükségünk külön szignálra.
-    Wenn wir den Signal's Wert andern dann CD wird scheduled to run. 
-    CD laeft nicht für alle Komponente sondern nur für das einzige komponent, wo signal gelesen wird. 
+quantity = signal(10);                                          // Erstellt und inizialisiert ein Signal = signal constructor function, kann parametisiert werden
+let ertek = quantity();                                         // Wert Auslesen
+this.quantity.set(11);                                          // Geben einen neuen Wert dem Signal, und benachritigt (notifies) den Consumer gleich, it set (by Object/array type a new Instanz!!!
+this.quantity.update( (ertek) => ertek * 2)                     // update nimmt den aktuellen Wert und macht etwas damit, array.filter
+totlaPrice = computed( () => this.price() * this.quantity();    // derived Signal., dessen wert aendert sich wenn einer der signal in seinem body andertsich. Theát ha egy olyan signal értéke
+                                                                // változik, amit nem használunk/referálunk a computedben arra nem lesz újra  computed !! -> szupi change detection alternativa!!
+                                                                //    neukalkuliert. : Hier werden wir ebenfalls benachritgit wenn ein signals wert aendert sich, und wird der derived signal wert
+                                                                // neuberechnet, also im gegensatz zu effect hier kriegt man ebenfalls ein signal.
+                                    //FONTOS: a effect function egyszer mindig lefut! A source signalnak MINDIG meg kell hivosódnia már az első if ágban is; ugyanakkor a source signal változhat dinamikusan!!
+effect(() => console.log(this.selectedVehicle()));              // effect function wird jedesmal ausgeführt, wenn signals Wert änderts sich (darf den Wert nicht ändern), Verwendung: wenn ich wie ein Logik ausführen,
+                                                                // nachdem ein Signalwert geaendert wurde -> 
+                                                                // benutze effect(): logging, machen wir etwas mit dem signal wert (saving to db).
+    // FONTOS: effect en belül nem szabad siganl értékét változtatni-> inifite loop.
+computed vs effect: a computed maga is egy signal, mig az efect egy mtódus amivel valamit csinálunk/reagálunk a signal változásra, de nincsen szükségünk külön szignálra.
+Wenn wir den Signal's Wert andern dann CD wird scheduled to run. 
+CD laeft nicht für alle Komponente sondern nur für das einzige komponent, wo signal gelesen wird. 
 
 Verwendungbesipiele:
     !!!! Allgemein: wenn man anstelle von Observables Signals verwendet dannn CD laeuft nur für das Komponent, wo das Signal gelesen wird und nicht für alle Komponente ( CD.Default) oder für
@@ -2081,20 +2087,31 @@ https://dev.to/this-is-angular/signals-the-do-s-and-the-dont-s-40fk
 ----------------------------------------------------------------------------------------------------------
 SIGNAL INPUT: input Methode, readonly signals
 ---------------------------------------------------------------------------------------------------------------
-    anstelle von @Input, und so können wir uns onChanges(changes: SimpleCahnges) Method ersparen, wenn wir eine Notifikation haben wollen,wenn der Wert des input aendert sich. 
-    user = input.required<User>({alias: 'felhasznalo'});
+anstelle von @Input, und so können wir uns onChanges(changes: SimpleCahnges) Method ersparen, wenn wir eine Notifikation haben wollen,wenn der Wert des input aendert sich. 
+user = input.required<User>({alias: 'felhasznalo'});
 
-    Wenn wir die Wertaenderung haben wollen dann,:  
-            effect(() => {  console.log(`New value: ${this.mysignal()}`);   });
-    Properties:
-    -   required? d.h. required inputs können keinen default value haben
-    -   alias: ertek = input<number>({alias: 'lajoska'});  // a parentben: <child [lajoska]=valami>
-    -   transform: wir transformieren den Wert des signals bevor es emmittiert wird: ertek = input<number>({transform: (value: number) => value * 2});
+Wenn wir die Wertaenderung haben wollen dann,:  
+        effect(() => {  console.log(`New value: ${this.mysignal()}`);   });
+Properties:
+-   required? d.h. required inputs können keinen default value haben
+-   alias: ertek = input<number>({alias: 'lajoska'});  // a parentben: <child [lajoska]=valami>
+-   transform: wir transformieren den Wert des signals bevor es emmittiert wird: ertek = input<number>({transform: (value: number) => value * 2});
 -------------------------------------------------------------------------------------------
-SIGNAL OUTPUT
+FUNCTION OUTPUT (EZ NEM SIGNAL !!!!)
 -------------------------------------------------------------------------------------------------------
-
-
+old:   @Outout() page = new EventEmitter<number>();
+new:   page = output<number>();     // output function womit wir Werte emittieren können.
+usage (maradt ugyanaz mint a dekorátorral): (click) = page.emit(3232);
+       (page) = doSomething($event);
+------------------------------------------------------------------------------------------------------------------------------------------
+RxJS Interoperability
+-----------------------------------------------------------------------------------------------------------------------
+Creating output form an Observable
+Usage: werden Daten von Observable geliefert, dann wird mit output Funktion beim jedem Observable.next(value) ein Erreigniss ausgelöst, und wir können darauf subscribieren
+in dem parent Komponent.
+myStream$ = from([1,2,3,4,5]);
+myOutputFormObservable = outputFromObservable(this.myStream$);
+dann können wir auf  (myOutputFormObservable) = "reactToMyOutputFormObs($event)" reagieren (event: number)
 
 ----------------------------------------------------------------------------------------------------------
 SIGNAL BASED QUERIES:
@@ -2122,9 +2139,9 @@ Pl.:    -
 
 **content query:** contentChild: referenziert man was zwischen den component's host tag ist
 
-    -   signalBase: ertek = signalBase(10);  // erstellt ein signal mit initial value
-    -   signalQuery: ertek = signalQuery(10); // erstellt ein signal mit initial value, aber es ist nicht reaktiv, d.h. wenn der Wert geaendert wird, dann wird kein CD ablaufen.
-    -   signalQuery: ertek = signalQuery(10, {reactive: true}); // erstellt ein signal mit initial value, und es ist reaktiv, d.h. wenn der Wert geaendert wird, dann wird CD ablaufen.
+-   signalBase: ertek = signalBase(10);  // erstellt ein signal mit initial value
+-   signalQuery: ertek = signalQuery(10); // erstellt ein signal mit initial value, aber es ist nicht reaktiv, d.h. wenn der Wert geaendert wird, dann wird kein CD ablaufen.
+-   signalQuery: ertek = signalQuery(10, {reactive: true}); // erstellt ein signal mit initial value, und es ist reaktiv, d.h. wenn der Wert geaendert wird, dann wird CD ablaufen.
 ----------------------------------------------------------------------------------
 SIGNAL MODEL:
 ----------------------------------------------------------------------------------------------------

@@ -48,7 +48,7 @@ lásd: https://www.baeldung.com/h2-embedded-db-data-storage
 https://www.baeldung.com/persistence-with-spring-series
 
 ## transations:
-https://www.baeldung.com/transaction-configuration-with-jpa-and-spring
+
 
 ## Leirja hogy lehet Queryket öszzeállitani:
 https://docs.spring.io/spring-data/data-jpa/docs/current/reference/html/#repositories.core-concepts

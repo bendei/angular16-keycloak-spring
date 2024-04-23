@@ -144,13 +144,15 @@ ResponseEntity extends HttpEntity but also adds a Http status code.
 public ResponseEntity(T body, MultiValueMap<String,String> headers, HttpStatus statusCode)
 
 ########################################################################################################################################################################
+EXCEPTION HANDLING:
+########################################################################################################################################################################
 
-Exception handling:
 https://springframework.guru/exception-handling-in-spring-boot-rest-api/
 
-Wir implementieren custom Exceptions für jede typsche Exceptionen, zB BookNotFoundException, BookAlreadyExistException (extending RuntimeException).
+Wir implementieren custom Exceptions für jede typsche Business Exceptionen, zB BookNotFoundException, BookAlreadyExistException (extending RuntimeException).
 Beim Abfangen diese werden responses zu den Angular client zurückgeschickt:
 
+@ControllerAdvice Klasse mit @ExceptionHandler methoden -> returns ResponseEntity
 Wir verwendeten ein globales Exception Handler Klasse, die alle in den RestController auftretetnde Business Exceptionen abfängt und behandelt.
 Zb: beim GET wird ein book id angegeben wofür die Repository keinen Eintrag i  dem DB findet und so wirft ein custom ResourceNotFoundException Ausnahme zurück zum Controller.
 Hier tritt der globaler Exceptionhandler ein, es ist ein spring AOP @ControllerAdvice annotierte Klasse. Für jede Exceptiontypen implementieren wir eine HandlerMethode
@@ -172,6 +174,8 @@ a rrepository dobhat EntityNotFoundException- de azt try cahctel a serviceImpl b
 
 Van olyan repo metódus amelyik nem dob exception, hanem Optionalt ad vissza és azt csekkeljük le hogy empty(), ha az akkor mi dobunk egy custom exceptiont a glolbalhandlernek
 ########################################################################################################################################################################
+REQUEST VALIDIERUNG
+########################################################################################################################################################################
 
 Request validierung in srping boot:
 Spring fördert domain Objekt Validierung durch die Verwendung von Hibernate (bean) Validatoren.
@@ -184,9 +188,6 @@ Wir können custom Validator implementieren: https://www.baeldung.com/spring-mvc
 Repository interface -ről:
 https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
 
-Spring Data JPA supports find, read, query, count and get.
-
-
 Persistence: Spring Data JPA ( ez a Repository interfészes cucc)
 https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
 	Spring Boot Hibernate JPA
@@ -198,12 +199,13 @@ az embedded h2 databaset használom most tanulásra:
 https://www.baeldung.com/spring-boot-h2-database
 http://localhost:8080/h2-console
 
-Transaction:
-https://www.baeldung.com/transaction-configuration-with-jpa-and-spring
-If we're using a Spring Boot project and have a spring-data-* or spring-tx dependencies on the classpath, then transaction management will be enabled by default.
-
 Szupi leirás hogy mit és hogyan lehet konfigurálni egészen a hibernate-logginig
 https://thorben-janssen.com/configuring-spring-data-jpa-with-spring-boot/
+
+
+********************************************************************************************************************************************
+JPA / Hibernate
+********************************************************************************************************************************************
 
 Da spring boot ist mit spring data jpa integriert ist, so es liefert eine Menge default Konfigurationen und addiert automatisch Abhaengigkeiten zu meinem Projekt,
 also spring-boot starter fügt alle nötigen und common Abhaengigkeiten zu dem Projekt und konfiguriert diese zugleich. Das einzige dass konfiguriert soll
@@ -264,8 +266,164 @@ Entities und ihre Lebenszyklus sind innerhalbe PC verwaltet. Durch ein EM kann m
 		- Deleted: EM.remove() -> wird nicht gleich vom DB entfernt, sondern nur nachh dem flush()
 
 List kann Duplicates haben und ist ordered, wogegen Set kann keine Duplikate haben und ist nicht ordered.
-Set : interessiert mich order nicht.
+Set : kann keine Duplikate enthalten ( equals()).
 List: order ist wichtid zB.:ordered list, order by Datum, ich weiß es können duplikate vorkommen.
+
+
+application.properties fájlban konfiguráljuk a datasourcet és a ddl policit
+
+SQL tipusai:
+DDL: data defintion language: creating, modifying table
+DML: insert, update , delete -> iró műveletek
+DQL: select -> olvasó műveletek
+DCL: jogositvány kezelő rendser-> set grant
+------------
+Foreign Key: az egyik táblában az adott mező értéke egy masik tábla adott mezőjének értékét veszi fel, és nem lehet Null azaz léteznie kell a másikban. Használjuk a table relationshipek leirására.
+REFERENCE INTEGRITY: foreign key-> points to PK ( léteznie kell a foreign key értékének mint PK a másik táblában)
+
+ many-many: kapcsolo tábla , két FK val., pl diák-tantrgy ( tartalmazuhat csak két foreign keyt, de néha plusz infot is mint pédálul érdemjegy)
+
+referencia integritas -> cascade deleting (ha egy tábla PK ja egy másik tábla idegen kulcsa akkor ha a PK törölni akarom de mutat rá egy sor -> ReferenceIntegrityException
+a tulajdonos.szamla hivatkozik a bankszamlak.szamla_szam ra (ami egy foreign key a tulajdonos.számla mezőhöz)
+ )
+------------
+RESTRICT: addig nem törölhetekegy rekordot amig van hivatkozás a rekordra
+CASCADE: ha törlök egy rekordot akkor az összes hivatkozo rekordot is törölnöm kell, ugy biztonságos hogy nem engedjük a cascade törlést, hanem előbb
+		törölni kell az összes hivatkozo rekordot és utána engegi az érintett rekord törlését
+------------
+N+1
+(https://stackoverflow.com/questions/97197/what-is-the-n1-selects-problem-in-orm-object-relational-mapping)
+N + 1 query problem: mikor van egy item  rekordunk es ahhoz egy related tablában egy category rekord: ha le akarjuk lkérdezni a item-categorikat is:
+    1. egy query hogy visszakapjuk az itemek listáját, majd végig iterálva a listák elemein egyenként querit inditunk a categoryk lekérdezéséhez is: Lassú mert 1+20 lekérdezést indítunk el.
+    2. Egyetlen nagyobb lekérdezést inditunk join-nal.
+
+    In JPA/Hibernate beim JPQL / Criteria:
+        Wir habe Post -> (many) Postícomments
+            @Entity()
+                public class PostComment {
+                    @ManyToOne
+                    private Post post;
+                }
+
+            Scenarios:
+             1:      @ManyToOne(fetch = fetchType.LAZY)
+                     private Post post;
+                     Erst wird keine Post auds dem DB geholt, nur eine Query für die PostComments. Aber wenn wir nachher die Post Assoziationen referien in dem Kode, dann wird 1+N Queries ausgeführt.
+                        for(PostComment comment : comments) {
+                            LOGGER.info(
+                                "The Post '{}' got this review '{}'",
+                                comment.getPost().getTitle(),
+                                comment.getReview()
+                            );
+                        }
+             2.  @ManyToOne(fetch = fetchType.EAGER): Problem: wir können weit mehr Data holen, als wird eigentlich brauchen. Zweitens: wird für alle Post Entites ein separater Query ausgeführt.
+             3.  @ManyToOne(fetch = fetchType.JOIN_FETCH): wird ein einziger Query mit join ausgeführt.
+
+------------
+DUMP: mikor nem szabad a eredeti db-t használni, hanem egy szöveges fájlban megkapom a db-t, importálom: ez a dumpolás
+Projection: mikor kiválasztjuk mely mező értékekre van szükségung egy selectben vissza.
+------------
+Spring Data and makes it possible to remove the DAO implementations entirely. Our custom interface of the DAO is now the only artifact that we need to explicitly define.
+The DAO interface needs to extend the JPA specific Repository interface, JpaRepository. This will enable Spring Data to find this interface and automatically create an implementation for it.
+ Spring Data repository interfaces and their functionality:
+    CrudRepository: provides CRUD functions
+    PagingAndSortingRepository: methods to do pagination and sorting of records
+    JpaRepository: all CrudRepository and PagingAndSortingRepository provided functionalities; provides JPA-related methods such as flushing the persistence context and deleting records in a batch
+
+ by implementing one of the Repository interfaces, the DAO will already have some basic CRUD methods (and queries) defined and implemented:
+     @Repository
+     public interface ProductRepository extends JpaRepository<Product, Long> {
+         Product findByName(String productName);
+     }
+
+    CRUDRepository interface, diese sinf by default Transactional:
+    save(…) – save an Iterable of entities. Here, we can pass multiple objects to save them in a batch
+    findOne(…) – get a single entity based on passed primary key value
+    findAll() – get an Iterable of all available entities in the database
+    count() – return the count of total entities in a table
+    delete(…) – delete an entity based on the passed object
+    exists(…) – verify if an entity exists based on the passed primary key value
+------------
+Constructing Queries in Spring Data (JPA options: JPQL, NAtive sQL, Criteria API):
+
+1. DERIVED QUERY METHODS: Using method naming conventions:
+    List<User> findByName(String name)
+    List<User> findTop3ByAge(); Passenger findFirstByOrderBySeatNumberAsc(); Passenger findTopByOrderBySeatNumberAsc();List<Passenger> passenger = repository.findByOrderBySeatNumberAsc(Limit.of(1));
+    List<User> findByNameIsNot(String name); List<User> findByNameIsNull(); List<User> findByNameIsNotNull(); List<User> findByActiveTrue(); findByNameStartingWith; findByNameLike(S
+    List<User> findByActiveFalse(); findByAgeLessThanEqual; findByAgeIn(Collection<Integer> ages); findByNameOrAgeAndActive;
+
+2: @Query(JPQL / SQL) Annotation to execute JPQL oder native SQL:   ( https://www.baeldung.com/spring-data-jpa-query )
+    - JPQL:
+        @Query("SELECT u FROM User u WHERE u.status = 1")
+        Collection<User> findAllActiveUsers();
+
+    - Native SQL:
+       @Query(
+         value = "SELECT * FROM USERS u WHERE u.status = 1",
+         nativeQuery = true)
+        Collection<User> findAllActiveUsersNative();
+
+    Passing parameters to queries:
+        1.  Indexed parameters: ?1, ?2
+                @Query("SELECT u FROM User u WHERE u.status = ?1 and u.name = ?2")
+                User findUserByStatusAndName(Integer status, String name);
+            oder:
+            @Query(
+              value = "SELECT * FROM Users u WHERE u.status = ?1",
+              nativeQuery = true)
+            User findUserByStatusNative(Integer status);
+
+        2. Named parameters:
+                @Query("SELECT u FROM User u WHERE u.status = :status and u.name = :name")
+                User findUserByStatusAndNameNamedParams(
+                  @Param("status") Integer status,
+                  @Param("name") String name);
+           oder:
+                @Query(value = "SELECT * FROM Users u WHERE u.status = :status and u.name = :name",
+                  nativeQuery = true)
+                User findUserByStatusAndNameNamedParamsNative(
+                  @Param("status") Integer status, @Param("name") String name);
+
+        3. Update / insert Statement:
+            @Modifying
+            @Query("update/insert User u set u.status = :status where u.name = :name")
+            int updateUserSetStatusForName(@Param("status") Integer status,
+              @Param("name") String name);
+
+            oder:
+                @Modifying
+                @Query(value = "update Users u set u.status = ? where u.name = ?",
+                  nativeQuery = true)
+                int updateUserSetStatusForNameNative(Integer status, String name);
+
+    3. Criteria API:
+    Wir können queries programmatisch zusammenbauen, Vorteil: klarer Objekt-oriented API, sehr gut, wenn wir dynamische Queries definieren wolen.
+        Session session = HibernateUtil.getHibernateSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Item> cr = cb.createQuery(Item.class);
+        Root<Item> root = cr.from(Item.class);
+        cr.select(root);
+
+        Query<Item> query = session.createQuery(cr);
+        List<Item> results = query.getResultList();
+
+    Wenn wir aber keinen statischen SQL statment definiren könne, weil wir einen dynamischen Query brauchen -> dann @Query Annotation können wir nicht verwenden.
+    Wir können den Spring Repository interface extendieren und als FRAGMENT INTERFACE verwenden:
+    https://docs.spring.io/spring-data/jpa/reference/repositories/custom-implementations.html
+        1. Wir definieren under suctom repository interface.
+        2. Wir implementieren diesen custom interface, mit der Verwendung von Criteria API
+        3. Wir extendieren neben dem zB JPARepository interface diesen custom interface in unserem busuiness specific Repository interface, wo wir dann einfach ihre Methoden rufen können.
+-----------------o verwendet, dann Transaction managememnt ist by default enabled.
+Jó kis példa a transactionra:
+https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html
+( https://www.geeksforgeeks.org/spring-boot-transaction-management-using-transactional-annotation/)
+A.: Methoden der CRUDRepository sind by default transactional
+B.: Wenn wir aber Query mit @Query definieren, dann müssen wir explicit @Transactional verwenden
+C.: mehrere DB Operationen in einem Service Method:Eset: ha az employee és a hozzá tartozó addresst is egyszerre kell mentenünk a DB-be.
+    1.  wir sollen in Application.java die @EnableTransactionManagement verwenden.
+    2. in dem Service MEethod / oder wir können es auf class-level auch die @Transaction vewernden
+
+
 
 
 

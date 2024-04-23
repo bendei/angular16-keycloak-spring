@@ -5,3 +5,8 @@ INSERT INTO KONNEKTOR (hostname, serialNumber, firmwareVersion, hardwareVersion,
 INSERT INTO KONNEKTOR ( hostname, serialNumber, firmwareVersion, hardwareVersion, active, created, validUntil) VALUES ('127.0.0.4', '213234', '11.04', '23.33.34', false, CURRENT_TIMESTAMP, '2024-03-25 16:47:38.474536+01');
 INSERT INTO KONNEKTOR (hostname, serialNumber, firmwareVersion, hardwareVersion, active, created, validUntil) VALUES  ('127.0.0.5', '213235', '11.05', '23.33.35', false, CURRENT_TIMESTAMP, '2024-07-25 16:47:38.474536+01');
 
+INSERT INTO AUDITLOG (usr, konnektorid, useraction, timestamp) VALUES ('superuser', 2, 'USER_LOGIN', CURRENT_TIMESTAMP);
+INSERT INTO AUDITLOG (usr, konnektorid, useraction, timestamp) VALUES ('egyuser', 2, 'USER_LOGIN', CURRENT_TIMESTAMP);
+INSERT INTO AUDITLOG (usr, konnektorid, useraction, timestamp) VALUES ('kettouser', 2, 'USER_LOGIN', CURRENT_TIMESTAMP);
+INSERT INTO AUDITLOG (usr, konnektorid, useraction, timestamp) VALUES ('haromruser', 1, 'USER_LOGIN', CURRENT_TIMESTAMP);
+

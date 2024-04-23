@@ -5,13 +5,26 @@ PARENT
 <span #spanRef>
   string interpolation with method expression: {{kiir()}}
 </span>
-<input type="button" (click)="changeViewChildText()">
+<input type="button" (click)="changeViewChildText()" value="changeViewChildText">
 <br/>
 userarr:
 
+
+<input type="text" [(ngModel)] = "textem" />
+<br/>
+<br/>
+<button (click)="updateobjektumComputed()">updateobjektumComputed</button>
+<br/>
+{{objektumComputed()}}
+<br/>
 
 routeCommonServiceProperty service property's value  {{routeCommonServiceProperty}} - <button (click)="incrementRouteCommonServiceProperty()">Increment it</button>
 <br>
 
 <button (click)="clickToIcrementInputSzam()"> click to insrement szam input for the child</button>
-<cdchild (childEvent)="reactToChildEvent($event)" [szamInput]="szam" #child></cdchild>
+<cdchild (myOutput)="reactToOutputObs($event)"
+         (myOutputFormObservable) = "reactToMyOutputFormObs($event)"
+         (childEvent)="reactToChildEvent($event)" [szamInput]="szam" #child
+          [atpasszolni]="atpasszolniChildnek"
+          (atpasszolniChange)="megjott($event)"
+          ></cdchild>

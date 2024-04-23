@@ -14,7 +14,9 @@ CD child component template
   }
   <br/>
 
-  <button (click)="emitChildEvent()">Output</button>
+  <button (click)="childEvent.emit('kackac')">emitting value using Output decorator</button>
+  <button (click)="myOutput.emit('this is the payload for outputFromObservable')">emitting value using output function</button>
+  <button (click)="atpasszolniChange.emit('ez jött a childtől')">atpasszolniChange</button>
 
   Using signal:
   <input type="text" [value]="nulladikSignal()" />
@@ -23,5 +25,9 @@ CD child component template
   Mezők összege: {{computedSignal()}}
   <br/>
   <br/>
+    <input type="text" [(ngModel)]="twowayBindProperty" />
+    <button (click)="changeTwowayBindProperty()">changing twowayBindProperty</button>
+
+
 </div>
 <hr>

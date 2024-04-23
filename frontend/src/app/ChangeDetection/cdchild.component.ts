@@ -6,27 +6,52 @@ import {
   input,
   Input,
   OnChanges,
-  OnInit, Output, signal,
+  OnInit, output, Output, signal,
   SimpleChanges
 } from "@angular/core";
 import {User, UserInterface} from "./cd.component";
 import {SimpleService} from "./simple.service";
+import {from} from "rxjs";
+import {outputFromObservable} from "@angular/core/rxjs-interop";
+import {FormsModule} from "@angular/forms";
 
 
 @Component({
   standalone: true,
   selector: "cdchild",
   templateUrl: "./cdchild.component.html",
+  imports: [
+    FormsModule
+  ],
   providers: [SimpleService]  // ebben a compban regisztráljuk, a service maga nem regisztrálja magár az @Injectable-val, igy csak ebben a child componensben érhető el
 })
 export class CdchildComponent implements OnInit, DoCheck {
 
   private simpleService = inject(SimpleService);
 
+  _twowayBindProperty = "hahah";
+  set twowayBindProperty(par: string) {
+    this._twowayBindProperty = par;
+    console.log("_twowayBindProperty set with value: " + par);
+  }
+  get twowayBindProperty() {
+    console.log("_twowayBindProperty ge" );
+    return this._twowayBindProperty;
+  }
+
   szamInput = input.required<number>();
   szamEffect = effect(() => {
     console.log("szamEffect: " + this.szamInput());
   });
+
+  // 2-way
+  atpasszolni = input<string>();
+  atpasszolniChange = output<string>();
+
+  atpasszolniEffect = effect(() => {
+    console.log("ez jött a parentttöl: " + this.atpasszolni());
+  });
+
 
   titleSignal = signal<string>("");
   usersArr = signal<UserInterface[]>([{name: "bbb", age: 4}]);
@@ -47,11 +72,19 @@ export class CdchildComponent implements OnInit, DoCheck {
   });
 
   @Output() childEvent: EventEmitter<string> = new EventEmitter<string>();
+  myOutput = output<string>();
+
+  myStream$ = from([1,2,3,4,5]);
+  myOutputFormObservable = outputFromObservable(this.myStream$);
 
 
   constructor() {
 
     console.log("simpleService:" + this.simpleService.simpleSzam);
+  }
+
+  changeTwowayBindProperty(): void {
+    this.twowayBindProperty = "nem haha";
   }
 
   emitChildEvent(): void {
