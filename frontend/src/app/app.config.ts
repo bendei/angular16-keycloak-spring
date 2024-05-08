@@ -23,7 +23,7 @@ export const appConfig: ApplicationConfig = {
                                                                 // um route parameters zu lesen
 
     provideHttpClient(withInterceptors([myErrorInterceptor, corsInterceptor])),            // configures HttpClient Service with functional Interceptor (ang 16 style)
-   // {provide: ErrorHandler, useClass: GlobalErrorHandler},                          // also registered with the root injector
+    {provide: ErrorHandler, useClass: GlobalErrorHandler},                          // also registered with the root injector
     {provide: RouteCommonService, useClass: RouteCommonService},                              // registering service for used by a group of child components commonly for data shareing
    // {provide: ObservableService, useClass: ObservableService},
    // {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},      // registering class-based old style interceptor

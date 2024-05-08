@@ -727,8 +727,6 @@ Ha a root moduleban akarjuk a routpokat regisztrálni:
 				imports: [RouterModule.forRoot(routes)] -> im main routing-module. Als Rückgabewert erhalten wir wiederum ein Modul, das mit unseren Routen initialisiert wurde.
 				mit forRoot erstellen wir ein RoutingService Objekt. (es darf nur einen einzigen davon geben), und Pfaddefinitionen, aka Routes werden mit Routing Service registriert.
 
-			})
-
 Ha egy feature modulban :
 	- forChild(): Für die Navigation wird ein separater Rouer-definition Datei erstellt, und in dem navigations-feature module mit RouterModule.forChild() importiert. 	Und vwerwenden
 	  RouterModule.forChild(array) in feature router modules, forChild erstellt aber keinen RoutingService Objekt, sondern werden die Routes (Pfad-component
@@ -736,10 +734,10 @@ Ha egy feature modulban :
 
 	- lazyLoading: geht es um lazy loaded module: routing module für der jeweiligen feature-Module wird im Routing-Definition Objekt mit loadChildren.. property importiert.
       also RoutenDefinition : {path: '..', anstelle von 'component' loadChildren: () => import("./nyomonkovetes/shared/nyomonkovetes-routing.module").then(i => i.NyomonkovetesRoutingModule)},}
-	  erstellen wir wiederum ein array of Route Types, wo path: book ist und anstatt component:
+	  erstellen wir wiederum ein array of Route Types, wo path: book ist und anstatt component: wenn wir auf den path klicken, dann wir der entsprechende routing module importiert mit den komponenten etc.
 STANDALONE
 	Mit standalone:
-		Anstelle RouteDefinitionen mit forRoot() in root/feature Module zu registrieren:
+		Anstelle RouteDefinitionen mit forRoot()/forChild in root/feature Module zu registrieren:
 		in app.routing.ts definieren wir eine Array von Routes ( mit möglicher loadChildren/loadComponent für lazy loading), die man in app.config.ts mit provideRouter(APP_ROUTES) Function 
         verwenden, um die Router zu registrieren. Diese app.config.ts wird dann im main.ts als paramter im bootstrapApplication(config) verwendet.
 
@@ -751,7 +749,7 @@ STANDALONE
 		Das Attribut darf 'href' also für Links auf interne Angular-Routen nicht verwendet werden, nur für externe.
 
 	ROUTENPARAMETER:  ':id',{ path:'mypath/component: MyComponent } => <a routerLink="/myPath/42">Link auf 42</a> , Zum Auslesen von Parametern (veraltete) bietet der Router die Klasse
-	ActivatedRouteSnapshot, die Auskunft über die gerade aktivierte Route und den  Zustand des Routers gibt.
+	ActivatedRouteSnapshot, die Auskunft über die gerade aktivierte Route und den  Zustand des Routers gibt. Ab 16 mit @Input auch können wir route parameters auslesen.
 **********************************
 STANDALONE COMPONENT STYLE
 
@@ -822,10 +820,9 @@ ROUTES PARAMETER MAPPING in SD: https://www.freecodecamp.org/news/use-input-for-
     ActivatedRoute Service wird seit version 16 nicht mehr verwendet. Seit version 16 wir verwenden @Input properties um route parameter zu lesen. Davon muss aber Angular wissen:
     app.config.ts : provideRouter(APP_ROUTES, withComponentInputBinding())
     
-
 Geminsames Service für eine Gruppe von Komponente:
 
-    ENVIROMENT INJECTOR: mit Modules, alle lazy modules hatten ihre eigene Injectors, mit SD alle Route können eigene Injector haben. Also ein gemeinsames Injector und damit ein 
+    ENVIROMENT INJECTOR: mit Modules, alle lazy modules / Components hatten ihre eigene Injectors, mit SD alle Route können eigene Injector haben. Also ein gemeinsames Injector und damit ein 
     gemeinsames Service für alle children Komponente. D.h. wir können alle Routes mit providers array versehen, und so bekommen diese ( auch non-lezy routes auch, nicht wie beim Modules
     eigene Injectors=> gemeinsames Services) ein eigenes Injector. Jetzt sind alle environmental injectors: root injectors auch.
     
@@ -1132,6 +1129,7 @@ Zwei Typen von Errorbehandlungen:
 
 		Strategien zur Abfangen Errors:
 
+        Mindkát A és B esetben valamit vissza kelll adnunk: vagy egy Observablet  modnjuk üres arrayel, vagy ujra dobjuk az errort mint Observablet:
         A:  in dem catchError operator wir fangen den error ab und geben ein fallback value zurück, so braucht man im observer keine error handler callback, weil es kriegt ein empty array zurück.
             const usersArray$ = of(DATA).pipe(
                 map(users =>  {
@@ -2045,7 +2043,7 @@ Vorteile des Signals:
     - Wir werden benachritgit, wenn ein Signal Wert geaendert wird, wogegen mit plain values there is no way to get notified.
     - Signal értékeit ne módositsuk közvetlenul, hanem a set/update functionnal, különben az effect/computed nem müködik , nem signalizál a signal.
     - Signal csak akkor signalisiiert, wenn es bekommt einen neuen Weert, dazu verwendet er === operator. (also wenn wir mehrmals den signal wert mt dem gleichen Wert überschreiben -> kein signalisierung.
-    - to make deep comparioson: {
+    - to make deep comparioson: mysiganl = siganl<object>({},{
             equal: (a, b) => {
             return a.id === b.id && a.title == b.title;
             },
@@ -2068,7 +2066,7 @@ effect(() => console.log(this.selectedVehicle()));              // effect functi
     // FONTOS: effect en belül nem szabad siganl értékét változtatni-> inifite loop.
 computed vs effect: a computed maga is egy signal, mig az efect egy mtódus amivel valamit csinálunk/reagálunk a signal változásra, de nincsen szükségünk külön szignálra.
 Wenn wir den Signal's Wert andern dann CD wird scheduled to run. 
-CD laeft nicht für alle Komponente sondern nur für das einzige komponent, wo signal gelesen wird. 
+FONTOS : CD laeft nicht für alle Komponente sondern nur für das einzige komponent, wo signal gelesen wird !!!. 
 
 Verwendungbesipiele:
     !!!! Allgemein: wenn man anstelle von Observables Signals verwendet dannn CD laeuft nur für das Komponent, wo das Signal gelesen wird und nicht für alle Komponente ( CD.Default) oder für
@@ -2153,7 +2151,7 @@ The signal-based Components, will be more concise in terms of life-cycle hook, o
 #####################################################################################################################################################################################
 DEFER bBOCK
 #####################################################################################################################################################################################
-Ziel: lezy loading eines Inhalts. Sollte es ein Komponent, Directive oder Pipe, ist es plaziert in einem @defer vblock, dann Angular ladet es basierend auf einer Kondition oder einen 
+Ziel: lezy loading eines Inhalts -> MINDIG LEAZY LOADINGOL !!!. Sollte es ein Komponent, Directive oder Pipe, ist es plaziert in einem @defer vblock, dann Angular ladet es basierend auf einer Kondition oder einen 
 Erreignis. => Leistungsoptimierung, 
 FONTOS : alapból a @defer lzay loadingolja a komponenst !!! Tehát, méh ha on immeditae van akkor is külön js filéban tölti be a komponenst !!
     1.  @defer(when isTrue) {.. // renderiert basierend auf einer Kkondition

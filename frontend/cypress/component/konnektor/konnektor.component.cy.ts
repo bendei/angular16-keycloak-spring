@@ -34,12 +34,10 @@ describe('KonnektorViewComponent', () => {
       imports: [] // import additional required modules here
     });
 
-    cy.get('[data-testid="header-one"]').should('be.visible')
-      .and('contain', 'Using template reference to call method and property on the child component'
+    cy.get('[data-testid="header-one"]').should('be.visible').and('contain', 'Using template reference to call method and property on the child component'
       );
 
-    cy.get('[data-testid="incrementOnChild"]').should("exist")
-      .and('contain', 'Methodenaufruf auf dem child componente mit temp ref variable')
+    cy.get('[data-testid="incrementOnChild"]').should("exist").and('contain', 'Methodenaufruf auf dem child componente mit temp ref variable')
       .click();
 
     cy.get('[data-testid="span-counter"]').should('exist').contains('1');

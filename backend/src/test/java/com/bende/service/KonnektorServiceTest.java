@@ -20,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
+
+// Unit test
 public class KonnektorServiceTest {
 
     private static final String HOSTNAME = "127.0.0.1";

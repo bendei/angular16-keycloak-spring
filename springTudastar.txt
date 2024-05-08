@@ -153,7 +153,7 @@ Wir implementieren custom Exceptions für jede typsche Business Exceptionen, zB 
 Beim Abfangen diese werden responses zu den Angular client zurückgeschickt:
 
 @ControllerAdvice Klasse mit @ExceptionHandler methoden -> returns ResponseEntity
-Wir verwendeten ein globales Exception Handler Klasse, die alle in den RestController auftretetnde Business Exceptionen abfängt und behandelt.
+Wir verwendeten ein globales Exception Handler Klasse, die alle in den RestController/Service/Repository auftretetnde Exceptionen abfängt und behandelt.
 Zb: beim GET wird ein book id angegeben wofür die Repository keinen Eintrag i  dem DB findet und so wirft ein custom ResourceNotFoundException Ausnahme zurück zum Controller.
 Hier tritt der globaler Exceptionhandler ein, es ist ein spring AOP @ControllerAdvice annotierte Klasse. Für jede Exceptiontypen implementieren wir eine HandlerMethode
 mit @ExceptionHandler Annotation. Der ExceptionHandler gibt ein ResponseEntity<error, status> , zurück.
@@ -174,17 +174,6 @@ a rrepository dobhat EntityNotFoundException- de azt try cahctel a serviceImpl b
 
 Van olyan repo metódus amelyik nem dob exception, hanem Optionalt ad vissza és azt csekkeljük le hogy empty(), ha az akkor mi dobunk egy custom exceptiont a glolbalhandlernek
 ########################################################################################################################################################################
-REQUEST VALIDIERUNG
-########################################################################################################################################################################
-
-Request validierung in srping boot:
-Spring fördert domain Objekt Validierung durch die Verwendung von Hibernate (bean) Validatoren.
-Wenn Spring validiert das Model Objekt und es ist invalid, Spring wirft ein MethodArgumentNotValidException, das wir im globalen ExeptionHandler abfangen und behandln.
-Wir können custom Validator implementieren: https://www.baeldung.com/spring-mvc-custom-validator
-	Implementieren ein custom Validation Annotation und annotieren damit das Model Property. Wir schreiben ein Interface und dann eine Klasse die es implementiert.
-	es können class level Validatoren auch geschrieben werden, für cross-field Validation.
-
-########################################################################################################################################################################
 Repository interface -ről:
 https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
 
@@ -202,11 +191,9 @@ http://localhost:8080/h2-console
 Szupi leirás hogy mit és hogyan lehet konfigurálni egészen a hibernate-logginig
 https://thorben-janssen.com/configuring-spring-data-jpa-with-spring-boot/
 
-
 ********************************************************************************************************************************************
 JPA / Hibernate
 ********************************************************************************************************************************************
-
 Da spring boot ist mit spring data jpa integriert ist, so es liefert eine Menge default Konfigurationen und addiert automatisch Abhaengigkeiten zu meinem Projekt,
 also spring-boot starter fügt alle nötigen und common Abhaengigkeiten zu dem Projekt und konfiguriert diese zugleich. Das einzige dass konfiguriert soll
 ist das connection information:
@@ -267,10 +254,6 @@ Entities und ihre Lebenszyklus sind innerhalbe PC verwaltet. Durch ein EM kann m
 
 List kann Duplicates haben und ist ordered, wogegen Set kann keine Duplikate haben und ist nicht ordered.
 Set : kann keine Duplikate enthalten ( equals()).
-List: order ist wichtid zB.:ordered list, order by Datum, ich weiß es können duplikate vorkommen.
-
-
-application.properties fájlban konfiguráljuk a datasourcet és a ddl policit
 
 SQL tipusai:
 DDL: data defintion language: creating, modifying table
@@ -319,6 +302,8 @@ N + 1 query problem: mikor van egy item  rekordunk es ahhoz egy related tablába
              2.  @ManyToOne(fetch = fetchType.EAGER): Problem: wir können weit mehr Data holen, als wird eigentlich brauchen. Zweitens: wird für alle Post Entites ein separater Query ausgeführt.
              3.  @ManyToOne(fetch = fetchType.JOIN_FETCH): wird ein einziger Query mit join ausgeführt.
 
+NAGYON JO: join vs join fetch:    https://dzone.com/articles/how-to-decide-between-join-and-join-fetch
+
 ------------
 DUMP: mikor nem szabad a eredeti db-t használni, hanem egy szöveges fájlban megkapom a db-t, importálom: ez a dumpolás
 Projection: mikor kiválasztjuk mely mező értékekre van szükségung egy selectben vissza.
@@ -330,7 +315,7 @@ The DAO interface needs to extend the JPA specific Repository interface, JpaRepo
     PagingAndSortingRepository: methods to do pagination and sorting of records
     JpaRepository: all CrudRepository and PagingAndSortingRepository provided functionalities; provides JPA-related methods such as flushing the persistence context and deleting records in a batch
 
- by implementing one of the Repository interfaces, the DAO will already have some basic CRUD methods (and queries) defined and implemented:
+ by implementing one of the Repository interfaces , the DAO will already have some basic CRUD methods (and queries) defined and implemented:
      @Repository
      public interface ProductRepository extends JpaRepository<Product, Long> {
          Product findByName(String productName);
@@ -346,7 +331,7 @@ The DAO interface needs to extend the JPA specific Repository interface, JpaRepo
 ------------
 Constructing Queries in Spring Data (JPA options: JPQL, NAtive sQL, Criteria API):
 
-1. DERIVED QUERY METHODS: Using method naming conventions:
+1. DERIVED QUERY METHODS: Using method naming conventions (geben nicht Optioanl zurück):
     List<User> findByName(String name)
     List<User> findTop3ByAge(); Passenger findFirstByOrderBySeatNumberAsc(); Passenger findTopByOrderBySeatNumberAsc();List<Passenger> passenger = repository.findByOrderBySeatNumberAsc(Limit.of(1));
     List<User> findByNameIsNot(String name); List<User> findByNameIsNull(); List<User> findByNameIsNotNull(); List<User> findByActiveTrue(); findByNameStartingWith; findByNameLike(S
@@ -413,7 +398,10 @@ Constructing Queries in Spring Data (JPA options: JPQL, NAtive sQL, Criteria API
         1. Wir definieren under suctom repository interface.
         2. Wir implementieren diesen custom interface, mit der Verwendung von Criteria API
         3. Wir extendieren neben dem zB JPARepository interface diesen custom interface in unserem busuiness specific Repository interface, wo wir dann einfach ihre Methoden rufen können.
------------------o verwendet, dann Transaction managememnt ist by default enabled.
+-----------------
+TRANSACTION
+
+Wenn die Methode der CRUDRepository verwendet, dann Transaction managememnt ist by default enabled.
 Jó kis példa a transactionra:
 https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html
 ( https://www.geeksforgeeks.org/spring-boot-transaction-management-using-transactional-annotation/)
@@ -422,11 +410,6 @@ B.: Wenn wir aber Query mit @Query definieren, dann müssen wir explicit @Transa
 C.: mehrere DB Operationen in einem Service Method:Eset: ha az employee és a hozzá tartozó addresst is egyszerre kell mentenünk a DB-be.
     1.  wir sollen in Application.java die @EnableTransactionManagement verwenden.
     2. in dem Service MEethod / oder wir können es auf class-level auch die @Transaction vewernden
-
-
-
-
-
 
 ########################################################################################################################################################################
 Json related collection of entities:
@@ -488,14 +471,99 @@ Book on Spring Boot JPA
 https://books.google.hu/books?id=dIvgDwAAQBAJ&pg=PA264&lpg=PA264&dq=org.hibernate.QueryException:+query+specified+join+fetching,+but+the+owner+of+the+fetched+association+was+not+present+in+the+select+list&source
 =bl&ots=ouIqZUYbx-&sig=ACfU3U0JCYZq-L7Ta8t4D9NYhx9zR9i0RQ&hl=hu&sa=X&ved=2ahUKEwjbs6Krk5fzAhVJposKHQHUDKQQ6AF6BAgkEAM#v=onepage&q&f=false
 
+**************************************************************************************************************************************************************
+VALIDATING REQUEST BODY AND PARAMETERS IN SPRING BOOT
+https://medium.com/@tericcabrel/validate-request-body-and-parameter-in-spring-boot-53ca77f97fe9
+**************************************************************************************************************************************************************
+A.: Validating request body:
+    In userem endpoint im der Controller Klasse wir kriegen mit http post in request body die Konnektor Daten. Dise nennt man KonnektorDTO (data transfer object), weil es vom controller Schicht die Daten zum service Schicht
+    transportiert. In dem DTO Klasse ( kann gelich mit dem JPA Entity sein) die Felder werden mit dem Hibernates Validator API constraints annotiert:
 
+      public class KonnektorDTO {
+       @JsonProperty("id")
+       private Integer id;
 
+       @NotBlank("The host name is required")
+       @JsonProperty("hostName")
+       private String hostName;
 
+    in dem Controller wir verwenden @Valid -> wenn Spring findet ein argument mit @Valid , dann es vaklidiert es gelich und wenn es fehlschlägt, dann wirft es MethodArgumentNotValidException. Diese können wir in einem
+    ControllerAdvice Klasse mit dem @ExceptionHandler annotirtem Methode behandeln.
+    public ResponseEntity<KonnektorDTO> updateKonnektor(@Valid @PathVariable String konnektorId, @Valid @RequestBody KonnektorDTO dto)
+B: validating path variable: @Validated anstelle von @Valid !!!! Hier wird jetzte aber ConstraintViolationException  geworfen , wenn...
+    @Validated
+    @RequestMapping(value = "/reservations")
+    public ResponseEntity<Reservation> oneReservation(@Pattern(regexp = "^RSV(-\\d{4,}){2}$") @PathVariable String code)
 
+**************************************************************************************************************************************************************
+TESTING
+https://www.baeldung.com/spring-boot-testing
+**************************************************************************************************************************************************************
+Mockito methods:
+https://www.javatpoint.com/methods-of-mockito
 
+unit testing with JUnit5 ( Jupiter): https://www.baeldung.com/junit-5
 
+## leirja, hogy mi a @Mock ill @InjectMocj stb, nagyon jó
+https://www.arhohuttunen.com/junit-5-mockito/
 
+## @Spy
+https://www.baeldung.com/mockito-annotations
 
+## @Mock vagy @Spy ??:
+https://stackoverflow.com/questions/15052984/what-is-the-difference-between-mocking-and-spying-when-using-mockito#:~:text=about%20partial%20mocks.-,Mockito.,passed%20to%20spy()%20method.
+
+## verify, mikor gyakorlatilag nincs mire assertelni, de a method hivásokat meg akarjuk csinálni:
+https://www.youtube.com/watch?v=lbN2nfsC7C4
+KonnektorServiceTest deleteKonnektor_Success
+
+## sql script használata a testhez:
+https://www.baeldung.com/spring-boot-data-sql-and-schema-sql
+-------
+UNIT TEST:
+    -   testet man ob ein komponent so funktioniert wie es beabsichtigt wurde.
+    -   Sie lauft  in Isolation, d.h. ein unit test ruft beim Ablaufen die dependencies der Komponente nicht auf, sondern es wird gemockt.
+    -   Die Reihenfolge der Test beinflusst den Ablauf nicht, kann automatisiert ablaufen. Beim Feature-Erweiterung kann man damit unerwünschte Sieteneffekte aufklaeren.
+    -   Test fixture: es ist die JUnit test Klasse, der mehrere Test cases hat, mit beforeEach/beforeAll etc.
+
+Test Aufbau Unit / Integration:
+    - given:ein Ausgangszustand wird initialisiert
+    - when:  Die zu testende Operation wird ausgeführt ;die wir testen wollen, kann mocking machen:  when(konnektorRepository.findById(1L)).thenReturn(Optional.of(konnektor))
+    - than:  Verifikation, hier werden Assertionen verwendet.
+
+INTEGRATION TEST: Testen der verschiende layers der Apllication in Zusammenspiel, desewegen wird es nicht gemockt manchaml der DB Schicht).
+Integration Test brauch, dass der IOc Spring container startet und die Application läuft in dem embedded server.
+
+// egész jó kis leírás, jo tanulos linkekkel az elején
+http://webprogramozas.inf.elte.hu/#!/subjects/full-stack/java-rest-test
+
+Testing the REST API:
+    Lehetőségek:
+        -   Az egeész szerver tesztelése, mikor a szerver is elindul, valamint az egész applicationContext is; ekkor http requesteket küldhetünk a szervernek a restTemplate segítségével, majd a responst
+            analizálhatjuk, elemezhetjük a response json-t (@SpringBootTest,  restTemplate)
+            lasd hogyan:
+                    http://webprogramozas.inf.elte.hu/#!/subjects/full-stack/java-rest-test.
+                    https://howtodoinjava.com/spring-boot2/testing/spring-integration-testing/
+
+            itt nem a production adatbázist érjük el, hanem a resources/test_data.sql- t használjuk a test casesben:  @Sql({"/test_data.sql"}) használatával
+        -   Az egész alkalmazás, de szerver nélkük: @AutoConfigureMockMvc
+        -   Csak a web layert, mit mocking der Abhängigkeiten @WebMvcTest
+
+Alkalmazás
+@RunWith(SpringRunner.class)
+@SpringBootTest(    // wir bootrappen das ganze Container, es kreiert einen ApplicationContext
+  webEnvironment = SpringBootTest.WebEnvironment.MOCK,
+  classes = Application.class)
+@AutoConfigureMockMvc
+@TestPropertySource(
+  locations = "classpath:application-integrationtest.properties")
+public class EmployeeRestControllerIntegrationTest {
+
+    @Autowired
+    private MockMvc mvc;
+
+    @Autowired
+    private EmployeeRepository repository;
 
 
 

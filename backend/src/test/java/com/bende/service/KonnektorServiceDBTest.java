@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional  // rolls back transaction after each Test -> no after cleanup is necessary (like deleteing entity after creating one in Test)
 //@DataJpaTest
-@SpringBootTest(classes = {Application.class, KonnektorService.class, KonnektorRepository.class})   // creates an AőőlicationContext -> for using @Autowired
+@SpringBootTest(classes = {Application.class, KonnektorService.class, KonnektorRepository.class})   // creates an ApplicationContext -> for using @Autowired
 public class KonnektorServiceDBTest {
 
     private static final String HOSTNAME = "127.0.0.1";

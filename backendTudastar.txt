@@ -18,12 +18,6 @@ https://javabydeveloper.com/java-8-double-colon-operator/
 https://dzone.com/articles/java-8-lambda-functions-usage-examples
 
 
-
-
-
-
-
-
  criteriaBuilder.like(criteriaBuildergivenKonnektorsForFilteringvalid.lower(userRoot.get("user")), "%" + filterText + "%")));		AuditLogRepository ban
 
   criteriaBuilder.like(criteriaBuilder.lower(userRoot.get("user")), "%" + filterText.trim().toLowerCase() + "%")));
@@ -515,10 +509,6 @@ public class Proba1 {
 
 }
 
-
-
-
-
 Creational Design Pattern:
 	it provides a way to create objects while hiding the creation logic, rather than instantiating objects directly using new operator.
 
@@ -744,16 +734,11 @@ builing a project	Bauen eines Projekts
 runing tests		Ausführung von Tests
 under the link		über folgendes Link erreichen
 
-
 Errors sind Fehler, die meist durch Fehlfunktionen der JVM ausgelöst werden, zum sofortigen Abbruch der Programmausführung führen und nicht abgefangen werden.
-
-
 
 Átnézni:lambda, optinal, default method, method refrence, functional interface, stream
 
 https://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/
-
-
 
 https://www.tutorialspoint.com/java8/java8_method_references.htm
 Java provides a new feature called method reference in Java 8. Method reference is used to refer method of functional interface. It is compact and easy form of
