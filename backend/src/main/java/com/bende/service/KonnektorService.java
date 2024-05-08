@@ -9,9 +9,9 @@ public interface KonnektorService {
 
     Konnektor getKonnektor(Long id);
 
-    void createKonnektor(Konnektor konnektor);
+    Konnektor createKonnektor(Konnektor konnektor);
 
-    List<Konnektor> getAllKonnektors(String serialNumber, String firmwareVersion, String hardwareVersion, LocalDate created);
+    List<Konnektor> getAllKonnektors();
 
     void deleteKonnektor(Long id);
 

@@ -21,26 +21,27 @@ public class KonnektorServiceImpl implements KonnektorService {
     }
 
     @Override
-    public void createKonnektor(final Konnektor konnektor) {
-        konnektorRepository.save(konnektor);
+    public Konnektor createKonnektor(final Konnektor konnektor) {
+        return konnektorRepository.save(konnektor);
     }
 
     @Override
-    public List<Konnektor> getAllKonnektors(String serialNumber, String firmwareVersion, String hardwareVersion, LocalDate created) {
+    public List<Konnektor> getAllKonnektors() {
         return konnektorRepository.findAll();
     }
 
     @Override
     public void deleteKonnektor(final Long id) {
        if (konnektorRepository.findById(id).isEmpty()) {
-           throw new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden, es kann nicht gelöscht werden.");
+           throw new ResourceNotFoundException("Konnektor mit dem id:" + id + "  nicht gefunden, es kann nicht gelöscht werden.");
        }
        konnektorRepository.deleteById(id);
     }
 
     @Override
     public List<Konnektor> findAllActiveKonnektors() {
-        return konnektorRepository.findAllActiveKonnektors();
+        //return konnektorRepository.findAllActiveKonnektors();
+        return konnektorRepository.findAllByActiveTrue();
     }
 
     @Override
@@ -50,13 +51,13 @@ public class KonnektorServiceImpl implements KonnektorService {
 
     @Override
     public Konnektor updateKonnektor(Konnektor konnektor) throws ResourceNotFoundException{
-       konnektorRepository.findById(konnektor.getId()).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden, es kann nicht geupdated werden."));
+       konnektorRepository.findById(konnektor.getId()).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id:" + konnektor.getId() + " nicht gefunden, es kann nicht geupdated werden."));
        return konnektorRepository.save(konnektor);
     }
 
     @Override
     public void updateKonnektorHostname(final Long id, final String hostname) {
-        Konnektor konn = konnektorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id {id} nicht gefunden, Hostname kann nicht geupdated werden."));
+        Konnektor konn = konnektorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Konnektor mit dem id:" + id + "  gefunden, Hostname kann nicht geupdated werden."));
         konn.setHostname(hostname);
         konnektorRepository.save(konn);
     }

@@ -527,7 +527,27 @@ UNIT TEST:
     -   Test fixture: es ist die JUnit test Klasse, der mehrere Test cases hat, mit beforeEach/beforeAll etc.
 
 Test Aufbau Unit / Integration:
-    - given:ein Ausgangszustand wird initialisiert
+    @Test
+    public void shouldReturnItemNameInUpperCase() {
+
+        //
+        // Given
+        //
+        Item mockedItem = new Item("it1", "Item 1", "This is item 1", 2000, true);
+        when(itemRepository.findById("it1")).thenReturn(mockedItem);
+
+        //
+        // When
+        //
+        String result = itemService.getItemNameUpperCase("it1");
+
+        //
+        // Then
+        //
+        verify(itemRepository, times(1)).findById("it1");
+        assertThat(result, is("ITEM 1"));
+}
+    - given: ein Ausgangszustand wird initialisiert
     - when:  Die zu testende Operation wird ausgeführt ;die wir testen wollen, kann mocking machen:  when(konnektorRepository.findById(1L)).thenReturn(Optional.of(konnektor))
     - than:  Verifikation, hier werden Assertionen verwendet.
 
@@ -564,6 +584,12 @@ public class EmployeeRestControllerIntegrationTest {
 
     @Autowired
     private EmployeeRepository repository;
+
+    Nálam:
+        1. Unit test with Mock für Service Klassen
+        2. Integration Test für die Service-Repositiry Kommunikation (@SpringBootTest). Dabei wurde die @SQL verwendet, um die testdaten von einem sql Datei zu holen, plus die embeded H2 Database verwendet.
+        3. Integration API Endpoint Test mit @SpringBootTest API controller->Service->Repository-> embededd Datenbank.
+
 
 
 

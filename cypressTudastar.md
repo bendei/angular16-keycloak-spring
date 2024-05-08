@@ -80,7 +80,7 @@ A.: ki tudjuk az adott service-ben stubbolni az adott metódust:
 
 B.: https://testgrid.io/blog/cypress-intercept/    "Cypress Intercepts implementation" résznél
     Teória: mielőtt a komponens egy esemény vagy onInit()ben meghivna egy pl GET requestet, azelott a cy.intercept()-al kimonndjuk hogy az adott GET request az adott URL -en ne legyen valósan kiküldve,
-            hanem, fogjuk el és helyette egy fixture json fájlt adjunk vissza resonseként. Azaz a kérés ne menjen ki, hanem egy mock kérés fusson le helyben!!
+            hanem, fogjuk el és helyette egy fixture json fájlt adjunk vissza resonseként. Azaz a kérés ne menjen ki, hanem egy mock kérés fusson le helyben!!npx 
 
     cy.intercept() -> wir fangen ab Funktionality und geben ein Response zurück de von einem fixture (json) Datei kommt.
     - a cypress/fixtures/mock_data.json fileben definiálom a response datat (szemben a fentivel, ahol beégetem a kódba)
