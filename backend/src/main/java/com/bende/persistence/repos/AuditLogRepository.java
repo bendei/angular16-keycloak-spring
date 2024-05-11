@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AuditLogRepository extends JpaRepository<AuditLog, Long>  {
 
-    List<AuditLog> findAuditLogsByKonnektorId(Long id);
+    //List<AuditLog> findAuditLogsByKonnektorId(Long id);
 
 }

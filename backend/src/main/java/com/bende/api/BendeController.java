@@ -6,10 +6,10 @@ import com.bende.api.model.KonnektorDTO;
 import com.bende.persistence.model.AuditLog;
 import com.bende.persistence.model.Konnektor;
 import com.bende.persistence.repos.KonnektorRepository;
-import com.bende.service.AuditlogService;
 import com.bende.service.KonnektorService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +35,11 @@ public class BendeController {
 //    AuditlogService auditlogService;
 
 
+    @GetMapping("/konnektorswithhostname")
+    public ResponseEntity<List<Konnektor>> findKonnektorByActiveTrueAndHostnameContains(@RequestParam String hostname) {
+        List<Konnektor> konns = konnektorRepository.findKonnektorByActiveTrueAndHostnameContains(hostname);
+        return new ResponseEntity<>(konns, HttpStatus.OK);
+    }
 
 
     // http://localhost:8081/api/konnektors/1

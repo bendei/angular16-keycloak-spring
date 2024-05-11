@@ -30,6 +30,7 @@ public class DynamicKonnektorQueryImpl implements DynamicKonnektorQuery {
 
         if (StringUtils.isNotEmpty(hostname)) {
             predicates.add(cb.equal(konnRoot.get("hostname"), hostname));
+            // hogy csinálni hogy contains wagy like???
         }
         if (StringUtils.isNotEmpty(serialNumber)) {
             predicates.add(cb.equal(konnRoot.get("serialNumber"), serialNumber));

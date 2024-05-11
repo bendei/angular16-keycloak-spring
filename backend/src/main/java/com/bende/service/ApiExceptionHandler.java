@@ -39,7 +39,7 @@ public class ApiExceptionHandler {
         apiError.setStatus(HttpStatus.BAD_REQUEST.toString());
         String text = errors.keySet().stream().map(key -> key + ": " + errors.get(key)).collect(Collectors.joining(","));
         apiError.setMessage(text);
-        apiError.setTimestamp(LocalDateTime.now());
+       // apiError.setTimestamp(LocalDateTime.now());
         return buildResponseEntity(apiError, HttpStatus.BAD_REQUEST);
     }
 

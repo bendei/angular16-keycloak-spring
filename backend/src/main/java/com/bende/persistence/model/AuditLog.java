@@ -38,9 +38,9 @@ public class AuditLog {
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime timestamp;
 
-   @ManyToOne(fetch = FetchType.EAGER)
+    /*@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "KONNEKTORID")
-    private Konnektor konnektor;
+    private Konnektor konnektor;*/
 
     public String getUser() {
         return user;

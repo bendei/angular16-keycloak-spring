@@ -65,8 +65,15 @@ https://okt.sed.hu/spring_uzleti/eloadas/02_ioc/
 				}
 			}
 
-			mit Konstruktor:
-				private MyDao mydao;
+			mit Konstruktor: (ugyanugy mint a angularnal)
+			ublic class FooService {
+                private FooFormatter fooFormatter;
+
+                @Autowired
+                public FooService(FooFormatter fooFormatter) {
+                    this.fooFormatter = fooFormatter;
+                }
+            }
 
 			//we can use autowiring on properties, setters, and constructors.:
 https://www.baeldung.com/spring-autowire
@@ -358,11 +365,10 @@ Constructing Queries in Spring Data (JPA options: JPQL, NAtive sQL, Criteria API
               nativeQuery = true)
             User findUserByStatusNative(Integer status);
 
+// https://www.baeldung.com/spring-jpa-like-queries
         2. Named parameters:
-                @Query("SELECT u FROM User u WHERE u.status = :status and u.name = :name")
-                User findUserByStatusAndNameNamedParams(
-                  @Param("status") Integer status,
-                  @Param("name") String name);
+                @Query("SELECT k FROM Konnektor k where k.active = true AND k.hostname =: hostname" AND lastname LIKE %:lastname%)
+                List<Konnektor> findKonnektorsByActiveTrueAndHostnameStartsWith(@Param("hostname") String hostname);    // nincs method body definition
            oder:
                 @Query(value = "SELECT * FROM Users u WHERE u.status = :status and u.name = :name",
                   nativeQuery = true)
@@ -588,8 +594,9 @@ public class EmployeeRestControllerIntegrationTest {
     Nálam:
         1. Unit test with Mock für Service Klassen
         2. Integration Test für die Service-Repositiry Kommunikation (@SpringBootTest). Dabei wurde die @SQL verwendet, um die testdaten von einem sql Datei zu holen, plus die embeded H2 Database verwendet.
-        3. Integration API Endpoint Test mit @SpringBootTest API controller->Service->Repository-> embededd Datenbank.
-
+        3. Integration API Endpoint Test mit @SpringBootTest / @WebClient (@RestTemplate is obsolete since Spring5) API controller->Service->Repository-> embededd Datenbank.
+            webflux package contains WebTestClient , with wich we can fire real http request against our server run appl. and than with exchange() we can analyse
+            the response.
 
 
 
