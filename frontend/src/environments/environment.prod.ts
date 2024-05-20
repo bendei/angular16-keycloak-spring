@@ -1,4 +1,4 @@
-import {DefaultService} from "../app/openapi-generated-sources";
+import {DefaultService} from "../app/core/default.service";
 
 export const environment = {
   production: true,

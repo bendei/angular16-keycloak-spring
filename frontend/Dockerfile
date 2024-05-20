@@ -17,7 +17,7 @@ RUN npm install
 COPY . .
 
 #Build Angular application in PROD mode and it will create prod ready files in dist/frontend folder
-RUN npm run build --con
+RUN npm run build
 
 #This line will create a second stage nginx container where we will copy the compiled output from our build stage.
 FROM nginx:alpine

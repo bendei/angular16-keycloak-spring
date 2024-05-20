@@ -28,8 +28,9 @@ import { KonnektorDTO } from './model/konnektorDTO';
 import { KonnektorHostnameDTO } from './model/konnektorHostnameDTO';
 
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS }                     from '../openapi-generated-sources/variables';
-import { Configuration }                                     from '../openapi-generated-sources/configuration';
+import { BASE_PATH }                     from '../openapi-generated-sources';
+import { Configuration }                                     from '../openapi-generated-sources';
+import {environment} from "../../environments/environment.prod";
 
 
 @Injectable({
@@ -37,8 +38,8 @@ import { Configuration }                                     from '../openapi-ge
 })
 export class DefaultService {
 
-    // eddig ezzel mukodott
-    protected basePath = 'http://localhost:8081/api';
+    // eddig ezzel mukodott: protected basePath = 'http://localhost:8081/api';
+    protected basePath = environment.apiUrl;
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
