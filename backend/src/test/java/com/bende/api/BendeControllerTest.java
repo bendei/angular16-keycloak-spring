@@ -1,6 +1,6 @@
 package com.bende.api;
 
-import com.bende.api.model.KonnektorDTO;
+import api.model.KonnektorDTO;
 import com.bende.persistence.model.Konnektor;
 import com.bende.service.ApiError;
 import jakarta.transaction.Transactional;

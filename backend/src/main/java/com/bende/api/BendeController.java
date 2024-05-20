@@ -1,24 +1,20 @@
 package com.bende.api;
 
-import com.bende.api.model.AuditLogDTO;
-import com.bende.api.model.AuditLogMessageDTO;
-import com.bende.api.model.KonnektorDTO;
+import api.model.AuditLogDTO;
+import api.model.AuditLogMessageDTO;
+import api.model.KonnektorDTO;
 import com.bende.persistence.model.AuditLog;
 import com.bende.persistence.model.Konnektor;
 import com.bende.persistence.repos.KonnektorRepository;
 import com.bende.service.KonnektorService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("http://localhost:4200")

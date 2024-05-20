@@ -164,40 +164,7 @@
                 <version>4.2.0.Final</version>
             </plugin>
 
-            <plugin>
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>6.4.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>
-                                ${project.parent.basedir}/openAPI.yaml
-                            </inputSpec>
-                            <generatorName>spring</generatorName>
-                            <library>spring-boot</library>
-                            <apiPackage>com.bende.api</apiPackage>
-                            <modelPackage>com.bende.api.model</modelPackage>
-                            <supportingFilesToGenerate>
-                                ApiUtil.java
-                            </supportingFilesToGenerate>
-                            <configOptions>
-                                <useJakartaEe>true</useJakartaEe>
-                                <interfaceOnly>true</interfaceOnly>
-                                <sourceFolder>src/gen/java</sourceFolder>
-                                <modelPackage>com.bende.api.model</modelPackage>
-                                <apiPackage>com.bende.api</apiPackage>
-                            </configOptions>
-                            <typeMappings>
-                                <typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
-                            </typeMappings>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+
 
             <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>

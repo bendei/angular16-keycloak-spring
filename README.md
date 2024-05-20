@@ -1,4 +1,10 @@
-# GIT: istvan_bende@yahoo.com/bendep72
+
+ez a branch: Ang17_standalonecomp_NOkeycloak_NOopenPI_frontedn a Ang17_standalonecomp_fronteend böl le weggebrancht, de mindketten a angular16-keycloak-spring repository branchjei
+EZT A BRANCHBOL KIVETTEM AZ OPENAPI ES A KEYCLOAK RESZT HOGY KÖNNYEBBEN LEHESSEN A DOCKER KONFIGURÁCIÓT ELVÉGEZNI RAJTA
+
+
+
+#GIT: istvan_bende@yahoo.com/bendep72
     Repository:  https://github.com/bendei/angular16-keycloak-spring.git
     Ennek van 4 branchesje: master, keycloak_frontend, angular16_keycloak-openAPI-Spring, angular16-openAPI-Spring
 a commitok itt nezhetők vissza: https://github.com/bendei/angular16-keycloak-spring/network
