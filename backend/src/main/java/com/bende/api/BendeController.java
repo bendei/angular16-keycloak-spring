@@ -122,7 +122,6 @@ public class BendeController {
         // successfuly deleted 200
         konnektorService.deleteKonnektor(Long.parseLong(konnektorId));
         return new ResponseEntity<>(HttpStatus.OK);
-
         // already delete 210
     }
 
