@@ -1,0 +1,9 @@
+node_modules
+.git
+tudastarImages
+README.md
+.editorconfig
+ngRXTudastar.md
+pom.xml
+openapitools.json
+
