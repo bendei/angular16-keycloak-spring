@@ -17,7 +17,7 @@
     "generate-api": "openapi-generator-cli generate -i ../openAPI.yaml -g typescript-angular -o src/app/openapi-generated-sources  -p=removeOperationIdPrefix=true",
     "mock-server": "json-server --watch mockdata.json --port 3000",
     "start-dev": "ng serve --configuration=dev --proxy-config proxy.conf.json",
-    "start-prod": "ng serve --configuration prod"
+    "start-prod": "ng serve --configuration=prod"
   },
   "private": true,
   "dependencies": {
