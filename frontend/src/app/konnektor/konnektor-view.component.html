@@ -4,6 +4,16 @@
 
 loaded: {{loaded}}
 
+
+@if(errorsignalService.errors().length > 0) {
+  @for (err of errorsignalService.errors(); track err.code) {
+    <div>
+      {{err.code}} - {{err.statusText}} - {{err.message}}
+    </div>
+  }
+}
+
+
 <h4>Mai dátum:  {{maiDatum | puredatepipe}}</h4>
 <div  class="card mt-3">
   <div class="card-body">
