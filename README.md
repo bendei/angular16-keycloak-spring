@@ -3,7 +3,6 @@ THis project conatains 3 module: a parent one, a backend and frontend.
 We build here a Spring fat jar, that contains the backend and the frontend.
 We can start frontend and backend separately too.
 
-
 ### Frontend:
 Angular app uses port 4200, java backend 8081.
 The heavy lifting is done by the plugin https://github.com/eirslett/frontend-maven-plugin. This plugin downloads and installs node, install the libraries and build the project by running npm install.
