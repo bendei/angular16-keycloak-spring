@@ -37,7 +37,7 @@ export const APP_ROUTES: Routes = [
         path: "cd2/:routeParamOne",
         title: 'Change detection Two',
         loadComponent: () => import('../app/ChangeDetectionTwo/cd2.component').then(e => Cd2Component),
-         canActivate: [AuthGuard],
+        // canActivate: [AuthGuard],
         // data: { roles: ['ADMIN'] }
       },
       {

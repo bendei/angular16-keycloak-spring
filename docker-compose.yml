@@ -1,12 +1,32 @@
 version:  '3.8'
 services:
- angular-service:
+  angular-service:
    container_name: angular_frontend_container
    build:
      context: frontend
      dockerfile: Dockerfile
    ports:
-     - "4200:80"
+     - "80:80"
+   expose:
+    - "80"
+   networks:
+    - mt-network
+   environment:
+     API_URL: http://localhost:8081/api
+  backend-service:
+    container_name: backend_container
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+    expose:
+      - 8081
+    networks:
+      - mt-network
+networks:
+  mt-network:
+    driver: bridge
 
 
 

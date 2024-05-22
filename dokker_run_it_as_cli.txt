@@ -1,0 +1,35 @@
+#Download Node Alpine image
+# https://dev.to/usmslm102/containerizing-angular-application-for-production-using-docker-3mhi
+# https://www.youtube.com/watch?v=-o5l6zFJ9_o
+# https://docs.docker.com/desktop/dev-environments/create-dev-env/
+FROM node:alpine As build
+
+#This WORKDIR command will create the working directory in our docker image. going forward any command will be run in the context of this directory.
+WORKDIR /usr/src/app
+
+#Copy package.json from current dir into workdir in the container
+COPY package.json package-lock.json ./
+
+RUN npm install -g @angular/cli@17.1.1
+#Install dependencies, wich will not be copied from node_modules
+RUN npm install
+
+#Copy all files from current dir into workdir
+COPY . .
+
+# IPAddress must be 0.0.0.0.0, server listen than on every hosts
+CMD ["ng", "serve",  "--host", "0.0.0.0", "--configuration", "prod"]
+------
+version:  '3.8'
+services:
+ angular-service:
+   container_name: angular_frontend_container
+   build: ./
+   ports:
+     - "4202:4200"
+
+
+---
+localhost:4202
+
+

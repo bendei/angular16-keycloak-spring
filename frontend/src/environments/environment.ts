@@ -6,7 +6,6 @@ import {MockService} from "../app/mock/mock.service";
 
 export const environment = {
   production: false,
- //apiUrl: 'http://localhost:3000/konnektors',
   // ipconfig -> IPv4 Address
   apiUrl: 'http://192.168.1.65:3000/konnektors',
   apiService: MockService,

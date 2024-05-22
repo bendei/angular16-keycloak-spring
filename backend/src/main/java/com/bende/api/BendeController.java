@@ -17,7 +17,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin("*")
 @RequestMapping("/api")
 public class BendeController {
 
@@ -96,7 +96,6 @@ public class BendeController {
      */
     @PostMapping(path = "/konnektors",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @CrossOrigin("http://localhost:4200")
     public ResponseEntity<Void> createKonnektor(@Valid @RequestBody KonnektorDTO konnektor) {
         konnektorRepository.save(BendeController.convertKonnektorDto(konnektor, null));
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -105,7 +104,6 @@ public class BendeController {
     @PutMapping(path = "konnektors/{konnektorId}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @CrossOrigin("http://localhost:4200")
     public ResponseEntity<KonnektorDTO> updateKonnektor(@Valid @PathVariable String konnektorId, @Valid @RequestBody KonnektorDTO dto) {
         Konnektor konn = convertKonnektorDto(dto, konnektorId);
         Konnektor updated = konnektorService.updateKonnektor(konn);
@@ -113,7 +111,6 @@ public class BendeController {
     }
 
     @DeleteMapping(path = "konnektors/{konnektorId}")
-    @CrossOrigin("http://localhost:4200")
     public ResponseEntity<Void> deleteKonnektor(@PathVariable String konnektorId) {
         // successfuly deleted 200
         konnektorService.deleteKonnektor(Long.parseLong(konnektorId));
