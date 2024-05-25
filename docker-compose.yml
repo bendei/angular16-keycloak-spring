@@ -1,0 +1,12 @@
+version:  '3.8'
+services:
+ angular-service:
+   container_name: angular_frontend_container
+   build:
+     context: frontend
+     dockerfile: Dockerfile
+   ports:
+     - "4200:80"
+
+
+

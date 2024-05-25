@@ -1,8 +1,8 @@
-import {DefaultService} from "../app/core/default.service";
+import {DefaultService} from "../app/openapi-generated-sources";
 
 export const environment = {
   production: true,
-  apiUrl: 'http://192.168.1.65:8081/api',
+  apiUrl: 'http://localhost:8081/api',
   //apiUrl: 'http://192.168.1.65:',
   apiService: DefaultService,
   keycloak: {

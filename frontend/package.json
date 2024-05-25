@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "bende-angular-frontend",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

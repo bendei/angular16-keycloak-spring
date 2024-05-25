@@ -4,7 +4,7 @@ import {
   Component,
   inject,
   isDevMode,
-  OnDestroy,
+  OnDestroy,provideZoneChangeDetection,
   OnInit
 } from '@angular/core';
 import {CommonModule} from "@angular/common";

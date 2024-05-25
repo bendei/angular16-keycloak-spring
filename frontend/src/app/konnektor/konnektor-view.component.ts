@@ -15,6 +15,7 @@ import {RouterModule} from "@angular/router";
 import {ErrorService} from "../core/error.service";
 import {NGXLogger} from "ngx-logger";
 import {toSignal} from "@angular/core/rxjs-interop";
+import {ErrorsignalService} from "../core/errorsignal.service";
 
 @Component({
   standalone: true,
@@ -29,6 +30,7 @@ export class KonnektorViewComponent implements OnInit {
 
   private readonly defaultService = inject(DefaultService);
   private readonly formBuilder = inject(FormBuilder);
+  readonly errorsignalService = inject(ErrorsignalService);
 
   private static readonly TIMEOUT_ERROR = '504';
   private static readonly ERROR_MSG = 'A non-timeout error occurred when fetching';
@@ -151,15 +153,20 @@ export class KonnektorViewComponent implements OnInit {
   // überarbeitet, da toPromise is deprecated
   private async loadKonnektors(hostname?: string, serialNumber?: string, firmwareVersion?: string, hardwareVersion?: string, created?: string) {
     this.loaded = false;
+
     try {
       const allKonnektors$ = this.defaultService.getAllKonnektors(hostname, serialNumber, firmwareVersion, hardwareVersion, created);
       this.konnektors = await lastValueFrom(allKonnektors$);
     } catch(error) {
+
       console.log("KonnektorViewComponent ERROR caught in loadKonnektors()");
+      console.table(error);
       if (error.status != KonnektorViewComponent.TIMEOUT_ERROR) {
         console.log("KonnektorViewComponent.TIMEOUT_ERROR", error);
         // itt lehet specifikusan lekezelin, pl popup business errorhoz
       }
+      this.errorsignalService.addError({message: error.message, code: error.code, statusText: error.statusText});
+
     }
     this.loaded = true;
 
