@@ -205,7 +205,7 @@ Da spring boot ist mit spring data jpa integriert ist, so es liefert eine Menge 
 also spring-boot starter fügt alle nötigen und common Abhaengigkeiten zu dem Projekt und konfiguriert diese zugleich. Das einzige dass konfiguriert soll
 ist das connection information:
 
-( ohne bot: wir sollten EntityManager, DataSource und Transactionmanager explizit definieren)
+( ohne boot: wir sollten EntityManager, DataSource und Transactionmanager explizit definieren)
 
 	-	Addiert by defaultHikariCP connection pool und konfiguriert es zuglecih. Es kann aber im applicatio.properties file konfiguriert werden.
 	-	In memory DB H2
@@ -226,7 +226,7 @@ Entities und ihre Lebenszyklus sind innerhalbe PC verwaltet. Durch ein EM kann m
 (wird durch EM erzeugt).
 
    Entity manager kann auf 2 Weise erzeugt und verwendet werden:
-	-	container managed EM: beim Spring app wird ein EM direkt von spring container erzeugt und verwaltet durch DI.
+	-	Spring IOC container managed EM: beim Spring app wird ein EM direkt von spring container erzeugt und verwaltet durch DI.
 		Dabei sollte man im DAO Klasse die EM mit @PersistentContext annotieren und in das DAO injizieren:
 
 			@PersistenceContext
@@ -288,9 +288,11 @@ N + 1 query problem: mikor van egy item  rekordunk es ahhoz egy related tablába
     2. Egyetlen nagyobb lekérdezést inditunk join-nal.
 
     In JPA/Hibernate beim JPQL / Criteria:
-        Wir habe Post -> (many) Postícomments
+    Unfortunately, the @ManyToOne and @OneToOne associations use FetchType.EAGER
+        Wir habe 1 Post -> (many) Postícomments
             @Entity()
                 public class PostComment {
+
                     @ManyToOne
                     private Post post;
                 }
@@ -350,9 +352,7 @@ Constructing Queries in Spring Data (JPA options: JPQL, NAtive sQL, Criteria API
         Collection<User> findAllActiveUsers();
 
     - Native SQL:
-       @Query(
-         value = "SELECT * FROM USERS u WHERE u.status = 1",
-         nativeQuery = true)
+       @Query(value = "SELECT * FROM USERS u WHERE u.status = 1",  nativeQuery = true)
         Collection<User> findAllActiveUsersNative();
 
     Passing parameters to queries:
@@ -482,8 +482,8 @@ VALIDATING REQUEST BODY AND PARAMETERS IN SPRING BOOT
 https://medium.com/@tericcabrel/validate-request-body-and-parameter-in-spring-boot-53ca77f97fe9
 **************************************************************************************************************************************************************
 A.: Validating request body:
-    In userem endpoint im der Controller Klasse wir kriegen mit http post in request body die Konnektor Daten. Dise nennt man KonnektorDTO (data transfer object), weil es vom controller Schicht die Daten zum service Schicht
-    transportiert. In dem DTO Klasse ( kann gelich mit dem JPA Entity sein) die Felder werden mit dem Hibernates Validator API constraints annotiert:
+    In userem endpoint im der Controller Klasse wir kriegen mit http post in request body die Konnektor Daten. Dise nennt man KonnektorDTO (data transfer object, generiert mit openAPI),
+     weil es vom controller Schicht die Daten zum service Schicht  transportiert. In dem DTO Klasse ( kann gelich mit dem JPA Entity sein) die Felder werden mit dem Hibernates Validator API constraints annotiert:
 
       public class KonnektorDTO {
        @JsonProperty("id")
@@ -496,7 +496,7 @@ A.: Validating request body:
     in dem Controller wir verwenden @Valid -> wenn Spring findet ein argument mit @Valid , dann es vaklidiert es gelich und wenn es fehlschlägt, dann wirft es MethodArgumentNotValidException. Diese können wir in einem
     ControllerAdvice Klasse mit dem @ExceptionHandler annotirtem Methode behandeln.
     public ResponseEntity<KonnektorDTO> updateKonnektor(@Valid @PathVariable String konnektorId, @Valid @RequestBody KonnektorDTO dto)
-B: validating path variable: @Validated anstelle von @Valid !!!! Hier wird jetzte aber ConstraintViolationException  geworfen , wenn...
+B: validating path variable: @Validated on clas level, anstelle von @Valid !!!! Hier wird jetzte aber ConstraintViolationException  geworfen , wenn...
     @Validated
     @RequestMapping(value = "/reservations")
     public ResponseEntity<Reservation> oneReservation(@Pattern(regexp = "^RSV(-\\d{4,}){2}$") @PathVariable String code)
@@ -533,7 +533,7 @@ UNIT TEST:
     -   Test fixture: es ist die JUnit test Klasse, der mehrere Test cases hat, mit beforeEach/beforeAll etc.
 
 Test Aufbau Unit / Integration:
-    @Test
+    @Test case
     public void shouldReturnItemNameInUpperCase() {
 
         //
@@ -565,7 +565,7 @@ http://webprogramozas.inf.elte.hu/#!/subjects/full-stack/java-rest-test
 
 Testing the REST API:
     Lehetőségek:
-        -   Az egeész szerver tesztelése, mikor a szerver is elindul, valamint az egész applicationContext is; ekkor http requesteket küldhetünk a szervernek a restTemplate segítségével, majd a responst
+        -   Az egeész szerver tesztelése, mikor a szerver is elindul, valamint az egész applicationContext is; ekkor http requesteket küldhetünk a szervernek a WebTestClient segítségével, majd a responst
             analizálhatjuk, elemezhetjük a response json-t (@SpringBootTest,  restTemplate)
             lasd hogyan:
                     http://webprogramozas.inf.elte.hu/#!/subjects/full-stack/java-rest-test.

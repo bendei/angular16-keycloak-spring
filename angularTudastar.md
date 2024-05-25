@@ -482,7 +482,10 @@ Html Attribute lassen sich mit Property binding nicht schreiben, dazu sind da: [
 EVENT BINDING damit können wir Ereignisse auf einem DOm Element abfangen und verarbeiten. (myEvent)="myHandler()"
 Diese Ereignisse sind entweder native DOM-Events oder werden innerhalb einer Komponente getriggert und diese auf einem Element abfangen und verarbeiten. In der Klasse legen wir
 EventEmitter deshalb eine Eigenschaft an und initialisieren sie mit einem so fooEvent genannten EventEmitter. Dieses Objekt brauchen wir, um ein Ereignis auszulösen.
-Mit dem Typparameter in spitzen Klammern geben wir an, von welchem Typ der zurückgegebene Payload ist. @Output() fooEvent = new EventEmitter<any>();
+Mit dem Typparameter in spitzen Klammern geben wir an, von welchem Typ der zurückgegebene Payload ist. 
+
+@Output() fooEvent = new EventEmitter<any>();
+
 myMethod(...): void {
 	this.fooEvent.emit(payload);
 }
@@ -718,24 +721,26 @@ Der ANGULAR-ROUTER interagiert mit der HTML5 History API und verwendet URL-Pfade
 	- Routen konfigurieren: Pfad - Komponente: diese Zuordnung ist die Routendefinition, es ist ein Object : { path: 'mypath', component: MyComponent }. Diese RoDefinitionen werden
 		in einem array von Typ Routes festgelegt = routesArray, sie werden in einem separaten Datei definiert.
 ***********************************
-MODULE-STYLE
+A. MODULE-STYLE
 
-Ha a root moduleban akarjuk a routpokat regisztrálni:
-	- forRoot(): outing module einbauen:
-		In simplen Fall: diese routesArray wird in dem root-Module importiert:
-			@NgModule({
-				imports: [RouterModule.forRoot(routes)] -> im main routing-module. Als Rückgabewert erhalten wir wiederum ein Modul, das mit unseren Routen initialisiert wurde.
-				mit forRoot erstellen wir ein RoutingService Objekt. (es darf nur einen einzigen davon geben), und Pfaddefinitionen, aka Routes werden mit Routing Service registriert.
+    Ha a root moduleban akarjuk a routpokat regisztrálni:
+        - forRoot(): outing module einbauen:
+            In simplen Fall: diese routesArray wird in dem root-Module importiert:
+                @NgModule({
+                    imports: [RouterModule.forRoot(routes)] -> im main routing-module. Als Rückgabewert erhalten wir wiederum ein Modul, das mit unseren Routen initialisiert wurde.
+                    mit forRoot erstellen wir ein RoutingService Objekt. (es darf nur einen einzigen davon geben), und Pfaddefinitionen, aka Routes werden mit Routing Service registriert.
+    
+    Ha egy feature modulban :
+        - forChild(): Für die Navigation wird ein separater Rouer-definition Datei erstellt, und in dem navigations-feature module mit RouterModule.forChild() importiert. 	Und vwerwenden
+          RouterModule.forChild(array) in feature router modules, forChild erstellt aber keinen RoutingService Objekt, sondern werden die Routes (Pfad-component
+          Definitionen mit dem Routingservice registriert, die mit forRoot erstellt wurden.)
+    
+        - lazyLoading: geht es um lazy loaded module: routing module für der jeweiligen feature-Module wird im Routing-Definition Objekt mit loadChildren.. property importiert.
+          also RoutenDefinition : {path: '..', anstelle von 'component' loadChildren: () => import("./nyomonkovetes/shared/nyomonkovetes-routing.module").then(i => i.NyomonkovetesRoutingModule)},}
+          erstellen wir wiederum ein array of Route Types, wo path: book ist und anstatt component: wenn wir auf den path klicken, dann wir der entsprechende routing module importiert mit den komponenten etc.
 
-Ha egy feature modulban :
-	- forChild(): Für die Navigation wird ein separater Rouer-definition Datei erstellt, und in dem navigations-feature module mit RouterModule.forChild() importiert. 	Und vwerwenden
-	  RouterModule.forChild(array) in feature router modules, forChild erstellt aber keinen RoutingService Objekt, sondern werden die Routes (Pfad-component
-	  Definitionen mit dem Routingservice registriert, die mit forRoot erstellt wurden.)
+B. STANDALONE-STYLE
 
-	- lazyLoading: geht es um lazy loaded module: routing module für der jeweiligen feature-Module wird im Routing-Definition Objekt mit loadChildren.. property importiert.
-      also RoutenDefinition : {path: '..', anstelle von 'component' loadChildren: () => import("./nyomonkovetes/shared/nyomonkovetes-routing.module").then(i => i.NyomonkovetesRoutingModule)},}
-	  erstellen wir wiederum ein array of Route Types, wo path: book ist und anstatt component: wenn wir auf den path klicken, dann wir der entsprechende routing module importiert mit den komponenten etc.
-STANDALONE
 	Mit standalone:
 		Anstelle RouteDefinitionen mit forRoot()/forChild in root/feature Module zu registrieren:
 		in app.routing.ts definieren wir eine Array von Routes ( mit möglicher loadChildren/loadComponent für lazy loading), die man in app.config.ts mit provideRouter(APP_ROUTES) Function 
@@ -1028,14 +1033,14 @@ PROMISE:	https://javascript.info/promise-basics
 );
 
 
-Async vor dem function: der Methode gibt immer ein Promise zurück, d.h. Rückgabewert wird immer als ein resolved Promise eingehüllt.
+_Async_ vor dem function: der Methode gibt immer ein Promise zurück, d.h. Rückgabewert wird immer als ein resolved Promise eingehüllt.
  async myFunction() {
     return 1;
     }
 ..dann :
     myFunction.then(..something);
 
-AWAIT / ASYNC
+_AWAIT / ASYNC_
 await lässt javascript warten bis Promise settled wird und einen Wert zurückliefert. d.h. wir brauchen then() nicht mehr:
     Methoden aufruf pausiert beim await bis Promise resolved wird und ein Wert zurückgibt, so js engine kann etwas anderes auch machen.
     await kann man nur verwenden, wenn async da ist. ErrorHandling: mit try/catch Block, anstelle von .catch() Methode
@@ -1133,14 +1138,14 @@ Zwei Typen von Errorbehandlungen:
         A:  in dem catchError operator wir fangen den error ab und geben ein fallback value zurück, so braucht man im observer keine error handler callback, weil es kriegt ein empty array zurück.
             const usersArray$ = of(DATA).pipe(
                 map(users =>  {
-                throw new Error("hahaha");
-                //users.map(user => user.age)
-            }),
-            catchError((err) => {
-                console.log("error: " + err);
-                return of([]);          // FONTOS!! valamit kell visszaadnunk vagy egy Observablet vagy errort wir kreiren einen observable
-                })
-            );
+                    throw new Error("hahaha");
+                    //users.map(user => user.age)
+                }), 
+                catchError((err) => {
+                    console.log("error: " + err);
+                    return of([]);          // FONTOS!! valamit kell visszaadnunk vagy egy Observablet vagy errort wir kreiren einen observable
+                }) // catchError end
+            ); // pipe end
 
             usersArray$.subscribe(
               {
@@ -1166,6 +1171,8 @@ Zwei Typen von Errorbehandlungen:
                   next: (data) => console.log(data),
                   error: (err) => console.log(err),     // muss man error abhandeln
                   }
+        
+        C. wir fangen es mit catchError überhaupt nicht ab, sondernreagieren wir auf error mit dem error callbeck in der Subscriber. 
 
 		-  allgemein (globally)  in Interceptoren: dieses ist die beste Lösung, andernfalls sollten wir in Komponenten/Services repetitive code schreiben, besser alles in Interceptor
 			auslagern. HttpInterceptor ist ein Service die erstellen und registrieren global in dem root Module. Dieses faengt alle eingehende und ausgehende Requests.
@@ -1174,8 +1181,6 @@ Zwei Typen von Errorbehandlungen:
             STANDALONE INTERCEPTOR: https://medium.com/@bhargavr445/angular-httpinterceptors-standalone-applications-part-5-dd855f052d45
             Ab version 16 functional interfaces oder class based interfaces, vorher nur class based interfaces.
             Functional means:
-            
-
 
 	2.	FEHLERBEHANDLUNG IN SYNKRON CODE:
         - Mit try/catch Block: nicht ausreichend in Applikationen, wo Ein Exception überall passieren kann.
@@ -1551,7 +1556,7 @@ A. Komponente haben paretn-child Beziehung:
 
 B.	Es gibt keine Beziehung zwischen den komponenten:
 	1.	mit Services in den Route Definitionen: Datenaustausch zwischen Komponeten, die zu gleichen route child angehören.
-	2.	Mit Observable: erstellt man ein Service und ein Observable darin, das ein Ereignis wird emittiert sobald es zur Verfügung seht oder sich aendert. In der komponenten können
+	2.	Mit Observable: erstellt man ein Service und ein Observable darin (BehaviorSubject), das ein Ereignis wird emittiert sobald es zur Verfügung seht oder sich aendert. In der komponenten können
 		wir dann daran abbonieren. https://www.tektutorialshub.com/angular/angular-component-communication-sharing-data/#listens-to-child-event
 
 ######################################################################################################################################################################################
@@ -1564,6 +1569,7 @@ Angular takes the following steps to load our first view.
 	2.	Loads Angular & Third-party libraries & Application, angular findet diese in dem package.json
 	3.	Executes application entry point (main.ts), die genaue Stelle findetangular im angular.json
 	4.	Load & execute Root Module (app.module.ts)
+    4.  ohne Module: main.ts -> bootstrapApplication(AppComponent, configurationObject)
 	5.	Executes the Root Component (app.component.ts)
 	6.	Displayes the template (app.component.html)
 
@@ -1644,10 +1650,11 @@ Wir binden ein property zu dem host Element, wenn proprty aendert Hostbinding wi
 
 	// CSS-Eigenschaft 'color' auf 'red' setzen
 	@HostBinding('style.color') get foo() { return 'red'; }
-	Binding erlauben aber keine direkten Zugriff auf das DOM-Element. daür ist die ELementRef (durch konstrukto Propoerty Referenz auf dem Host-Element, mit @ViewChild)
 
-Häufig verwendet man Attributdirektiven, um auf Ereignisse zu reagieren, die auf dem Host-Element auftreten. Diese Events lassen sich durch den Decorator @HostListener(mouseenter)
- abfangen, sodass wir in der Attributdirektive darauf reagieren können. Wir annotieren damit eine Methode.
+    @HostListener 
+	Binding erlauben aber keine direkten Zugriff auf das DOM-Element. daür ist die ELementRef (durch konstrukto Propoerty Referenz auf dem Host-Element, mit @ViewChild)
+    Häufig verwendet man Attributdirektiven, um auf Ereignisse zu reagieren, die auf dem Host-Element auftreten. Diese Events lassen sich durch den Decorator @HostListener(mouseenter)
+    abfangen, sodass wir in der Attributdirektive darauf reagieren können. Wir annotieren damit eine Methode.
 
 STRUKTURDIREKTIVE: Strukturdirektiven sind immer dann sinnvoll, wenn Elemente in Abhängigkeit von bestimmten Faktoren ein- und ausgeblendet werden sollen.
 Die Möglichkeiten sind sehr vielfältig: Denken Sie beispielsweise an Feature-Toggles, zeitliche Verzögerung oder Sichtbarkeit abhängig von Berechtigungen.
@@ -1870,7 +1877,7 @@ implements HttpInterceptor -> intercept(req: HttpRequest<any>, next: HttpHandler
 https://www.tektutorialshub.com/angular/valuechanges-in-angular-forms/
 
 DOM event -> Observable
-Angular stellt RxJS  FormEvent Methode zu Verfügung, um ein Observable aus DOM Errignisse zu machen. Zb: Wir haben ein FormControll input und wir wollen auf keyup Erreignisse abbonieren,
+Angular stellt RxJS  fromEvent Methode zu Verfügung, um ein Observable aus DOM Errignisse zu machen. Zb: Wir haben ein FormControll input und wir wollen auf keyup Erreignisse abbonieren,
 (so server calls starten) damit wir ein autocomplete implementieren.
 
 fromEvent(this.idInput.nativeElement,'keyup').subscribe(res => console.log(res));
@@ -2012,7 +2019,7 @@ Lösungen:
     -   konfigurieren proxy:
         1.  Erstellen: proxy.conf.json:
                                 {
-                                    "/api": {
+                                    "/api/konnektors": {
                                     "target": "http://localhost:8081/api",
                                     "secure": false
                                 }
